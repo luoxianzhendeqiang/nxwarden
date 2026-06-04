@@ -16,7 +16,7 @@ export default function LoginPage() {
             <a href="/#systems">Systems</a>
             <a href="/#work">Work</a>
             <a href="/#contact">Contact</a>
-            <a className="nav-login active" href="/login/">
+            <a className="nav-login" href="/console/">
               Console
             </a>
           </nav>
