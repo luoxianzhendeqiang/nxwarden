@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NX Warden builds calm infrastructure systems, media automation, monitoring, and resilient personal cloud operations."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NX Warden" />
+    <meta
+      property="og:description"
+      content="A luminous company page for personal cloud systems, automation pipelines, monitoring, and AI workflows."
+    />
+    <meta property="og:image" content="/assets/blackhole-hero.png" />
+    <meta property="og:url" content="https://nxwarden.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#050505" />
+    <title>NX Warden</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="./assets/blackhole-hero.png" as="image" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas class="starfield" id="starfield" aria-hidden="true"></canvas>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-bg" src="./assets/blackhole-hero.png" alt="" />
+        <div class="hero-shade" aria-hidden="true"></div>
+
+        <header class="nav" aria-label="Primary">
+          <a class="brand" href="#top" aria-label="NX Warden home">
+            <span class="brand-mark">NX</span>
+            <span>NX Warden</span>
+          </a>
+          <nav class="nav-links">
+            <a href="#systems">Systems</a>
+            <a href="#work">Work</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </header>
+
+        <div class="hero-copy" id="top">
+          <p class="eyebrow">private infrastructure studio</p>
+          <h1 id="hero-title">SYSTEMS I BUILD</h1>
+          <p class="lead">
+            I design personal cloud systems, automation pipelines, and quiet web experiences that keep running after the first launch.
+          </p>
+          <div class="actions" aria-label="Site actions">
+            <a class="button primary" href="#systems">Explore systems</a>
+            <a class="button ghost" href="#contact">Start a build</a>
+          </div>
+        </div>
+
+        <div class="orbit-panel panel-top">
+          <span>black hole 03</span>
+          <strong>Company Website</strong>
+          <p>A luminous homepage for work, systems, and useful experiments.</p>
+        </div>
+        <div class="orbit-panel panel-left">
+          <span>01 / content engine</span>
+          <strong>Self-Media Workflow</strong>
+          <p>Downloads, archives, metadata, and publishing loops.</p>
+        </div>
+        <div class="orbit-panel panel-right">
+          <span>02 / signal field</span>
+          <strong>AI Intel Source</strong>
+          <p>Research surfaces, automation notes, and decision memory.</p>
+        </div>
+        <div class="orbit-panel panel-bottom">
+          <span>03 / decision core</span>
+          <strong>Startup Thinking</strong>
+          <p>Product taste, durable systems, and fast iteration.</p>
+        </div>
+      </section>
+
+      <section class="systems" id="systems" aria-labelledby="systems-title">
+        <div class="section-head">
+          <p class="eyebrow">what i can do</p>
+          <h2 id="systems-title">A calm operating layer for small teams and personal labs.</h2>
+        </div>
+
+        <div class="system-grid">
+          <article class="system-card">
+            <span>01</span>
+            <h3>Cloud Homebase</h3>
+            <p>Personal dashboards, service maps, reverse proxies, TLS, and uptime visibility.</p>
+          </article>
+          <article class="system-card">
+            <span>02</span>
+            <h3>Media Automation</h3>
+            <p>Download queues, OneDrive archives, filename cleanup, and Jellyfin-ready libraries.</p>
+          </article>
+          <article class="system-card">
+            <span>03</span>
+            <h3>Monitoring Field</h3>
+            <p>Kuma, Komari, alerts, and simple rituals that keep VPS fleets understandable.</p>
+          </article>
+          <article class="system-card">
+            <span>04</span>
+            <h3>AI Workflows</h3>
+            <p>Research, notes, lightweight tools, and repeatable workflows for fast decisions.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="work" id="work" aria-labelledby="work-title">
+        <div>
+          <p class="eyebrow">build trail</p>
+          <h2 id="work-title">From raw servers to a useful digital company surface.</h2>
+        </div>
+        <ol class="timeline">
+          <li>
+            <span>Deploy</span>
+            <p>Ship a clean public website on Cloudflare's edge network.</p>
+          </li>
+          <li>
+            <span>Connect</span>
+            <p>Keep private services on VPS infrastructure where long-running automation belongs.</p>
+          </li>
+          <li>
+            <span>Observe</span>
+            <p>Watch availability, storage flows, and naming hygiene before complexity grows.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="portal" aria-labelledby="portal-title">
+        <div class="portal-copy">
+          <p class="eyebrow">service constellation</p>
+          <h2 id="portal-title">Public edge in front. Private machines behind it.</h2>
+        </div>
+        <div class="portal-links" aria-label="Service links">
+          <a href="https://home1.54614614.xyz">Homepage</a>
+          <a href="https://jellyfin.54614614.xyz">Jellyfin</a>
+          <a href="https://kuma.54614614.xyz/status/xueer">Status</a>
+          <a href="https://tools.54614614.xyz">Tools</a>
+        </div>
+      </section>
+
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <p class="eyebrow">nxwarden.com</p>
+        <h2 id="contact-title">A small company page with room to become a real operating system.</h2>
+        <p>
+          The public site can stay serverless. The heavy work can stay on the machines that already know how to move files, run containers, and keep watch.
+        </p>
+        <a class="button primary" href="mailto:hello@nxwarden.com">hello@nxwarden.com</a>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
