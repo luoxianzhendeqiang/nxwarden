@@ -1,5 +1,7 @@
 import {
   ArrowLeft,
+  RadioTower,
+  ShieldCheck,
   Sparkles
 } from "lucide-react";
 import SignalDashboard from "./signal-dashboard";
@@ -25,25 +27,42 @@ export default function ConsolePage() {
         </nav>
       </header>
 
-      <section className="console-hero" aria-labelledby="console-title">
-        <div className="console-hero-copy">
+      <section className="mission-header" aria-labelledby="mission-title">
+        <div className="mission-copy">
           <p className="eyebrow">personal infrastructure os</p>
-          <h1 id="console-title">CONSOLE</h1>
-          <p className="lead">
-            A read-only prototype for the operating layer behind NX Warden:
-            public edge in front, private machines behind it, and memory moved
-            into systems.
-          </p>
-        </div>
-
-        <div className="console-orbit" aria-label="Current operating state">
-          <span className="console-ring" aria-hidden="true" />
-          <div>
-            <Sparkles aria-hidden="true" size={18} strokeWidth={2} />
-            <strong>Inner control room</strong>
-            <p>Static signal only. No commands are wired yet.</p>
+          <h1 id="mission-title">NX WARDEN / MISSION CONTROL</h1>
+          <div className="mission-lines" aria-label="Mission state">
+            <span>Observation layer active.</span>
+            <span>No write actions armed.</span>
+            <span>Public edge online.</span>
+            <span>Private plane sealed.</span>
           </div>
         </div>
+
+        <aside className="mission-status" aria-label="Current operating state">
+          <div className="mission-radar">
+            <span className="console-ring" aria-hidden="true" />
+            <div>
+              <Sparkles aria-hidden="true" size={18} strokeWidth={2} />
+              <strong>Observation only</strong>
+              <p>No commands are wired into this public layer.</p>
+            </div>
+          </div>
+          <div className="mission-chips" aria-label="Mission control chips">
+            <span>
+              <RadioTower aria-hidden="true" size={15} strokeWidth={2.1} />
+              EDGE: ONLINE
+            </span>
+            <span>
+              <ShieldCheck aria-hidden="true" size={15} strokeWidth={2.1} />
+              CONTROL: READ ONLY
+            </span>
+            <span>
+              <Sparkles aria-hidden="true" size={15} strokeWidth={2.1} />
+              AUTH: NOT ARMED
+            </span>
+          </div>
+        </aside>
       </section>
 
       <SignalDashboard />

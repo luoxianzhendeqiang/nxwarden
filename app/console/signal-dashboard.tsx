@@ -29,7 +29,7 @@ import {
 
 type Tone = "green" | "gold" | "blue" | "red";
 
-type Service = {
+type MapNode = {
   endpoint: string;
   icon: typeof Globe2;
   id: string;
@@ -43,57 +43,96 @@ type Service = {
 };
 
 const consoleTabs = [
-  "Overview",
-  "Services",
-  "Flows",
-  "Logs",
-  "Access"
+  { id: "signal", label: "Signal" },
+  { id: "map", label: "Map" },
+  { id: "loops", label: "Loops" },
+  { id: "memory", label: "Memory" },
+  { id: "gate", label: "Gate" }
 ];
 
 const pulseCards = [
   {
     icon: Activity,
-    label: "System Pulse",
-    value: "Reachable",
-    body: "All public services report a usable public surface. Private services stay marked for access review.",
+    label: "Mission Pulse",
+    value: "Observation",
+    body: "Public edge is online, private plane is sealed, and no write actions are armed.",
     tone: "green" as Tone
   },
   {
     icon: HardDrive,
     label: "Storage Flow",
     value: "Connected",
-    body: "OneDrive archive is present as a system path. Next layer should verify selected Jellyfin scan folders.",
+    body: "OneDrive archive exists as a system path. Folder policy still needs a final retention decision.",
     tone: "gold" as Tone
   },
   {
     icon: Server,
-    label: "Service Map",
-    value: "5 tracked",
-    body: "Homepage, Jellyfin, Status, Tools, and OneDrive Archive now have detail signals.",
+    label: "Infrastructure Map",
+    value: "4 layers",
+    body: "Public Edge, Cloudflare Pages, Access Boundary, and Private Plane now read as one topology.",
     tone: "blue" as Tone
   },
   {
     icon: FileClock,
-    label: "Automation Trail",
-    value: "ceea657",
-    body: "Last stable console shell shipped to main before the Signal Dashboard layer.",
+    label: "Mission Trail",
+    value: "a0d9b4d",
+    body: "Signal Dashboard shipped before this Mission Control pass.",
     tone: "gold" as Tone
   }
 ];
 
-const services: Service[] = [
+const infrastructureNodes: MapNode[] = [
   {
-    endpoint: "nxwarden.com / home1.54614614.xyz",
+    endpoint: "nxwarden.com",
     icon: Globe2,
-    id: "homepage",
-    lastCheck: "Production deploy verified after ceea657",
-    name: "Homepage",
-    nextAction: "Keep Console entry visible and migrate future public links to 614451.xyz.",
-    riskNote: "Public edge is healthy; old 54614614 links should be phased out before renewal.",
-    signal: "Cloudflare Pages",
+    id: "public-edge",
+    lastCheck: "Production domain confirmed on Cloudflare Pages",
+    name: "Public Edge",
+    nextAction: "Keep this as the clean public surface for NX Warden.",
+    riskNote: "Public content is safe to expose; no control actions belong here.",
+    signal: "Visitor-facing entry",
     status: "Online",
     visibility: "Public"
   },
+  {
+    endpoint: "nxwarden.pages.dev / nxwarden.com",
+    icon: Cloud,
+    id: "cloudflare-pages",
+    lastCheck: "Latest production source: a0d9b4d",
+    name: "Cloudflare Pages",
+    nextAction: "Continue using Pages as the static public edge until control needs appear.",
+    riskNote: "Pages is a good fit for public UI. It should not receive machine-control secrets.",
+    signal: "Edge deployment",
+    status: "Serving",
+    visibility: "Public"
+  },
+  {
+    endpoint: "Future Cloudflare Access boundary",
+    icon: ShieldCheck,
+    id: "access-boundary",
+    lastCheck: "Not wired by design",
+    name: "Access Boundary",
+    nextAction: "Create protected /control or /console-private only after the public console is stable.",
+    riskNote: "Auth is not armed. Keep the current console read-only and harmless.",
+    signal: "Safety gate",
+    status: "Planned",
+    visibility: "Gate"
+  },
+  {
+    endpoint: "Xueer VPS and private automation surfaces",
+    icon: Server,
+    id: "private-plane",
+    lastCheck: "Represented as static topology only",
+    name: "Private Plane",
+    nextAction: "Do not expose scripts, logs, or restart controls before Access is active.",
+    riskNote: "Private services need access rules before any future control plane is connected.",
+    signal: "Sealed services",
+    status: "Sealed",
+    visibility: "Private"
+  }
+];
+
+const privateServices: MapNode[] = [
   {
     endpoint: "jellyfin.54614614.xyz",
     icon: MonitorCheck,
@@ -107,14 +146,26 @@ const services: Service[] = [
     visibility: "Private"
   },
   {
+    endpoint: "Xue archive path for TG downloads",
+    icon: Archive,
+    id: "onedrive-archive",
+    lastCheck: "rclone chunk size fixed to 80M on DC03",
+    name: "OneDrive Archive",
+    nextAction: "Confirm final folder policy for Xue and Luo before automating larger cleanup.",
+    riskNote: "Archive paths are working, but retention and backup policy are not confirmed.",
+    signal: "Storage flow",
+    status: "Connected",
+    visibility: "Private"
+  },
+  {
     endpoint: "kuma.54614614.xyz/status/xueer",
     icon: Gauge,
-    id: "status",
+    id: "uptime-kuma",
     lastCheck: "Public status page reviewed",
-    name: "Status",
+    name: "Uptime Kuma",
     nextAction: "Add 614451 endpoints once the new domain migration starts.",
     riskNote: "Status page is public by design; sensitive monitor names should stay bland.",
-    signal: "Uptime Kuma",
+    signal: "Status beacon",
     status: "Watching",
     visibility: "Monitored"
   },
@@ -129,32 +180,22 @@ const services: Service[] = [
     signal: "Utility bench",
     status: "Available",
     visibility: "Experimental"
-  },
-  {
-    endpoint: "Xue archive path for TG downloads",
-    icon: Archive,
-    id: "archive",
-    lastCheck: "rclone chunk size fixed to 80M on DC03",
-    name: "OneDrive Archive",
-    nextAction: "Confirm final folder policy for Xue and Luo before automating larger cleanup.",
-    riskNote: "Archive paths are working, but retention and backup policy are not confirmed.",
-    signal: "Xue archive flow",
-    status: "Connected",
-    visibility: "Private"
   }
 ];
+
+const mapNodes = [...infrastructureNodes, ...privateServices];
 
 const flows = [
   {
     icon: Cloud,
     title: "Downloads -> Rename -> Archive -> Jellyfin",
-    detail: "Telegram media is downloaded, numeric prefixes are cleaned, files move into OneDrive, and Jellyfin scans selected folders later.",
+    detail: "Telegram media enters a guarded loop: download, clean numeric prefixes, archive to OneDrive, then wait for a selected Jellyfin scan.",
     signal: "Observed"
   },
   {
     icon: Bot,
     title: "Notes -> AI Intel -> Decision Memory",
-    detail: "Research fragments, deployment choices, and operating notes should become durable memory instead of vanishing into chat.",
+    detail: "Research fragments, deployment choices, and operating notes should become durable mission memory instead of vanishing into chat.",
     signal: "Planned"
   },
   {
@@ -170,31 +211,31 @@ const timeline = [
     icon: GitBranch,
     label: "GitHub push to main",
     time: "latest",
-    value: "Console shell committed and pushed"
+    value: "Mission Control upgrade prepared from a0d9b4d"
   },
   {
     icon: CheckCircle2,
     label: "npm run build passed",
-    time: "latest",
-    value: "Static export includes /console"
+    time: "required",
+    value: "Static export must include /console"
   },
   {
     icon: RadioTower,
     label: "Cloudflare Pages production deployed",
-    time: "latest",
-    value: "Production deploy served from nxwarden.com"
+    time: "required",
+    value: "Production should serve the Mission Control shell"
   },
   {
     icon: Code2,
-    label: "/console route created",
-    time: "previous",
-    value: "Read-only layer began as inner control room"
+    label: "/console route active",
+    time: "stable",
+    value: "Public observation layer stays read-only"
   },
   {
     icon: TerminalSquare,
     label: "Computer Use native pipe path unavailable",
     time: "known issue",
-    value: "Repo edits and CLI remain the main workflow"
+    value: "Repo edits and Playwright remain the main workflow"
   }
 ];
 
@@ -207,7 +248,7 @@ const risks = [
   },
   {
     icon: ShieldAlert,
-    label: "Private services require access rules",
+    label: "Private plane requires access rules",
     detail: "Jellyfin, archive paths, and future controls need a clear boundary.",
     tone: "red" as Tone
   },
@@ -231,21 +272,28 @@ const risks = [
   }
 ];
 
+const decisionLogs = [
+  "Decision: Keep console read-only until Cloudflare Access is wired.",
+  "Decision: Treat Computer Use as non-blocking.",
+  "Decision: Use Playwright as visual validation fallback.",
+  "Decision: Build observation layer before control plane."
+];
+
 const logs = [
   {
     icon: RadioTower,
-    label: "Latest deploy",
-    value: "Cloudflare Pages production deployed"
+    label: "Latest deploy target",
+    value: "Cloudflare Pages production"
   },
   {
     icon: Code2,
-    label: "Latest stable commit",
-    value: "ceea657"
+    label: "Previous stable commit",
+    value: "a0d9b4d"
   },
   {
     icon: CheckCircle2,
     label: "Build check",
-    value: "npm run build passed"
+    value: "npm run build required after upgrade"
   },
   {
     icon: TerminalSquare,
@@ -255,35 +303,35 @@ const logs = [
 ];
 
 export default function SignalDashboard() {
-  const [selectedServiceId, setSelectedServiceId] = useState(services[0].id);
-  const selectedService =
-    services.find((service) => service.id === selectedServiceId) ?? services[0];
-  const SelectedIcon = selectedService.icon;
+  const [selectedNodeId, setSelectedNodeId] = useState(infrastructureNodes[0].id);
+  const selectedNode =
+    mapNodes.find((node) => node.id === selectedNodeId) ?? infrastructureNodes[0];
+  const SelectedIcon = selectedNode.icon;
 
   return (
     <>
-      <nav className="console-tabs" aria-label="Console sections">
+      <nav className="console-tabs mode-switch" aria-label="Mission modes">
         {consoleTabs.map((tab) => (
-          <a href={`#${tab.toLowerCase()}`} key={tab}>
+          <a href={`#${tab.id}`} key={tab.id}>
             <span className="tab-light" aria-hidden="true" />
-            {tab}
+            {tab.label}
           </a>
         ))}
       </nav>
 
       <section
         className="console-section"
-        id="overview"
-        aria-labelledby="overview-title"
+        id="signal"
+        aria-labelledby="signal-title"
       >
         <div className="console-section-head">
           <div>
-            <p className="eyebrow">overview</p>
-            <h2 id="overview-title">System state, reduced to signals.</h2>
+            <p className="eyebrow">signal</p>
+            <h2 id="signal-title">Observation layer, armed with context.</h2>
           </div>
           <p>
-            This layer is intentionally read-only: enough structure to reveal the
-            product, no risky controls before access rules exist.
+            This cockpit is intentionally static: enough signal to understand the
+            system, no risky controls before a real gate exists.
           </p>
         </div>
 
@@ -305,83 +353,112 @@ export default function SignalDashboard() {
         </div>
       </section>
 
-      <section className="console-grid" aria-label="Signal Dashboard">
-        <div className="console-panel services-panel" id="services">
+      <section className="console-grid mission-grid" aria-label="Mission Control">
+        <div className="console-panel map-panel" id="map">
           <div className="panel-title">
-            <p className="eyebrow">services</p>
-            <h2>Service map</h2>
+            <p className="eyebrow">map</p>
+            <h2>Infrastructure Map</h2>
           </div>
-          <div className="service-dashboard">
-            <div className="service-table" aria-label="Tracked services">
-              {services.map((service) => {
-                const Icon = service.icon;
-                const isSelected = service.id === selectedService.id;
+          <div className="infrastructure-shell">
+            <div className="infrastructure-map" aria-label="Connected infrastructure nodes">
+              <div className="map-spine" aria-hidden="true" />
+              <div className="trunk-nodes">
+                {infrastructureNodes.map((node) => {
+                  const Icon = node.icon;
+                  const isSelected = node.id === selectedNode.id;
 
-                return (
-                  <button
-                    aria-pressed={isSelected}
-                    className={`console-row service-button${isSelected ? " active" : ""}`}
-                    key={service.id}
-                    onClick={() => setSelectedServiceId(service.id)}
-                    type="button"
-                  >
-                    <span className="row-icon">
-                      <Icon aria-hidden="true" size={20} strokeWidth={1.9} />
-                    </span>
-                    <span>
-                      <strong>{service.name}</strong>
-                      <small>{service.signal}</small>
-                    </span>
-                    <span className="row-scope">{service.visibility}</span>
-                    <span className="row-status">{service.status}</span>
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      aria-pressed={isSelected}
+                      className={`map-node trunk-node${isSelected ? " active" : ""}`}
+                      key={node.id}
+                      onClick={() => setSelectedNodeId(node.id)}
+                      type="button"
+                    >
+                      <span className="node-icon">
+                        <Icon aria-hidden="true" size={20} strokeWidth={1.9} />
+                      </span>
+                      <span>
+                        <small>{node.signal}</small>
+                        <strong>{node.name}</strong>
+                      </span>
+                      <em>{node.status}</em>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="private-branches" aria-label="Private plane branches">
+                {privateServices.map((service) => {
+                  const Icon = service.icon;
+                  const isSelected = service.id === selectedNode.id;
+
+                  return (
+                    <button
+                      aria-pressed={isSelected}
+                      className={`map-node branch-node${isSelected ? " active" : ""}`}
+                      key={service.id}
+                      onClick={() => setSelectedNodeId(service.id)}
+                      type="button"
+                    >
+                      <span className="branch-line" aria-hidden="true" />
+                      <span className="node-icon">
+                        <Icon aria-hidden="true" size={20} strokeWidth={1.9} />
+                      </span>
+                      <span>
+                        <small>{service.visibility}</small>
+                        <strong>{service.name}</strong>
+                      </span>
+                      <em>{service.status}</em>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            <aside className="service-detail" aria-live="polite">
+            <aside className="service-detail mission-detail" aria-live="polite">
               <div className="detail-topline">
                 <span className="row-icon">
                   <SelectedIcon aria-hidden="true" size={20} strokeWidth={1.9} />
                 </span>
                 <div>
-                  <p className="eyebrow">detail drawer</p>
-                  <h3>{selectedService.name}</h3>
+                  <p className="eyebrow">focus node</p>
+                  <h3>{selectedNode.name}</h3>
                 </div>
               </div>
               <dl className="detail-list">
                 <div>
                   <dt>Status</dt>
-                  <dd>{selectedService.status}</dd>
+                  <dd>{selectedNode.status}</dd>
                 </div>
                 <div>
                   <dt>Visibility</dt>
-                  <dd>{selectedService.visibility}</dd>
+                  <dd>{selectedNode.visibility}</dd>
                 </div>
                 <div>
                   <dt>Endpoint</dt>
-                  <dd>{selectedService.endpoint}</dd>
+                  <dd>{selectedNode.endpoint}</dd>
                 </div>
                 <div>
                   <dt>Last check</dt>
-                  <dd>{selectedService.lastCheck}</dd>
+                  <dd>{selectedNode.lastCheck}</dd>
                 </div>
                 <div>
                   <dt>Risk note</dt>
-                  <dd>{selectedService.riskNote}</dd>
+                  <dd>{selectedNode.riskNote}</dd>
                 </div>
                 <div>
                   <dt>Next action</dt>
-                  <dd>{selectedService.nextAction}</dd>
+                  <dd>{selectedNode.nextAction}</dd>
                 </div>
               </dl>
             </aside>
           </div>
         </div>
 
-        <div className="console-panel" id="flows">
+        <div className="console-panel" id="loops">
           <div className="panel-title">
-            <p className="eyebrow">flows</p>
+            <p className="eyebrow">loops</p>
             <h2>Operating loops</h2>
           </div>
           <div className="flow-list">
@@ -402,10 +479,10 @@ export default function SignalDashboard() {
           </div>
         </div>
 
-        <div className="console-panel timeline-panel" id="logs">
+        <div className="console-panel timeline-panel" id="memory">
           <div className="panel-title">
-            <p className="eyebrow">logs</p>
-            <h2>Recent timeline</h2>
+            <p className="eyebrow">memory</p>
+            <h2>Recent mission trail</h2>
           </div>
           <div className="timeline-list">
             {timeline.map((item) => {
@@ -447,6 +524,22 @@ export default function SignalDashboard() {
           </div>
         </div>
 
+        <aside
+          className="console-panel memory-panel black-box-memory"
+          aria-labelledby="memory-title"
+        >
+          <Sparkles aria-hidden="true" size={26} strokeWidth={1.8} />
+          <div>
+            <p className="eyebrow">system memory</p>
+            <h2 id="memory-title">Black-box decision log.</h2>
+            <ol>
+              {decisionLogs.map((decision) => (
+                <li key={decision}>{decision}</li>
+              ))}
+            </ol>
+          </div>
+        </aside>
+
         <div className="console-panel logs-panel">
           <div className="panel-title">
             <p className="eyebrow">signals</p>
@@ -468,29 +561,13 @@ export default function SignalDashboard() {
         </div>
 
         <aside
-          className="console-panel memory-panel"
-          aria-labelledby="memory-title"
-        >
-          <Sparkles aria-hidden="true" size={26} strokeWidth={1.8} />
-          <div>
-            <p className="eyebrow">system memory</p>
-            <h2 id="memory-title">A place for decisions to stop evaporating.</h2>
-            <p>
-              Deployment notes, service paths, script rituals, cert decisions,
-              archive rules, and recovery steps will eventually live here as a
-              durable operating memory for NX Warden.
-            </p>
-          </div>
-        </aside>
-
-        <aside
           className="console-panel console-lock"
-          id="access"
-          aria-label="Access note"
+          id="gate"
+          aria-label="Gate note"
         >
           <ShieldCheck aria-hidden="true" size={26} strokeWidth={1.8} />
           <div>
-            <p className="eyebrow">access posture</p>
+            <p className="eyebrow">gate</p>
             <h2>Public prototype. Protected control plane later.</h2>
             <p>
               Login, write actions, and machine commands stay out of this layer
