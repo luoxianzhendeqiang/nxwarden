@@ -13,6 +13,7 @@ This project is deployed, builds successfully, and is pushed to GitHub. No Cloud
 - Reserved login page: `https://nxwarden.com/login/`
 - D1 database: `nxwarden-db`
 - D1 binding: `DB`
+- Planned R2 bucket: `nxwarden-assets`
 - Contact API: `https://nxwarden.com/api/contact` accepts `POST`
 - Latest verified result: both custom domains return `200 OK`.
 - Local branch: `main`
@@ -36,6 +37,24 @@ Verified:
 - Local Pages dev POST returned `{ "ok": true }`.
 - Production POST to `https://nxwarden.com/api/contact` returned `{ "ok": true }`.
 - Remote D1 query confirmed the inserted row, then the test row was deleted.
+
+## Cloudflare R2
+
+R2 is not enabled on the Cloudflare account yet.
+
+Wrangler result:
+
+```text
+Please enable R2 through the Cloudflare Dashboard. [code: 10042]
+```
+
+After the account owner enables R2 in the Cloudflare Dashboard:
+
+```bash
+npx wrangler r2 bucket create nxwarden-assets
+```
+
+Then copy the `[[r2_buckets]]` block from `wrangler.r2.example.toml` into `wrangler.toml` and redeploy Cloudflare Pages.
 
 ## GitHub
 

@@ -46,6 +46,31 @@ npx wrangler d1 execute nxwarden-db --remote --file d1/schema.sql
 
 The app intentionally has no user authentication. Anonymous visitors can submit the form, but cannot read submissions from the public site.
 
+## Cloudflare R2
+
+R2 is optional for the current homepage, but it is the right place for future blog images, Markdown source files, downloads, and generated media. The reference blog project uses R2 for file/object storage while D1 stores relational data; NX Warden follows the same split once R2 is enabled.
+
+Planned bucket:
+
+```text
+Name: nxwarden-assets
+Binding: ASSETS
+```
+
+Current account state:
+
+```text
+R2 is not enabled yet. Wrangler returns: Please enable R2 through the Cloudflare Dashboard. [code: 10042]
+```
+
+After R2 is enabled in the Cloudflare Dashboard, create the bucket and copy the example binding into `wrangler.toml`:
+
+```bash
+npx wrangler r2 bucket create nxwarden-assets
+```
+
+See `wrangler.r2.example.toml` for the binding block.
+
 ## Cloudflare Pages
 
 Project: `nxwarden`

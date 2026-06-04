@@ -22,8 +22,19 @@ export const metadata: Metadata = {
     images: ["/assets/blackhole-hero.png"]
   },
   icons: {
-    icon: "/favicon.svg",
-    apple: "/assets/nxwarden-icon.png"
+    icon: [
+      {
+        url: "/assets/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png"
+      },
+      {
+        url: "/assets/nxwarden-icon-512.png",
+        sizes: "512x512",
+        type: "image/png"
+      }
+    ],
+    apple: "/assets/apple-touch-icon.png"
   }
 };
 
