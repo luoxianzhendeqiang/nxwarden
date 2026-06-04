@@ -1,6 +1,6 @@
 # Authorization Blockers
 
-This project is deployed, builds successfully, and is pushed to GitHub. No Cloudflare D1 blocker is currently open.
+This project is deployed, builds successfully, and is pushed to GitHub. No Cloudflare D1 or R2 blocker is currently open.
 
 ## Current Green State
 
@@ -40,21 +40,15 @@ Verified:
 
 ## Cloudflare R2
 
-R2 is not enabled on the Cloudflare account yet.
-
-Wrangler result:
+R2 is enabled and the bucket exists.
 
 ```text
-Please enable R2 through the Cloudflare Dashboard. [code: 10042]
+Bucket: nxwarden-assets
+Binding: NXWARDEN_ASSETS
+Created: 2026-06-04
 ```
 
-After the account owner enables R2 in the Cloudflare Dashboard:
-
-```bash
-npx wrangler r2 bucket create nxwarden-assets
-```
-
-Then copy the `[[r2_buckets]]` block from `wrangler.r2.example.toml` into `wrangler.toml` and redeploy Cloudflare Pages.
+The `[[r2_buckets]]` binding is configured in `wrangler.toml`. Use this bucket for future blog images, Markdown source, generated media, or downloadable assets.
 
 ## GitHub
 

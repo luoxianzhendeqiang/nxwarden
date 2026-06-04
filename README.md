@@ -54,22 +54,22 @@ Planned bucket:
 
 ```text
 Name: nxwarden-assets
-Binding: ASSETS
+Binding: NXWARDEN_ASSETS
 ```
 
 Current account state:
 
 ```text
-R2 is not enabled yet. Wrangler returns: Please enable R2 through the Cloudflare Dashboard. [code: 10042]
+Bucket created on 2026-06-04.
 ```
 
-After R2 is enabled in the Cloudflare Dashboard, create the bucket and copy the example binding into `wrangler.toml`:
+If the bucket ever needs to be recreated, use:
 
 ```bash
 npx wrangler r2 bucket create nxwarden-assets
 ```
 
-See `wrangler.r2.example.toml` for the binding block.
+The production binding is configured in `wrangler.toml`. See `wrangler.r2.example.toml` as a copyable reference.
 
 ## Cloudflare Pages
 
