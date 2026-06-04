@@ -416,6 +416,19 @@ h2 {
   font-size: 20px;
 }
 
+.contact-email {
+  width: fit-content;
+  display: inline-flex;
+  margin-top: 22px;
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.contact-email:hover {
+  color: var(--ink);
+}
+
 .contact-form {
   display: grid;
   gap: 16px;

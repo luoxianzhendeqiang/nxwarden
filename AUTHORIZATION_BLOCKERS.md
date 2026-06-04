@@ -1,6 +1,6 @@
 # Authorization Blockers
 
-This project is deployed and builds successfully, but a few account-side actions still need owner access.
+This project is deployed, builds successfully, and is pushed to GitHub. A few account-side actions still need owner access.
 
 ## Current Green State
 
@@ -9,9 +9,11 @@ This project is deployed and builds successfully, but a few account-side actions
 - Custom domains:
   - `https://nxwarden.com`
   - `https://www.nxwarden.com`
+- Contact email: `ceo@nxwarden.com`
 - Latest verified result: both custom domains return `200 OK`.
 - Local branch: `main`
 - Local commit: run `git log --oneline -1`
+- GitHub repository: `https://github.com/luoxianzhendeqiang/nxwarden`
 
 ## Supabase
 
@@ -40,26 +42,16 @@ The current public key is a publishable key and is safe for browser use. Do not 
 
 ## GitHub
 
-The local repository is initialized and committed, with remote set to:
+GitHub push is complete.
 
 ```text
 https://github.com/luoxianzhendeqiang/nxwarden.git
 ```
 
-Push is blocked because:
+GitHub rejected the private address `zy4628357@gmail.com`, so the pushed commit uses the account's noreply address:
 
-- No existing `nxwarden` repository was found for `luoxianzhendeqiang`.
-- Local GitHub HTTPS credentials are unavailable in unattended mode.
-- The available GitHub connector can read repositories and write files to an existing repository, but does not expose repository creation in this session.
-
-To finish GitHub:
-
-1. Create a GitHub repository named `nxwarden` under `luoxianzhendeqiang`.
-2. Authenticate Git locally with GitHub Credential Manager, GitHub CLI, or a scoped token.
-3. Push:
-
-```bash
-git push -u origin main
+```text
+Luo <200782421+luoxianzhendeqiang@users.noreply.github.com>
 ```
 
 ## Vercel

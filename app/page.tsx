@@ -153,6 +153,9 @@ export default function Home() {
             machines that already know how to move files, run containers, and
             keep watch.
           </p>
+          <a className="contact-email" href="mailto:ceo@nxwarden.com">
+            ceo@nxwarden.com
+          </a>
         </div>
         <ContactForm />
       </section>

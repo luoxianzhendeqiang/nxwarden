@@ -2,6 +2,8 @@
 
 NX Warden is a luminous personal company site for infrastructure systems, media automation, monitoring, and AI workflows.
 
+Contact: `ceo@nxwarden.com`
+
 ## Versions
 
 - Dynamic Next.js version: `app/`
