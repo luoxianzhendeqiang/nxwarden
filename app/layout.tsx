@@ -20,6 +20,10 @@ export const metadata: Metadata = {
     description:
       "A luminous company page for personal cloud systems, automation pipelines, monitoring, and AI workflows.",
     images: ["/assets/blackhole-hero.png"]
+  },
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/assets/nxwarden-icon.png"
   }
 };
 

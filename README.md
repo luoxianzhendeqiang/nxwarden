@@ -26,16 +26,25 @@ npm run build
 
 The exported site is written to `out/` and deployed to Cloudflare Pages.
 
-## Supabase
+## Cloudflare D1
 
-The public contact form writes to `public.site_submissions`.
+The public contact form writes to the Cloudflare D1 table `contact_submissions` through the Pages Function at `/api/contact`.
 
-1. Confirm the Supabase project URL in `.env` and `env.production`.
-2. Run `supabase/schema.sql` in the Supabase SQL editor.
-3. Keep service role keys out of this repository.
+Database:
 
-The app intentionally has no user authentication. Anonymous visitors can submit the form, but cannot read submissions.
-If the Supabase URL is unreachable, the form falls back to a friendly email prompt instead of exposing the raw browser fetch error.
+```text
+Name: nxwarden-db
+Binding: DB
+ID: e11978a6-ebc5-487e-847a-d5c99a4ab5cf
+```
+
+Initialize or update the schema:
+
+```bash
+npx wrangler d1 execute nxwarden-db --remote --file d1/schema.sql
+```
+
+The app intentionally has no user authentication. Anonymous visitors can submit the form, but cannot read submissions from the public site.
 
 ## Cloudflare Pages
 
@@ -44,6 +53,8 @@ Project: `nxwarden`
 ```bash
 npx wrangler pages deploy out --project-name nxwarden --branch main --commit-dirty=true
 ```
+
+The D1 binding is configured in `wrangler.toml`.
 
 Custom domain DNS records:
 

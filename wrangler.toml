@@ -1,3 +1,8 @@
 name = "nxwarden"
 pages_build_output_dir = "out"
 compatibility_date = "2026-06-03"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nxwarden-db"
+database_id = "e11978a6-ebc5-487e-847a-d5c99a4ab5cf"

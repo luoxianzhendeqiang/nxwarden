@@ -1,6 +1,6 @@
 # Authorization Blockers
 
-This project is deployed, builds successfully, and is pushed to GitHub. A few account-side actions still need owner access.
+This project is deployed, builds successfully, and is pushed to GitHub. No Cloudflare D1 blocker is currently open.
 
 ## Current Green State
 
@@ -11,37 +11,31 @@ This project is deployed, builds successfully, and is pushed to GitHub. A few ac
   - `https://www.nxwarden.com`
 - Contact email: `ceo@nxwarden.com`
 - Reserved login page: `https://nxwarden.com/login/`
+- D1 database: `nxwarden-db`
+- D1 binding: `DB`
+- Contact API: `https://nxwarden.com/api/contact` accepts `POST`
 - Latest verified result: both custom domains return `200 OK`.
 - Local branch: `main`
 - Local commit: run `git log --oneline -1`
 - GitHub repository: `https://github.com/luoxianzhendeqiang/nxwarden`
 
-## Supabase
+## Cloudflare D1
 
-Current `.env` and `env.production` point to:
+The Supabase intake path was replaced by Cloudflare Pages Functions + D1.
+
+Database:
 
 ```text
-NEXT_PUBLIC_SUPABASE_URL=https://hjkvkaybcdcnvxacibkp.supabase.co
+Name: nxwarden-db
+ID: e11978a6-ebc5-487e-847a-d5c99a4ab5cf
+Binding: DB
 ```
 
-That host currently returns `NXDOMAIN` from public DNS, including `1.1.1.1`.
+Verified:
 
-The website now catches that failure and shows a friendly fallback directing visitors to `ceo@nxwarden.com`, but database submissions cannot succeed until the project URL resolves.
-
-To finish Supabase:
-
-1. Open the Supabase project dashboard.
-2. Copy the exact Project URL from Project Settings.
-3. Replace `NEXT_PUBLIC_SUPABASE_URL` in `.env` and `env.production`.
-4. Run `supabase/schema.sql` in the Supabase SQL editor.
-5. Rebuild and redeploy:
-
-```bash
-npm run build
-npx wrangler pages deploy out --project-name nxwarden --branch main --commit-dirty=true
-```
-
-The current public key is a publishable key and is safe for browser use. Do not commit service role keys.
+- Local Pages dev POST returned `{ "ok": true }`.
+- Production POST to `https://nxwarden.com/api/contact` returned `{ "ok": true }`.
+- Remote D1 query confirmed the inserted row, then the test row was deleted.
 
 ## GitHub
 

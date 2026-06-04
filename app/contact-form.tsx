@@ -1,7 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
+import { FormEvent, useState } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -13,31 +12,19 @@ const projectTypes = [
   "AI workflow"
 ];
 
-function getSupabaseClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!url || !key) {
-    throw new Error("Supabase environment variables are missing.");
-  }
-
-  return createBrowserClient(url, key);
-}
-
 function getFriendlyError(message: string) {
-  if (/failed to fetch|network|fetch|load failed|timeout|dns/i.test(message)) {
-    return "The intake line cannot reach Supabase yet. Please email ceo@nxwarden.com while the database link is being verified.";
+  if (/D1 database binding is missing/i.test(message)) {
+    return "The D1 intake database is not bound yet. Please email ceo@nxwarden.com while the binding is being verified.";
   }
 
-  if (/permission|row-level|rls|policy|not exposed|schema cache/i.test(message)) {
-    return "The database is reachable, but the submissions table needs its Supabase SQL policy applied.";
+  if (/failed to fetch|network|fetch|load failed|timeout|dns/i.test(message)) {
+    return "The intake line is offline for a moment. Please email ceo@nxwarden.com instead.";
   }
 
   return message || "The signal line is offline for a moment. Please email ceo@nxwarden.com instead.";
 }
 
 export default function ContactForm() {
-  const supabase = useMemo(() => getSupabaseClient(), []);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
 
@@ -67,8 +54,18 @@ export default function ContactForm() {
     let errorMessage = "";
 
     try {
-      const { error } = await supabase.from("site_submissions").insert(payload);
-      errorMessage = error?.message ?? "";
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...payload,
+          website: String(data.get("website") ?? "")
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      errorMessage = response.ok ? "" : String(result.error ?? "Unable to send signal.");
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : "";
     }

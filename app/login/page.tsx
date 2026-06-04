@@ -7,7 +7,9 @@ export default function LoginPage() {
 
         <header className="nav" aria-label="Primary">
           <a className="brand" href="/" aria-label="NX Warden home">
-            <span className="brand-mark">NX</span>
+            <span className="brand-mark">
+              <img src="/assets/nxwarden-icon.png" alt="" />
+            </span>
             <span>NX Warden</span>
           </a>
           <nav className="nav-links">

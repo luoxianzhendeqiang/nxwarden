@@ -1,25 +1,66 @@
+import {
+  Activity,
+  ArrowUpRight,
+  Bot,
+  Clapperboard,
+  Gauge,
+  House,
+  Server,
+  Wrench
+} from "lucide-react";
 import ContactForm from "./contact-form";
 
 const systems = [
   {
     index: "01",
+    icon: Server,
     title: "Cloud Homebase",
     body: "Personal dashboards, service maps, reverse proxies, TLS, and uptime visibility."
   },
   {
     index: "02",
+    icon: Clapperboard,
     title: "Media Automation",
     body: "Download queues, OneDrive archives, filename cleanup, and Jellyfin-ready libraries."
   },
   {
     index: "03",
+    icon: Activity,
     title: "Monitoring Field",
     body: "Kuma, Komari, alerts, and simple rituals that keep VPS fleets understandable."
   },
   {
     index: "04",
+    icon: Bot,
     title: "AI Workflows",
     body: "Research, notes, lightweight tools, and repeatable workflows for fast decisions."
+  }
+];
+
+const serviceLinks = [
+  {
+    icon: House,
+    label: "Homepage",
+    href: "https://home1.54614614.xyz",
+    detail: "Service map"
+  },
+  {
+    icon: Clapperboard,
+    label: "Jellyfin",
+    href: "https://jellyfin.54614614.xyz",
+    detail: "Media library"
+  },
+  {
+    icon: Gauge,
+    label: "Status",
+    href: "https://kuma.54614614.xyz/status/xueer",
+    detail: "Uptime board"
+  },
+  {
+    icon: Wrench,
+    label: "Tools",
+    href: "https://tools.54614614.xyz",
+    detail: "Utility bench"
   }
 ];
 
@@ -32,7 +73,9 @@ export default function Home() {
 
         <header className="nav" aria-label="Primary">
           <a className="brand" href="#top" aria-label="NX Warden home">
-            <span className="brand-mark">NX</span>
+            <span className="brand-mark">
+              <img src="/assets/nxwarden-icon.png" alt="" />
+            </span>
             <span>NX Warden</span>
           </a>
           <nav className="nav-links">
@@ -93,13 +136,20 @@ export default function Home() {
         </div>
 
         <div className="system-grid">
-          {systems.map((system) => (
-            <article className="system-card" key={system.title}>
-              <span>{system.index}</span>
-              <h3>{system.title}</h3>
-              <p>{system.body}</p>
-            </article>
-          ))}
+          {systems.map((system) => {
+            const Icon = system.icon;
+
+            return (
+              <article className="system-card" key={system.title}>
+                <div className="card-signal">
+                  <span>{system.index}</span>
+                  <Icon aria-hidden="true" size={26} strokeWidth={1.8} />
+                </div>
+                <h3>{system.title}</h3>
+                <p>{system.body}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -138,10 +188,25 @@ export default function Home() {
           <h2 id="portal-title">Public edge in front. Private machines behind it.</h2>
         </div>
         <div className="portal-links" aria-label="Service links">
-          <a href="https://home1.54614614.xyz">Homepage</a>
-          <a href="https://jellyfin.54614614.xyz">Jellyfin</a>
-          <a href="https://kuma.54614614.xyz/status/xueer">Status</a>
-          <a href="https://tools.54614614.xyz">Tools</a>
+          {serviceLinks.map((service) => {
+            const Icon = service.icon;
+
+            return (
+              <a href={service.href} key={service.label}>
+                <span className="service-icon">
+                  <Icon aria-hidden="true" size={24} strokeWidth={1.9} />
+                </span>
+                <span className="service-copy">
+                  <strong>{service.label}</strong>
+                  <span>{service.detail}</span>
+                </span>
+                <span className="service-open">
+                  Open
+                  <ArrowUpRight aria-hidden="true" size={16} strokeWidth={2.2} />
+                </span>
+              </a>
+            );
+          })}
         </div>
       </section>
 

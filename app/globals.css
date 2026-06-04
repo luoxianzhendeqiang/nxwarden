@@ -94,11 +94,19 @@ main {
 .brand-mark {
   width: 38px;
   height: 38px;
-  display: grid;
-  place-items: center;
+  display: block;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  overflow: hidden;
+  background: #070706;
   box-shadow: inset 0 0 22px rgba(241, 199, 122, 0.13);
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .nav-links {
@@ -319,14 +327,25 @@ h2 {
     #0b0b0a;
 }
 
-.system-card span,
+.card-signal,
 .timeline span {
   display: block;
-  margin-bottom: 54px;
   color: var(--gold);
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.card-signal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 54px;
+}
+
+.card-signal svg {
+  color: var(--blue);
+  filter: drop-shadow(0 0 16px rgba(158, 216, 255, 0.22));
 }
 
 .system-card h3 {
@@ -372,24 +391,60 @@ h2 {
 
 .portal-links a {
   min-height: 76px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 16px;
   align-items: center;
-  justify-content: space-between;
   padding: 0 22px;
   background: rgba(255, 255, 255, 0.055);
-  font-size: 20px;
-  font-weight: 850;
 }
 
-.portal-links a::after {
-  content: "OPEN";
+.service-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245, 241, 232, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    rgba(0, 0, 0, 0.22);
+  color: var(--gold);
+}
+
+.service-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.service-copy strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.service-copy span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.service-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--blue);
   font-size: 11px;
   font-weight: 900;
+  text-transform: uppercase;
 }
 
 .portal-links a:hover {
   background: rgba(241, 199, 122, 0.12);
+}
+
+.portal-links a:hover .service-icon {
+  border-color: rgba(241, 199, 122, 0.45);
+  color: var(--ink);
 }
 
 .timeline {
@@ -660,8 +715,17 @@ textarea:focus {
     min-height: 210px;
   }
 
-  .system-card span {
+  .card-signal {
     margin-bottom: 32px;
+  }
+
+  .portal-links a {
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 86px;
+  }
+
+  .service-open {
+    grid-column: 2;
   }
 }
 
