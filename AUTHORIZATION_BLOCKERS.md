@@ -48,10 +48,10 @@ GitHub push is complete.
 https://github.com/luoxianzhendeqiang/nxwarden.git
 ```
 
-GitHub rejected the private address `zy4628357@gmail.com`, so the pushed commit uses the account's noreply address:
+GitHub email privacy is off and `ceo@nxwarden.com` is verified, so repository commits can use:
 
 ```text
-Luo <200782421+luoxianzhendeqiang@users.noreply.github.com>
+Luo <ceo@nxwarden.com>
 ```
 
 ## Vercel
