@@ -42,26 +42,37 @@ const serviceLinks = [
     icon: House,
     label: "Homepage",
     href: "https://home1.54614614.xyz",
-    detail: "Service map"
+    detail: "Service map",
+    status: "Public"
   },
   {
     icon: Clapperboard,
     label: "Jellyfin",
     href: "https://jellyfin.54614614.xyz",
-    detail: "Media library"
+    detail: "Media library",
+    status: "Private"
   },
   {
     icon: Gauge,
     label: "Status",
     href: "https://kuma.54614614.xyz/status/xueer",
-    detail: "Uptime board"
+    detail: "Uptime board",
+    status: "Monitored"
   },
   {
     icon: Wrench,
     label: "Tools",
     href: "https://tools.54614614.xyz",
-    detail: "Utility bench"
+    detail: "Utility bench",
+    status: "Experimental"
   }
+];
+
+const audienceSignals = [
+  "Scattered tools",
+  "Messy files",
+  "Half-running servers",
+  "No calm dashboard"
 ];
 
 export default function Home() {
@@ -83,7 +94,7 @@ export default function Home() {
             <a href="#work">Work</a>
             <a href="#contact">Contact</a>
             <a className="nav-login" href="/login/">
-              Login
+              Console
             </a>
           </nav>
         </header>
@@ -107,7 +118,7 @@ export default function Home() {
 
         <div className="orbit-panel panel-top">
           <span>black hole 03</span>
-          <strong>Company Website</strong>
+          <strong>Public Edge</strong>
           <p>A luminous homepage for work, systems, and useful experiments.</p>
         </div>
         <div className="orbit-panel panel-left">
@@ -182,6 +193,25 @@ export default function Home() {
         </ol>
       </section>
 
+      <section className="audience" aria-labelledby="audience-title">
+        <div className="audience-copy">
+          <p className="eyebrow">who it is for</p>
+          <h2 id="audience-title">
+            For people with useful systems that have outgrown memory.
+          </h2>
+          <p>
+            When tools scatter, files lose names, servers keep running without a
+            map, and automation lives in half-finished scripts, NX Warden turns
+            the pile into a quiet operating layer.
+          </p>
+        </div>
+        <div className="audience-signals" aria-label="Common symptoms">
+          {audienceSignals.map((signal) => (
+            <span key={signal}>{signal}</span>
+          ))}
+        </div>
+      </section>
+
       <section className="portal" aria-labelledby="portal-title">
         <div className="portal-copy">
           <p className="eyebrow">service constellation</p>
@@ -200,6 +230,7 @@ export default function Home() {
                   <strong>{service.label}</strong>
                   <span>{service.detail}</span>
                 </span>
+                <span className="service-status">{service.status}</span>
                 <span className="service-open">
                   Open
                   <ArrowUpRight aria-hidden="true" size={16} strokeWidth={2.2} />

@@ -17,7 +17,7 @@ export default function LoginPage() {
             <a href="/#work">Work</a>
             <a href="/#contact">Contact</a>
             <a className="nav-login active" href="/login/">
-              Login
+              Console
             </a>
           </nav>
         </header>
@@ -25,7 +25,7 @@ export default function LoginPage() {
         <div className="login-shell">
           <div className="login-copy">
             <p className="eyebrow">operator access</p>
-            <h1 id="login-title">LOGIN</h1>
+            <h1 id="login-title">CONSOLE</h1>
             <p className="lead">
               A quiet entry point for the private control room. Authentication
               can be connected after the public intake line is stable.
