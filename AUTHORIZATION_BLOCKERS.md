@@ -10,6 +10,7 @@ This project is deployed, builds successfully, and is pushed to GitHub. A few ac
   - `https://nxwarden.com`
   - `https://www.nxwarden.com`
 - Contact email: `ceo@nxwarden.com`
+- Reserved login page: `https://nxwarden.com/login/`
 - Latest verified result: both custom domains return `200 OK`.
 - Local branch: `main`
 - Local commit: run `git log --oneline -1`
@@ -24,6 +25,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://hjkvkaybcdcnvxacibkp.supabase.co
 ```
 
 That host currently returns `NXDOMAIN` from public DNS, including `1.1.1.1`.
+
+The website now catches that failure and shows a friendly fallback directing visitors to `ceo@nxwarden.com`, but database submissions cannot succeed until the project URL resolves.
 
 To finish Supabase:
 

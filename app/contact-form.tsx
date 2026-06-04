@@ -24,6 +24,18 @@ function getSupabaseClient() {
   return createBrowserClient(url, key);
 }
 
+function getFriendlyError(message: string) {
+  if (/failed to fetch|network|fetch|load failed|timeout|dns/i.test(message)) {
+    return "The intake line cannot reach Supabase yet. Please email ceo@nxwarden.com while the database link is being verified.";
+  }
+
+  if (/permission|row-level|rls|policy|not exposed|schema cache/i.test(message)) {
+    return "The database is reachable, but the submissions table needs its Supabase SQL policy applied.";
+  }
+
+  return message || "The signal line is offline for a moment. Please email ceo@nxwarden.com instead.";
+}
+
 export default function ContactForm() {
   const supabase = useMemo(() => getSupabaseClient(), []);
   const [status, setStatus] = useState<Status>("idle");
@@ -57,13 +69,13 @@ export default function ContactForm() {
     try {
       const { error } = await supabase.from("site_submissions").insert(payload);
       errorMessage = error?.message ?? "";
-    } catch {
-      errorMessage = "The signal line is offline for a moment. Please try again later.";
+    } catch (error) {
+      errorMessage = error instanceof Error ? error.message : "";
     }
 
     if (errorMessage) {
       setStatus("error");
-      setMessage(errorMessage);
+      setMessage(getFriendlyError(errorMessage));
       return;
     }
 
@@ -114,7 +126,11 @@ export default function ContactForm() {
         <button className="button primary" type="submit" disabled={status === "submitting"}>
           {status === "submitting" ? "Sending" : "Send signal"}
         </button>
-        {message ? <p className={`form-status ${status}`}>{message}</p> : null}
+        {message ? (
+          <p className={`form-status ${status}`} role={status === "error" ? "alert" : "status"}>
+            {message}
+          </p>
+        ) : null}
       </div>
     </form>
   );

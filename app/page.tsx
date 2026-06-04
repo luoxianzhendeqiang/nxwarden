@@ -39,6 +39,9 @@ export default function Home() {
             <a href="#systems">Systems</a>
             <a href="#work">Work</a>
             <a href="#contact">Contact</a>
+            <a className="nav-login" href="/login/">
+              Login
+            </a>
           </nav>
         </header>
 

@@ -9,6 +9,7 @@ Contact: `ceo@nxwarden.com`
 - Dynamic Next.js version: `app/`
 - Original static version kept for comparison: `index.html`, `styles.css`, `script.js`
 - Generated hero asset: `public/assets/blackhole-hero.png`
+- Reserved operator entry: `/login/`
 
 ## Local Development
 
@@ -34,6 +35,7 @@ The public contact form writes to `public.site_submissions`.
 3. Keep service role keys out of this repository.
 
 The app intentionally has no user authentication. Anonymous visitors can submit the form, but cannot read submissions.
+If the Supabase URL is unreachable, the form falls back to a friendly email prompt instead of exposing the raw browser fetch error.
 
 ## Cloudflare Pages
 

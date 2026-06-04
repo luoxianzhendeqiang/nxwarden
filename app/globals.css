@@ -103,6 +103,7 @@ main {
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: clamp(16px, 3vw, 36px);
   color: var(--muted);
   font-weight: 700;
@@ -110,6 +111,22 @@ main {
 
 .nav-links a:hover {
   color: var(--ink);
+}
+
+.nav-login {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid rgba(245, 241, 232, 0.25);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.nav-login:hover,
+.nav-login.active {
+  border-color: rgba(241, 199, 122, 0.5);
+  color: var(--ink);
+  background: rgba(241, 199, 122, 0.13);
 }
 
 .hero-copy {
@@ -496,8 +513,10 @@ textarea:focus {
 }
 
 .form-status {
+  max-width: 420px;
   margin: 0;
   font-size: 14px;
+  line-height: 1.45;
 }
 
 .form-status.success {
@@ -506,6 +525,46 @@ textarea:focus {
 
 .form-status.error {
   color: #ffb2a6;
+}
+
+.login-screen {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.login-shell {
+  min-height: calc(100svh - 82px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.96fr) minmax(340px, 0.54fr);
+  gap: clamp(34px, 7vw, 110px);
+  align-items: center;
+  padding: 4svh clamp(20px, 5vw, 92px) 10svh;
+}
+
+.login-copy h1 {
+  max-width: 620px;
+}
+
+.login-panel {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.login-panel .button {
+  width: fit-content;
+}
+
+.login-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 @media (max-width: 980px) {
@@ -563,7 +622,8 @@ textarea:focus {
   .section-head,
   .work,
   .portal,
-  .contact {
+  .contact,
+  .login-shell {
     grid-template-columns: 1fr;
   }
 
@@ -602,6 +662,31 @@ textarea:focus {
 
   .system-card span {
     margin-bottom: 32px;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 981px) {
+  .hero-copy {
+    padding-bottom: 8svh;
+  }
+
+  .panel-left {
+    display: none;
+  }
+
+  .panel-bottom {
+    bottom: 6svh;
+  }
+
+  .contact {
+    min-height: auto;
+    align-items: start;
+    padding-top: 70px;
+    padding-bottom: 70px;
+  }
+
+  .contact h2 {
+    font-size: clamp(46px, 5vw, 68px);
   }
 }
 
