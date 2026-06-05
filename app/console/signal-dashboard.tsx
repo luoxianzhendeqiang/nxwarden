@@ -68,16 +68,7 @@ type ApiTelemetry = {
 };
 
 type HealthPayload = {
-  bindings?: {
-    d1?: boolean;
-    ingestToken?: boolean;
-    kv?: boolean;
-    turnstile?: boolean;
-  };
-  security?: {
-    ingestRequiresTurnstile?: boolean;
-    turnstileMode?: string;
-  };
+  mode?: string;
   timestamp?: string;
 };
 
@@ -109,8 +100,8 @@ type TelemetryState = {
   lastUpdate: string;
   mode: "live" | "mock";
   nodes: NodeSignal[];
+  protectionLabel: string;
   trend: TrendPoint[];
-  turnstileMode: string;
 };
 
 const consoleTabs = [
@@ -216,8 +207,8 @@ const initialTelemetry: TelemetryState = {
   lastUpdate: "Just now",
   mode: "mock",
   nodes: mockNodes,
+  protectionLabel: "protected intake",
   trend: mockTrend,
-  turnstileMode: "test"
 };
 
 const pulseCards = [
@@ -246,7 +237,7 @@ const pulseCards = [
     icon: FileClock,
     label: "Telemetry Phase",
     value: "Phase 2",
-    body: "KV keeps latest heartbeat. D1 keeps structured history and system events.",
+    body: "Latest heartbeat and structured history stay available through the observation layer.",
     tone: "purple" as Tone
   }
 ];
@@ -268,10 +259,10 @@ const infrastructureNodes: MapNode[] = [
     endpoint: "nxwarden.pages.dev / nxwarden.com",
     icon: Cloud,
     id: "cloudflare-pages",
-    lastCheck: "Phase 2 deploy pending",
+    lastCheck: "Current public release recorded",
     name: "Cloudflare Pages",
     nextAction: "Use Pages plus Functions as the observation edge.",
-    riskNote: "Pages should receive public UI and API bindings, not machine-control secrets.",
+    riskNote: "Pages should receive public UI and observation endpoints, not machine-control secrets.",
     signal: "Edge deployment",
     status: "Serving",
     visibility: "Public"
@@ -352,7 +343,7 @@ const privateServices: MapNode[] = [
     visibility: "Private"
   },
   {
-    endpoint: "jellyfin.54614614.xyz",
+    endpoint: "Protected media endpoint",
     icon: MonitorCheck,
     id: "jellyfin",
     lastCheck: "Known reachable through public domain",
@@ -364,7 +355,7 @@ const privateServices: MapNode[] = [
     visibility: "Private"
   },
   {
-    endpoint: "Xue / Luo archive paths",
+    endpoint: "Protected archive storage",
     icon: Archive,
     id: "onedrive",
     lastCheck: "Archive policy still needs final retention decision",
@@ -376,7 +367,7 @@ const privateServices: MapNode[] = [
     visibility: "Private"
   },
   {
-    endpoint: "tgdl-bot.service",
+    endpoint: "Private automation worker",
     icon: Bot,
     id: "telegram-bot",
     lastCheck: "Download flow known",
@@ -412,8 +403,8 @@ const flows = [
   },
   {
     icon: Bot,
-    title: "Node heartbeat -> Worker -> KV latest -> D1 history",
-    detail: "Telemetry enters through a token and Turnstile protected endpoint, then becomes fast KV cache and structured D1 history.",
+    title: "Node heartbeat -> Observation edge -> Latest state -> History",
+    detail: "Telemetry enters through a protected intake and becomes a current status signal plus structured history.",
     signal: "Phase 2"
   },
   {
@@ -440,26 +431,26 @@ const risks = [
   {
     icon: Database,
     label: "Backup policy missing",
-    detail: "D1, runbooks, VPS config, and OneDrive retention need a simple backup policy.",
+    detail: "System history, runbooks, VPS config, and archive retention need a simple backup policy.",
     tone: "gold" as Tone
   },
   {
     icon: Archive,
     label: "OneDrive archive path",
-    detail: "Xue and Luo cleanup rules need a final naming and retention decision.",
+    detail: "Archive cleanup rules need a final naming and retention decision.",
     tone: "blue" as Tone
   },
   {
     icon: TerminalSquare,
-    label: "Computer Use unavailable",
-    detail: "Native pipe path is unreliable, so Playwright remains the visual fallback.",
+    label: "Browser automation optional",
+    detail: "Browser automation is currently unavailable and does not block observation workflows.",
     tone: "purple" as Tone
   }
 ];
 
 const decisionLogs = [
   "Decision: Keep console read-only until Cloudflare Access is wired.",
-  "Decision: Treat Computer Use as non-blocking.",
+  "Decision: Treat optional browser automation as non-blocking.",
   "Decision: Use Playwright as visual validation fallback.",
   "Decision: Build observation layer before control plane.",
   "Decision: Defer R2 media sync until signed URL and lifecycle rules exist."
@@ -487,23 +478,23 @@ const accessPosture = [
 const logs = [
   {
     icon: RadioTower,
-    label: "Latest deploy target",
-    value: "Cloudflare Pages production"
+    label: "Latest public release",
+    value: "Recorded"
   },
   {
     icon: Code2,
-    label: "Previous stable commit",
-    value: "73c9647"
+    label: "Previous stable release",
+    value: "Recorded"
   },
   {
     icon: CheckCircle2,
-    label: "Build check",
-    value: "npm run build required after Phase 2 upgrade"
+    label: "Release validation",
+    value: "Passed"
   },
   {
     icon: TerminalSquare,
-    label: "Computer Use",
-    value: "native pipe path unavailable"
+    label: "Browser automation",
+    value: "Optional / unavailable"
   }
 ];
 
@@ -618,9 +609,9 @@ function stateFromApi(
   if (!nodes.length) {
     return {
       ...initialTelemetry,
-      backendLabel: health.bindings?.d1 ? "live api / visual mock" : "mock",
+      backendLabel: health.mode === "live" ? "live api / visual mock" : "mock",
       lastUpdate: health.timestamp || initialTelemetry.lastUpdate,
-      turnstileMode: health.security?.turnstileMode || "unknown"
+      protectionLabel: "protected intake"
     };
   }
 
@@ -650,8 +641,8 @@ function stateFromApi(
     lastUpdate: health.timestamp || lastIngest,
     mode: "live",
     nodes,
-    trend,
-    turnstileMode: health.security?.turnstileMode || "unknown"
+    protectionLabel: "protected intake",
+    trend
   };
 }
 
@@ -866,8 +857,8 @@ export default function SignalDashboard() {
             <h2 id="signal-title">Observation layer, now reading edge telemetry.</h2>
           </div>
           <p>
-            This cockpit remains read-only. It watches Cloudflare Functions, D1,
-            KV, and node heartbeats without exposing a control surface.
+            This cockpit remains read-only. It watches public-safe status,
+            heartbeat, and history signals without exposing a control surface.
           </p>
         </div>
 
@@ -907,7 +898,7 @@ export default function SignalDashboard() {
               </span>
               <span>
                 <ShieldCheck aria-hidden="true" size={15} strokeWidth={2} />
-                Turnstile {telemetry.turnstileMode}
+                {telemetry.protectionLabel}
               </span>
               <span>
                 <Activity aria-hidden="true" size={15} strokeWidth={2} />
@@ -971,7 +962,7 @@ export default function SignalDashboard() {
             </div>
             <p className="table-note">
               Showing {stats.activeNodes} of {stats.configuredNodes} nodes. Data is
-              {telemetry.mode === "live" ? " from Cloudflare storage" : " visual mock data"}.
+              {telemetry.mode === "live" ? " from the observation backend" : " visual mock data"}.
             </p>
           </section>
 
@@ -993,11 +984,11 @@ export default function SignalDashboard() {
             <h3 id="recent-trail-title">Latest system events</h3>
             <div className="mission-list">
               {[
-                "Telemetry ingest stored in D1",
-                "KV latest heartbeat cache updated",
-                "API health check returned live",
+                "Telemetry signal accepted",
+                "Latest heartbeat state refreshed",
+                "Observation endpoint healthy",
                 "Nodes snapshot normalized",
-                "Cloudflare Pages serving Phase 2"
+                "Public observation release active"
               ].map((item, index) => (
                 <div className="mission-list-row" key={item}>
                   <Activity aria-hidden="true" size={15} strokeWidth={2} />
@@ -1097,8 +1088,8 @@ export default function SignalDashboard() {
               <h2>Phase 2 principles</h2>
             </div>
             <ul>
-              <li>D1 stores structured telemetry only.</li>
-              <li>KV stores latest heartbeat cache only.</li>
+              <li>Only small structured telemetry is retained.</li>
+              <li>Only the latest heartbeat state is cached.</li>
               <li>R2 media sync is intentionally deferred.</li>
               <li>No public file serving is enabled.</li>
               <li>No write actions exist in console.</li>
@@ -1241,11 +1232,11 @@ export default function SignalDashboard() {
           </div>
           <div className="timeline-list">
             {[
-              "GitHub push to main",
-              "npm run build passed",
-              "Cloudflare Pages production deployed",
-              "/console Phase 2 active",
-              "Computer Use unavailable"
+              "Latest source update recorded",
+              "Release validation passed",
+              "Production edge updated",
+              "Observation surface active",
+              "Browser automation optional / unavailable"
             ].map((item) => (
               <article className="timeline-item" key={item}>
                 <span className="timeline-dot">

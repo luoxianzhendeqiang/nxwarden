@@ -14,12 +14,19 @@ Phase 2 connects the public `/console/` observation layer to Cloudflare-native t
 
 ```text
 GET  /api/health
+GET  /api/health?verbose=1
 GET  /api/nodes
 GET  /api/telemetry/recent?limit=10
 POST /api/telemetry/ingest
 ```
 
 `POST /api/telemetry/ingest` requires both `INGEST_TOKEN` and a Cloudflare Turnstile token.
+
+The default health response is public-safe and only returns `ok`, `service`,
+`mode`, and `timestamp`. Detailed binding and security state is available from
+`/api/health?verbose=1` only when an internal bearer token or
+`X-Internal-Token` is supplied. The current fallback internal token is
+`INGEST_TOKEN`.
 
 `INGEST_TOKEN` can be supplied through either:
 
@@ -87,7 +94,10 @@ npx wrangler pages secret put TURNSTILE_SECRET_KEY --project-name nxwarden
 
 Do not commit real ingest tokens or Turnstile secrets to the repository or expose them in frontend code.
 
-For Phase 2 testing, the frontend falls back to Cloudflare's always-pass test sitekey. Replace `NEXT_PUBLIC_TURNSTILE_SITE_KEY` with a production widget sitekey when a real Turnstile widget is created in Cloudflare.
+For Phase 2 testing, the frontend falls back to Cloudflare's always-pass test
+sitekey. TODO before real public ingest: replace
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` with a matched
+production Turnstile widget key pair.
 
 ## Console Behavior
 

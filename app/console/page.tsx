@@ -65,6 +65,14 @@ export default function ConsolePage() {
         </aside>
       </section>
 
+      <aside className="public-observation-note" aria-label="Public observation layer notice">
+        <ShieldCheck aria-hidden="true" size={18} strokeWidth={2} />
+        <p>
+          This console shows public-safe system signals only. Secrets, internal
+          paths, and machine controls are not exposed.
+        </p>
+      </aside>
+
       <SignalDashboard />
     </main>
   );

@@ -1,6 +1,9 @@
 const TURNSTILE_VERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+// TODO: Replace the Phase 2 testing secret in Cloudflare Pages with a real
+// Turnstile widget secret before enabling production public ingestion.
+
 export function turnstileTokenFromBody(body, request) {
   return (
     String(body?.cf_turnstile_response || "").trim() ||

@@ -6,6 +6,7 @@ import {
   Gauge,
   House,
   Server,
+  TerminalSquare,
   Wrench
 } from "lucide-react";
 import ContactForm from "./contact-form";
@@ -97,6 +98,10 @@ export default function Home() {
               Console
             </a>
           </nav>
+          <a className="mobile-console-entry" href="/console/">
+            <TerminalSquare aria-hidden="true" size={16} strokeWidth={2.1} />
+            Console
+          </a>
         </header>
 
         <div className="hero-copy" id="top">

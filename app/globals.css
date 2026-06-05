@@ -137,6 +137,10 @@ main {
   background: rgba(241, 199, 122, 0.13);
 }
 
+.mobile-console-entry {
+  display: none;
+}
+
 .hero-copy {
   align-self: center;
   max-width: 760px;
@@ -754,6 +758,29 @@ textarea:focus {
   border-color: rgba(241, 199, 122, 0.48);
   color: var(--ink);
   background: rgba(241, 199, 122, 0.12);
+}
+
+.public-observation-note {
+  width: min(1120px, calc(100% - 40px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -36px auto 28px;
+  padding: 14px 16px;
+  border: 1px solid rgba(100, 170, 255, 0.24);
+  background: rgba(7, 13, 18, 0.76);
+  color: rgba(245, 241, 232, 0.72);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.public-observation-note svg {
+  flex: 0 0 auto;
+  color: var(--blue);
+}
+
+.public-observation-note p {
+  margin: 0;
 }
 
 .mission-header {
@@ -1678,9 +1705,9 @@ textarea:focus {
   position: relative;
   width: 100%;
   min-width: 0;
-  min-height: 96px;
+  min-height: 108px;
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
+  grid-template-columns: 42px minmax(0, 1fr);
   gap: 14px;
   align-items: center;
   padding: 16px;
@@ -1729,12 +1756,14 @@ textarea:focus {
 
 .map-node strong {
   display: block;
-  font-size: clamp(18px, 2vw, 24px);
+  overflow-wrap: anywhere;
+  font-size: 20px;
   line-height: 1.08;
 }
 
 .map-node em {
-  justify-self: end;
+  grid-column: 2;
+  justify-self: start;
   padding: 6px 8px;
   border: 1px solid rgba(169, 243, 192, 0.28);
   color: #a9f3c0;
@@ -1743,6 +1772,14 @@ textarea:focus {
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.trunk-node strong {
+  font-size: 22px;
+}
+
+.branch-node strong {
+  font-size: 18px;
 }
 
 .node-icon {
@@ -2229,6 +2266,17 @@ textarea:focus {
   margin-bottom: 12px;
 }
 
+@media (max-width: 1400px) and (min-width: 981px) {
+  .infrastructure-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .service-detail {
+    border-top: 1px solid rgba(245, 241, 232, 0.12);
+    border-left: 0;
+  }
+}
+
 @media (max-width: 980px) {
   .nav {
     height: 70px;
@@ -2236,6 +2284,20 @@ textarea:focus {
 
   .nav-links {
     display: none;
+  }
+
+  .mobile-console-entry {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 12px;
+    border: 1px solid rgba(241, 199, 122, 0.45);
+    background: rgba(12, 12, 10, 0.76);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 850;
+    text-transform: uppercase;
   }
 
   .hero-copy {
@@ -2393,6 +2455,12 @@ textarea:focus {
 
   .console-nav-links a {
     padding: 0 10px;
+  }
+
+  .public-observation-note {
+    width: calc(100% - 28px);
+    align-items: flex-start;
+    margin-top: -24px;
   }
 
   .console-tabs {

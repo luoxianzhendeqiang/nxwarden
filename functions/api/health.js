@@ -12,11 +12,38 @@ function json(data, init = {}) {
   });
 }
 
-export function onRequestGet({ env }) {
-  return json({
+function requestToken(request) {
+  const bearer = request.headers.get("Authorization") || "";
+
+  if (bearer.startsWith("Bearer ")) {
+    return bearer.slice(7).trim();
+  }
+
+  return request.headers.get("X-Internal-Token") || "";
+}
+
+export function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+  const verbose = url.searchParams.get("verbose") === "1";
+  const publicHealth = {
     ok: true,
     service: "nxwarden-telemetry",
     mode: "live",
+    timestamp: new Date().toISOString()
+  };
+
+  if (!verbose) {
+    return json(publicHealth);
+  }
+
+  const internalToken = env.INTERNAL_STATUS_TOKEN || env.INGEST_TOKEN;
+
+  if (!internalToken || requestToken(request) !== internalToken) {
+    return json({ error: "Unauthorized health detail request." }, { status: 401 });
+  }
+
+  return json({
+    ...publicHealth,
     bindings: {
       d1: Boolean(env.DB),
       kv: Boolean(env.NXWARDEN_TELEMETRY_KV || env.TELEMETRY_KV),
@@ -30,8 +57,7 @@ export function onRequestGet({ env }) {
           ? "production"
           : "missing",
       ingestRequiresTurnstile: true
-    },
-    timestamp: new Date().toISOString()
+    }
   });
 }
 

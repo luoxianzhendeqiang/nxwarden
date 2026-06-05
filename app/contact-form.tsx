@@ -13,6 +13,7 @@ const projectTypes = [
   "AI workflow"
 ];
 
+// TODO: Replace the official always-pass test key with the production widget key.
 const turnstileSiteKey =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
 

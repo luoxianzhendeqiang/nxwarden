@@ -87,11 +87,17 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "D1 database binding is missing." }, { status: 500 });
   }
 
+  const suppliedToken = requestToken(request);
+
+  if (!suppliedToken) {
+    return json({ error: "Unauthorized ingest request." }, { status: 401 });
+  }
+
   if (!env.INGEST_TOKEN) {
     return json({ error: "INGEST_TOKEN is not configured." }, { status: 503 });
   }
 
-  if (requestToken(request) !== env.INGEST_TOKEN) {
+  if (suppliedToken !== env.INGEST_TOKEN) {
     return json({ error: "Unauthorized ingest request." }, { status: 401 });
   }
 
