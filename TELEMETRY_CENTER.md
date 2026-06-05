@@ -1,12 +1,12 @@
 # NX Warden Telemetry Center
 
-Phase 1 connects the public `/console/` observation layer to Cloudflare-native telemetry primitives. It stays read-only from the browser and does not add login, machine control, R2 media sync, public file serving, or download automation.
+Phase 2 connects the public `/console/` observation layer to Cloudflare-native telemetry primitives and adds Turnstile verification to public write intake. It stays read-only from the browser and does not add login, machine control, R2 media sync, public file serving, or download automation.
 
 ## Architecture
 
 - Cloudflare Pages serves the public site and `/console/`.
 - Cloudflare Pages Functions provide the API under `/api/*`.
-- D1 stores structured telemetry history and audit logs.
+- D1 stores structured telemetry history, audit logs, and system events.
 - KV stores the latest node status cache for fast reads.
 - R2 is intentionally deferred to a later phase.
 
@@ -19,11 +19,22 @@ GET  /api/telemetry/recent?limit=10
 POST /api/telemetry/ingest
 ```
 
-`POST /api/telemetry/ingest` requires `INGEST_TOKEN` through either:
+`POST /api/telemetry/ingest` requires both `INGEST_TOKEN` and a Cloudflare Turnstile token.
+
+`INGEST_TOKEN` can be supplied through either:
 
 ```text
 Authorization: Bearer <token>
 X-Ingest-Token: <token>
+```
+
+Turnstile can be supplied through either:
+
+```text
+cf_turnstile_response
+cf-turnstile-response
+turnstile_token
+X-Turnstile-Token
 ```
 
 Example payload:
@@ -41,7 +52,8 @@ Example payload:
   "memory_percent": 43,
   "disk_percent": 14,
   "temperature_c": null,
-  "online_users": 4
+  "online_users": 4,
+  "cf_turnstile_response": "<turnstile-token>"
 }
 ```
 
@@ -67,25 +79,37 @@ Set the ingest secret for Cloudflare Pages:
 npx wrangler pages secret put INGEST_TOKEN --project-name nxwarden
 ```
 
-Do not commit real ingest tokens to the repository or expose them in frontend code.
+Set the Turnstile secret for Cloudflare Pages:
+
+```bash
+npx wrangler pages secret put TURNSTILE_SECRET_KEY --project-name nxwarden
+```
+
+Do not commit real ingest tokens or Turnstile secrets to the repository or expose them in frontend code.
+
+For Phase 2 testing, the frontend falls back to Cloudflare's always-pass test sitekey. Replace `NEXT_PUBLIC_TURNSTILE_SITE_KEY` with a production widget sitekey when a real Turnstile widget is created in Cloudflare.
 
 ## Console Behavior
 
-`/console/` fetches `/api/health`, `/api/nodes`, and `/api/telemetry/recent?limit=1`. If the API is unavailable, the UI falls back to mock telemetry and clearly shows `Backend mode: mock`.
+`/console/` fetches `/api/health`, `/api/nodes`, and `/api/telemetry/recent?limit=24`. If the API is unavailable or no real node data is present, the UI falls back to mock telemetry while preserving the read-only dashboard shell.
 
-The Telemetry Center card shows:
+The Phase 2 Telemetry Center shows:
 
-- latest node heartbeat
-- latest CPU / memory / disk signal
-- latest online users metric
+- active nodes
+- CPU / memory / disk averages
+- temperature and online users
 - last ingest time
 - backend mode: mock / live
+- 24-hour heartbeat trend
+- risk radar, system memory, and access posture
 
 ## Cost Guard
 
 - D1 stores small structured telemetry only.
+- KV stores latest heartbeat cache only.
 - R2 media sync is intentionally deferred.
 - No public file serving or download automation is enabled yet.
+- No write actions exist in `/console/`.
 
 ## R2 Phase 2 Guardrails
 

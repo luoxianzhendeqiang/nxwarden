@@ -1,3 +1,5 @@
+import { verifyTurnstile } from "./_shared/turnstile.js";
+
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8"
 };
@@ -35,6 +37,18 @@ export async function onRequestPost({ request, env }) {
 
   if (cleanText(body.website, 120)) {
     return json({ ok: true });
+  }
+
+  const turnstile = await verifyTurnstile({ body, env, request });
+
+  if (!turnstile.ok) {
+    return json(
+      {
+        error: turnstile.error,
+        details: turnstile.details || undefined
+      },
+      { status: turnstile.status }
+    );
   }
 
   const name = cleanText(body.name, 120);

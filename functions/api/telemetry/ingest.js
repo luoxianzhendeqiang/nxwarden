@@ -1,3 +1,5 @@
+import { verifyTurnstile } from "../_shared/turnstile.js";
+
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8"
 };
@@ -101,6 +103,18 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Invalid request body." }, { status: 400 });
   }
 
+  const turnstile = await verifyTurnstile({ body, env, request });
+
+  if (!turnstile.ok) {
+    return json(
+      {
+        error: turnstile.error,
+        details: turnstile.details || undefined
+      },
+      { status: turnstile.status }
+    );
+  }
+
   const nodeId = cleanNodeId(body.node_id || body.node?.id);
 
   if (!nodeId) {
@@ -171,6 +185,13 @@ export async function onRequestPost({ request, env }) {
      values (?, ?, ?)`
   )
     .bind("telemetry-ingest", "telemetry.received", `Telemetry received for ${nodeId}`)
+    .run();
+
+  await env.DB.prepare(
+    `insert into system_events (source, event_type, message, severity)
+     values (?, ?, ?, ?)`
+  )
+    .bind("telemetry-ingest", "node.heartbeat", `Heartbeat stored for ${nodeId}`, "info")
     .run();
 
   return json({

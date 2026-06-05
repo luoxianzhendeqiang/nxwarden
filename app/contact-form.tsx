@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Script from "next/script";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -12,6 +13,9 @@ const projectTypes = [
   "AI workflow"
 ];
 
+const turnstileSiteKey =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
+
 function getFriendlyError(message: string) {
   if (/D1 database binding is missing/i.test(message)) {
     return "The D1 intake database is not bound yet. Please email ceo@nxwarden.com while the binding is being verified.";
@@ -19,6 +23,10 @@ function getFriendlyError(message: string) {
 
   if (/failed to fetch|network|fetch|load failed|timeout|dns/i.test(message)) {
     return "The intake line is offline for a moment. Please email ceo@nxwarden.com instead.";
+  }
+
+  if (/turnstile|cloudflare/i.test(message)) {
+    return "The Cloudflare safety check did not complete. Please refresh and try once more.";
   }
 
   return message || "The signal line is offline for a moment. Please email ceo@nxwarden.com instead.";
@@ -48,7 +56,8 @@ export default function ContactForm() {
       email: String(data.get("email") ?? "").trim() || null,
       project_type: String(data.get("projectType") ?? "Company site"),
       message: String(data.get("message") ?? "").trim(),
-      source: "nxwarden.com"
+      source: "nxwarden.com",
+      cf_turnstile_response: String(data.get("cf-turnstile-response") ?? "")
     };
 
     let errorMessage = "";
@@ -73,62 +82,79 @@ export default function ContactForm() {
     if (errorMessage) {
       setStatus("error");
       setMessage(getFriendlyError(errorMessage));
+      (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
       return;
     }
 
     setStatus("success");
     setMessage("Received. I will read it soon.");
     form.reset();
+    (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
-      <div className="form-row">
+    <>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="afterInteractive"
+      />
+      <form className="contact-form" onSubmit={handleSubmit}>
+        <div className="form-row">
+          <label>
+            <span>Name</span>
+            <input name="name" type="text" autoComplete="name" required />
+          </label>
+          <label>
+            <span>Email</span>
+            <input name="email" type="email" autoComplete="email" />
+          </label>
+        </div>
+
         <label>
-          <span>Name</span>
-          <input name="name" type="text" autoComplete="name" required />
+          <span>Project</span>
+          <select name="projectType" defaultValue="Company site">
+            {projectTypes.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
+          </select>
         </label>
+
+        <label className="hidden-field" aria-hidden="true">
+          <span>Website</span>
+          <input name="website" tabIndex={-1} autoComplete="off" />
+        </label>
+
         <label>
-          <span>Email</span>
-          <input name="email" type="email" autoComplete="email" />
+          <span>Signal</span>
+          <textarea
+            name="message"
+            rows={5}
+            minLength={8}
+            maxLength={2000}
+            required
+          />
         </label>
-      </div>
 
-      <label>
-        <span>Project</span>
-        <select name="projectType" defaultValue="Company site">
-          {projectTypes.map((type) => (
-            <option key={type}>{type}</option>
-          ))}
-        </select>
-      </label>
+        <div className="turnstile-shell" aria-label="Cloudflare Turnstile challenge">
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+            data-theme="dark"
+            data-size="flexible"
+          />
+        </div>
 
-      <label className="hidden-field" aria-hidden="true">
-        <span>Website</span>
-        <input name="website" tabIndex={-1} autoComplete="off" />
-      </label>
-
-      <label>
-        <span>Signal</span>
-        <textarea
-          name="message"
-          rows={5}
-          minLength={8}
-          maxLength={2000}
-          required
-        />
-      </label>
-
-      <div className="form-footer">
-        <button className="button primary" type="submit" disabled={status === "submitting"}>
-          {status === "submitting" ? "Sending" : "Send signal"}
-        </button>
-        {message ? (
-          <p className={`form-status ${status}`} role={status === "error" ? "alert" : "status"}>
-            {message}
-          </p>
-        ) : null}
-      </div>
-    </form>
+        <div className="form-footer">
+          <button className="button primary" type="submit" disabled={status === "submitting"}>
+            {status === "submitting" ? "Sending" : "Send signal"}
+          </button>
+          {message ? (
+            <p className={`form-status ${status}`} role={status === "error" ? "alert" : "status"}>
+              {message}
+            </p>
+          ) : null}
+        </div>
+      </form>
+    </>
   );
 }

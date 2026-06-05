@@ -50,3 +50,15 @@ create table if not exists audit_logs (
 
 create index if not exists idx_audit_logs_created_at
 on audit_logs(created_at desc);
+
+create table if not exists system_events (
+  id integer primary key autoincrement,
+  source text not null,
+  event_type text not null,
+  message text not null,
+  severity text not null default 'info',
+  created_at text not null default (datetime('now'))
+);
+
+create index if not exists idx_system_events_created_at
+on system_events(created_at desc);

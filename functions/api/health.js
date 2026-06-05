@@ -20,7 +20,16 @@ export function onRequestGet({ env }) {
     bindings: {
       d1: Boolean(env.DB),
       kv: Boolean(env.NXWARDEN_TELEMETRY_KV || env.TELEMETRY_KV),
-      ingestToken: Boolean(env.INGEST_TOKEN)
+      ingestToken: Boolean(env.INGEST_TOKEN),
+      turnstile: Boolean(env.TURNSTILE_SECRET_KEY)
+    },
+    security: {
+      turnstileMode: String(env.TURNSTILE_SECRET_KEY || "").startsWith("1x000")
+        ? "test"
+        : env.TURNSTILE_SECRET_KEY
+          ? "production"
+          : "missing",
+      ingestRequiresTurnstile: true
     },
     timestamp: new Date().toISOString()
   });

@@ -30,11 +30,12 @@ The exported site is written to `out/` and deployed to Cloudflare Pages.
 
 The public contact form writes to the Cloudflare D1 table `contact_submissions` through the Pages Function at `/api/contact`.
 
-Telemetry Center Phase 1 also uses D1 for small structured observation records:
+Telemetry Center also uses D1 for small structured observation records:
 
 - `nodes`
 - `telemetry`
 - `audit_logs`
+- `system_events`
 
 Database:
 
@@ -65,7 +66,7 @@ GET  /api/telemetry/recent
 POST /api/telemetry/ingest
 ```
 
-The ingest route is protected by the server-side `INGEST_TOKEN` secret. See `TELEMETRY_CENTER.md` for the API contract, KV cache key format, and R2 Phase 2 guardrails.
+The ingest route is protected by the server-side `INGEST_TOKEN` secret and Cloudflare Turnstile verification. The public contact form also posts through Turnstile. See `TELEMETRY_CENTER.md` for the API contract, KV cache key format, and R2 Phase 2 guardrails.
 
 ## Cloudflare R2
 
