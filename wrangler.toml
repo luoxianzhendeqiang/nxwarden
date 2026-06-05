@@ -7,6 +7,10 @@ binding = "DB"
 database_name = "nxwarden-db"
 database_id = "e11978a6-ebc5-487e-847a-d5c99a4ab5cf"
 
+[[kv_namespaces]]
+binding = "NXWARDEN_TELEMETRY_KV"
+id = "888ce639a51d49cdaf9be8ed515c7ebb"
+
 [[r2_buckets]]
 binding = "NXWARDEN_ASSETS"
 bucket_name = "nxwarden-assets"

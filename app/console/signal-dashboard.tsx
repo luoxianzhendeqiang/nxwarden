@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity,
   Archive,
@@ -42,6 +42,17 @@ type MapNode = {
   visibility: string;
 };
 
+type TelemetrySnapshot = {
+  cpuPercent: number | null;
+  diskPercent: number | null;
+  heartbeat: string;
+  lastIngest: string;
+  memoryPercent: number | null;
+  mode: "live" | "mock";
+  nodeName: string;
+  onlineUsers: number | null;
+};
+
 const consoleTabs = [
   { id: "signal", label: "Signal" },
   { id: "map", label: "Map" },
@@ -75,8 +86,8 @@ const pulseCards = [
   {
     icon: FileClock,
     label: "Mission Trail",
-    value: "a0d9b4d",
-    body: "Signal Dashboard shipped before this Mission Control pass.",
+    value: "Phase 1",
+    body: "Telemetry Center now watches a Cloudflare-native backend with mock fallback.",
     tone: "gold" as Tone
   }
 ];
@@ -98,7 +109,7 @@ const infrastructureNodes: MapNode[] = [
     endpoint: "nxwarden.pages.dev / nxwarden.com",
     icon: Cloud,
     id: "cloudflare-pages",
-    lastCheck: "Latest production source: a0d9b4d",
+    lastCheck: "Telemetry Center deploy pending",
     name: "Cloudflare Pages",
     nextAction: "Continue using Pages as the static public edge until control needs appear.",
     riskNote: "Pages is a good fit for public UI. It should not receive machine-control secrets.",
@@ -211,7 +222,7 @@ const timeline = [
     icon: GitBranch,
     label: "GitHub push to main",
     time: "latest",
-    value: "Mission Control upgrade prepared from a0d9b4d"
+    value: "Telemetry Center Phase 1 prepared for Cloudflare Pages"
   },
   {
     icon: CheckCircle2,
@@ -288,7 +299,7 @@ const logs = [
   {
     icon: Code2,
     label: "Previous stable commit",
-    value: "a0d9b4d"
+    value: "f9f12dd"
   },
   {
     icon: CheckCircle2,
@@ -302,11 +313,113 @@ const logs = [
   }
 ];
 
+const mockTelemetry: TelemetrySnapshot = {
+  cpuPercent: 8,
+  diskPercent: 14,
+  heartbeat: "Mock heartbeat ready",
+  lastIngest: "Mock signal",
+  memoryPercent: 43,
+  mode: "mock",
+  nodeName: "Xueer observation node",
+  onlineUsers: 4
+};
+
+function formatPercent(value: number | null) {
+  return typeof value === "number" ? `${Math.round(value)}%` : "--";
+}
+
+function formatNumber(value: number | null) {
+  return typeof value === "number" ? String(value) : "--";
+}
+
+function formatTime(value: string) {
+  if (!value || value === "Mock signal") {
+    return value || "--";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
 export default function SignalDashboard() {
   const [selectedNodeId, setSelectedNodeId] = useState(infrastructureNodes[0].id);
+  const [telemetrySnapshot, setTelemetrySnapshot] =
+    useState<TelemetrySnapshot>(mockTelemetry);
   const selectedNode =
     mapNodes.find((node) => node.id === selectedNodeId) ?? infrastructureNodes[0];
   const SelectedIcon = selectedNode.icon;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadTelemetry() {
+      try {
+        const [healthResponse, nodesResponse, recentResponse] = await Promise.all([
+          fetch("/api/health", { signal: controller.signal }),
+          fetch("/api/nodes", { signal: controller.signal }),
+          fetch("/api/telemetry/recent?limit=1", { signal: controller.signal })
+        ]);
+
+        if (!healthResponse.ok || !nodesResponse.ok || !recentResponse.ok) {
+          throw new Error("Telemetry API unavailable.");
+        }
+
+        const [health, nodesPayload, recentPayload] = await Promise.all([
+          healthResponse.json(),
+          nodesResponse.json(),
+          recentResponse.json()
+        ]);
+        const latest =
+          recentPayload.telemetry?.[0] ||
+          nodesPayload.nodes?.find((node: { latest?: unknown }) => node.latest)?.latest ||
+          null;
+        const matchedNode = latest
+          ? nodesPayload.nodes?.find((node: { id: string }) => node.id === latest.node_id)
+          : null;
+
+        if (!latest) {
+          setTelemetrySnapshot({
+            cpuPercent: null,
+            diskPercent: null,
+            heartbeat: "Live backend ready, waiting for first ingest",
+            lastIngest: health.timestamp || "--",
+            memoryPercent: null,
+            mode: "live",
+            nodeName: "Awaiting telemetry node",
+            onlineUsers: null
+          });
+          return;
+        }
+
+        setTelemetrySnapshot({
+          cpuPercent: latest.cpu_percent ?? null,
+          diskPercent: latest.disk_percent ?? null,
+          heartbeat: "Latest signal received",
+          lastIngest: latest.created_at || health.timestamp || "--",
+          memoryPercent: latest.memory_percent ?? null,
+          mode: "live",
+          nodeName: latest.node_name || matchedNode?.name || latest.node_id,
+          onlineUsers: latest.online_users ?? null
+        });
+      } catch {
+        if (!controller.signal.aborted) {
+          setTelemetrySnapshot(mockTelemetry);
+        }
+      }
+    }
+
+    loadTelemetry();
+
+    return () => controller.abort();
+  }, []);
 
   return (
     <>
@@ -351,6 +464,50 @@ export default function SignalDashboard() {
             );
           })}
         </div>
+
+        <aside
+          className="console-panel telemetry-center"
+          aria-labelledby="telemetry-title"
+        >
+          <div className="panel-title">
+            <p className="eyebrow">telemetry center</p>
+            <h2 id="telemetry-title">Cloudflare-native observation backend.</h2>
+          </div>
+          <div className="telemetry-grid">
+            <article className="telemetry-card">
+              <span>latest node heartbeat</span>
+              <strong>{telemetrySnapshot.nodeName}</strong>
+              <p>{telemetrySnapshot.heartbeat}</p>
+            </article>
+            <article className="telemetry-card">
+              <span>cpu / memory / disk</span>
+              <strong>
+                {formatPercent(telemetrySnapshot.cpuPercent)} /{" "}
+                {formatPercent(telemetrySnapshot.memoryPercent)} /{" "}
+                {formatPercent(telemetrySnapshot.diskPercent)}
+              </strong>
+              <p>Small structured telemetry only.</p>
+            </article>
+            <article className="telemetry-card">
+              <span>online users</span>
+              <strong>{formatNumber(telemetrySnapshot.onlineUsers)}</strong>
+              <p>Latest presence signal from ingest cache.</p>
+            </article>
+            <article className="telemetry-card">
+              <span>last ingest</span>
+              <strong>{formatTime(telemetrySnapshot.lastIngest)}</strong>
+              <p>Backend mode: {telemetrySnapshot.mode}</p>
+            </article>
+          </div>
+          <div className="cost-guard">
+            <Database aria-hidden="true" size={20} strokeWidth={1.9} />
+            <p>
+              Cost Guard: D1 stores small structured telemetry only. R2 media
+              sync is intentionally deferred. No public file serving or download
+              automation is enabled yet.
+            </p>
+          </div>
+        </aside>
       </section>
 
       <section className="console-grid mission-grid" aria-label="Mission Control">

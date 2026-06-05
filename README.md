@@ -30,6 +30,12 @@ The exported site is written to `out/` and deployed to Cloudflare Pages.
 
 The public contact form writes to the Cloudflare D1 table `contact_submissions` through the Pages Function at `/api/contact`.
 
+Telemetry Center Phase 1 also uses D1 for small structured observation records:
+
+- `nodes`
+- `telemetry`
+- `audit_logs`
+
 Database:
 
 ```text
@@ -45,6 +51,21 @@ npx wrangler d1 execute nxwarden-db --remote --file d1/schema.sql
 ```
 
 The app intentionally has no user authentication. Anonymous visitors can submit the form, but cannot read submissions from the public site.
+
+## Telemetry Center
+
+`/console/` reads from Cloudflare Pages Functions and falls back to mock telemetry when the API is unavailable.
+
+Routes:
+
+```text
+GET  /api/health
+GET  /api/nodes
+GET  /api/telemetry/recent
+POST /api/telemetry/ingest
+```
+
+The ingest route is protected by the server-side `INGEST_TOKEN` secret. See `TELEMETRY_CENTER.md` for the API contract, KV cache key format, and R2 Phase 2 guardrails.
 
 ## Cloudflare R2
 
