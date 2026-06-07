@@ -25,7 +25,7 @@ function readLimit(request) {
 
 export async function onRequestGet({ request, env }) {
   if (!env.DB) {
-    return json({ error: "D1 database binding is missing." }, { status: 500 });
+    return json({ error: "Service temporarily unavailable." }, { status: 503 });
   }
 
   const limit = readLimit(request);

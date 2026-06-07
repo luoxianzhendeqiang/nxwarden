@@ -84,7 +84,7 @@ function requestToken(request) {
 
 export async function onRequestPost({ request, env }) {
   if (!env.DB) {
-    return json({ error: "D1 database binding is missing." }, { status: 500 });
+    return json({ error: "Service temporarily unavailable." }, { status: 503 });
   }
 
   const suppliedToken = requestToken(request);
@@ -94,11 +94,17 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (!env.INGEST_TOKEN) {
-    return json({ error: "INGEST_TOKEN is not configured." }, { status: 503 });
+    return json({ error: "Service temporarily unavailable." }, { status: 503 });
   }
 
   if (suppliedToken !== env.INGEST_TOKEN) {
     return json({ error: "Unauthorized ingest request." }, { status: 401 });
+  }
+
+  const contentLength = Number(request.headers.get("Content-Length") || 0);
+
+  if (Number.isFinite(contentLength) && contentLength > 16_384) {
+    return json({ error: "Request body is too large." }, { status: 413 });
   }
 
   let body;

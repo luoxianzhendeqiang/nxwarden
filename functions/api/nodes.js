@@ -32,7 +32,7 @@ async function latestForNode(kv, nodeId) {
 
 export async function onRequestGet({ env }) {
   if (!env.DB) {
-    return json({ error: "D1 database binding is missing." }, { status: 500 });
+    return json({ error: "Service temporarily unavailable." }, { status: 503 });
   }
 
   const kv = env.NXWARDEN_TELEMETRY_KV || env.TELEMETRY_KV || null;
@@ -52,10 +52,6 @@ export async function onRequestGet({ env }) {
   return json({
     ok: true,
     nodes,
-    backend: {
-      d1: true,
-      kv: Boolean(kv)
-    },
     timestamp: new Date().toISOString()
   });
 }

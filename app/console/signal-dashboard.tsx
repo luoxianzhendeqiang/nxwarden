@@ -6,11 +6,13 @@ import {
   Archive,
   Bot,
   CheckCircle2,
+  ChevronDown,
   CircleAlert,
   Cloud,
   Code2,
   Database,
   FileClock,
+  Filter,
   Gauge,
   GitBranch,
   Globe2,
@@ -18,28 +20,50 @@ import {
   KeyRound,
   Lock,
   MonitorCheck,
+  Play,
   RadioTower,
+  RotateCcw,
   Server,
+  Settings2,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
   TerminalSquare,
-  Wrench
+  Wrench,
+  X
 } from "lucide-react";
 
 type Tone = "green" | "gold" | "blue" | "red" | "purple";
 
 type MapNode = {
   endpoint: string;
+  health: "online" | "offline" | "attention";
   icon: typeof Globe2;
   id: string;
   lastCheck: string;
   name: string;
   nextAction: string;
+  provider: string;
+  region: string;
   riskNote: string;
   signal: string;
   status: string;
   visibility: string;
+};
+
+type MissionEvent = {
+  detail: string;
+  id: string;
+  label: string;
+  phase: string;
+  time: string;
+};
+
+type DecisionLog = {
+  detail: string;
+  id: string;
+  label: string;
+  phase: string;
 };
 
 type ApiNode = {
@@ -110,7 +134,8 @@ const consoleTabs = [
   { id: "loops", label: "Loops" },
   { id: "memory", label: "Memory" },
   { id: "gate", label: "Gate" },
-  { id: "telemetry", label: "Telemetry" }
+  { id: "telemetry", label: "Telemetry" },
+  { id: "control", label: "Control" }
 ];
 
 const mockNodes: NodeSignal[] = [
@@ -245,11 +270,14 @@ const pulseCards = [
 const infrastructureNodes: MapNode[] = [
   {
     endpoint: "nxwarden.com",
+    health: "online",
     icon: Globe2,
     id: "public-edge",
     lastCheck: "Production domain confirmed on Cloudflare Pages",
     name: "Public Edge",
     nextAction: "Keep this as the clean public surface for NX Warden.",
+    provider: "Cloudflare",
+    region: "Global",
     riskNote: "Public content is safe to expose; no control actions belong here.",
     signal: "Visitor-facing entry",
     status: "Online",
@@ -257,11 +285,14 @@ const infrastructureNodes: MapNode[] = [
   },
   {
     endpoint: "nxwarden.pages.dev / nxwarden.com",
+    health: "online",
     icon: Cloud,
     id: "cloudflare-pages",
     lastCheck: "Current public release recorded",
     name: "Cloudflare Pages",
     nextAction: "Use Pages plus Functions as the observation edge.",
+    provider: "Cloudflare",
+    region: "Global",
     riskNote: "Pages should receive public UI and observation endpoints, not machine-control secrets.",
     signal: "Edge deployment",
     status: "Serving",
@@ -269,11 +300,14 @@ const infrastructureNodes: MapNode[] = [
   },
   {
     endpoint: "Future Cloudflare Access boundary",
+    health: "attention",
     icon: ShieldCheck,
     id: "access-boundary",
     lastCheck: "Not wired by design",
     name: "Access Boundary",
     nextAction: "Create protected /control only after the observation layer is stable.",
+    provider: "Cloudflare",
+    region: "Global",
     riskNote: "Auth is not armed. Keep the current console read-only and harmless.",
     signal: "Safety gate",
     status: "Planned",
@@ -281,11 +315,14 @@ const infrastructureNodes: MapNode[] = [
   },
   {
     endpoint: "Private VPS, agents, media, scripts",
+    health: "online",
     icon: Server,
     id: "private-plane",
     lastCheck: "Represented as static topology plus telemetry signals",
     name: "Private Plane",
     nextAction: "Only heartbeat data should enter this public console.",
+    provider: "Mixed",
+    region: "Multi-region",
     riskNote: "Private services need Access before any future control plane is connected.",
     signal: "Sealed services",
     status: "Sealed",
@@ -296,11 +333,14 @@ const infrastructureNodes: MapNode[] = [
 const privateServices: MapNode[] = [
   {
     endpoint: "CloudCone nodes",
+    health: "online",
     icon: Cloud,
     id: "cloudcone",
     lastCheck: "Telemetry sample available",
     name: "CloudCone",
     nextAction: "Send only lightweight heartbeat data from VPS scripts.",
+    provider: "CloudCone",
+    region: "Hong Kong",
     riskNote: "Do not expose SSH, shell logs, or control actions.",
     signal: "VPS provider",
     status: "Observed",
@@ -308,11 +348,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "RackNerd / DC03 nodes",
+    health: "online",
     icon: Server,
     id: "racknerd",
     lastCheck: "Telemetry sample available",
     name: "RackNerd",
     nextAction: "Keep Telegram bot and AList behind current service rules.",
+    provider: "RackNerd",
+    region: "US / EU",
     riskNote: "Ingest should stay token and Turnstile protected.",
     signal: "VPS provider",
     status: "Observed",
@@ -320,11 +363,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "Komari monitor field",
+    health: "online",
     icon: Gauge,
     id: "komari",
     lastCheck: "Dashboard visual source",
     name: "KoMari",
     nextAction: "Map Komari data into normalized telemetry later.",
+    provider: "KoMari",
+    region: "Fleet",
     riskNote: "Public metric labels should stay bland and non-sensitive.",
     signal: "Fleet monitor",
     status: "Watching",
@@ -332,11 +378,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "sing-box / proxy nodes",
+    health: "online",
     icon: RadioTower,
     id: "sing-box",
     lastCheck: "No direct control wired",
     name: "Sing-box",
     nextAction: "Keep proxy traffic domains DNS-only when needed.",
+    provider: "Network",
+    region: "Multi-region",
     riskNote: "Never expose live proxy credentials in this console.",
     signal: "Network layer",
     status: "Sealed",
@@ -344,11 +393,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "Protected media endpoint",
+    health: "attention",
     icon: MonitorCheck,
     id: "jellyfin",
     lastCheck: "Known reachable through public domain",
     name: "Jellyfin",
     nextAction: "Confirm Access rules before exposing deeper controls.",
+    provider: "Self-hosted",
+    region: "Xueer",
     riskNote: "OneDrive mount should stay read-only for library scans.",
     signal: "Media library",
     status: "Protected",
@@ -356,11 +408,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "Protected archive storage",
+    health: "attention",
     icon: Archive,
     id: "onedrive",
     lastCheck: "Archive policy still needs final retention decision",
     name: "OneDrive",
     nextAction: "Confirm cleanup and retention before R2 Phase 2.",
+    provider: "Microsoft",
+    region: "Global",
     riskNote: "R2 media sync stays deferred and private by default.",
     signal: "Storage flow",
     status: "Connected",
@@ -368,11 +423,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "Private automation worker",
+    health: "online",
     icon: Bot,
     id: "telegram-bot",
     lastCheck: "Download flow known",
     name: "Telegram Bot",
     nextAction: "Expose only heartbeat, not task controls.",
+    provider: "Scripts",
+    region: "DC03",
     riskNote: "Downloads and cache deletion should not be controlled from public UI.",
     signal: "Automation loop",
     status: "Watching",
@@ -380,11 +438,14 @@ const privateServices: MapNode[] = [
   },
   {
     endpoint: "organizers / sync scripts",
+    health: "online",
     icon: Code2,
     id: "scripts",
     lastCheck: "Read-only map item",
     name: "Scripts",
     nextAction: "Promote scripts into a protected control plane later.",
+    provider: "Internal",
+    region: "Multi-region",
     riskNote: "No write actions are armed in Phase 2.",
     signal: "Automation layer",
     status: "Mapped",
@@ -420,41 +481,111 @@ const risks = [
     icon: KeyRound,
     label: "Auth not wired",
     detail: "Console is public and read-only until Cloudflare Access is chosen.",
+    nodeIds: ["access-boundary"],
     tone: "gold" as Tone
   },
   {
     icon: ShieldAlert,
     label: "Private services exposed?",
     detail: "Review Access rules before adding any control-plane route.",
+    nodeIds: ["private-plane", "jellyfin"],
     tone: "red" as Tone
   },
   {
     icon: Database,
     label: "Backup policy missing",
     detail: "System history, runbooks, VPS config, and archive retention need a simple backup policy.",
+    nodeIds: ["scripts"],
     tone: "gold" as Tone
   },
   {
     icon: Archive,
     label: "OneDrive archive path",
     detail: "Archive cleanup rules need a final naming and retention decision.",
+    nodeIds: ["onedrive"],
     tone: "blue" as Tone
   },
   {
     icon: TerminalSquare,
     label: "Browser automation optional",
     detail: "Browser automation is currently unavailable and does not block observation workflows.",
+    nodeIds: [],
     tone: "purple" as Tone
   }
 ];
 
-const decisionLogs = [
-  "Decision: Keep console read-only until Cloudflare Access is wired.",
-  "Decision: Treat optional browser automation as non-blocking.",
-  "Decision: Use Playwright as visual validation fallback.",
-  "Decision: Build observation layer before control plane.",
-  "Decision: Defer R2 media sync until signed URL and lifecycle rules exist."
+const decisionLogs: DecisionLog[] = [
+  {
+    detail: "The public console can observe signals, but every real command stays behind a future Access policy and explicit authorization model.",
+    id: "read-only",
+    label: "Keep console read-only until Cloudflare Access is wired.",
+    phase: "phase 2 / safety"
+  },
+  {
+    detail: "Repository edits, builds, deployment checks, and browser verification remain sufficient even when optional desktop automation is unavailable.",
+    id: "automation-optional",
+    label: "Treat optional browser automation as non-blocking.",
+    phase: "phase 2 / workflow"
+  },
+  {
+    detail: "Desktop and mobile screenshots are part of release validation so layout regressions are caught before production.",
+    id: "visual-validation",
+    label: "Use browser checks as the visual validation fallback.",
+    phase: "phase 2 / quality"
+  },
+  {
+    detail: "Signals and system memory must become trustworthy before any action endpoint can be armed.",
+    id: "observe-first",
+    label: "Build observation layer before control plane.",
+    phase: "phase 3 / boundary"
+  },
+  {
+    detail: "Future object storage requires private buckets, signed URLs, lifecycle cleanup, upload caps, and no public listings.",
+    id: "defer-r2",
+    label: "Defer R2 media sync until signed URL and lifecycle rules exist.",
+    phase: "future / storage"
+  }
 ];
+
+const missionEvents: MissionEvent[] = [
+  {
+    detail: "The latest source update reached the production branch after local build validation.",
+    id: "source-update",
+    label: "Latest source update recorded",
+    phase: "phase 2",
+    time: "release trail"
+  },
+  {
+    detail: "Static export and Pages Functions compiled without TypeScript or route errors.",
+    id: "release-validation",
+    label: "Release validation passed",
+    phase: "phase 2",
+    time: "build gate"
+  },
+  {
+    detail: "Cloudflare Pages received the current public observation surface.",
+    id: "edge-updated",
+    label: "Production edge updated",
+    phase: "phase 2",
+    time: "edge deploy"
+  },
+  {
+    detail: "Signal, Map, Loops, Memory, Gate, Telemetry, and the unarmed Control shell are available.",
+    id: "surface-active",
+    label: "Observation surface active",
+    phase: "phase 3",
+    time: "mission state"
+  },
+  {
+    detail: "Optional browser automation does not block builds, verification, deployment, or telemetry reads.",
+    id: "browser-optional",
+    label: "Browser automation optional / unavailable",
+    phase: "phase 2",
+    time: "known limit"
+  }
+];
+
+const alertNodeIds = new Set(risks.flatMap((risk) => risk.nodeIds));
 
 const accessPosture = [
   {
@@ -734,9 +865,33 @@ function HeartbeatTrend({ trend }: { trend: TrendPoint[] }) {
 
 export default function SignalDashboard() {
   const [selectedNodeId, setSelectedNodeId] = useState(infrastructureNodes[0].id);
+  const [providerFilter, setProviderFilter] = useState("all");
+  const [regionFilter, setRegionFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [telemetry, setTelemetry] = useState<TelemetryState>(initialTelemetry);
   const selectedNode =
     mapNodes.find((node) => node.id === selectedNodeId) ?? infrastructureNodes[0];
+  const selectedEvent =
+    missionEvents.find((event) => event.id === selectedEventId) ?? null;
+  const providerOptions = useMemo(
+    () => Array.from(new Set(privateServices.map((node) => node.provider))).sort(),
+    []
+  );
+  const regionOptions = useMemo(
+    () => Array.from(new Set(privateServices.map((node) => node.region))).sort(),
+    []
+  );
+  const filteredPrivateServices = useMemo(
+    () =>
+      privateServices.filter(
+        (node) =>
+          (providerFilter === "all" || node.provider === providerFilter) &&
+          (regionFilter === "all" || node.region === regionFilter) &&
+          (statusFilter === "all" || node.health === statusFilter)
+      ),
+    [providerFilter, regionFilter, statusFilter]
+  );
   const SelectedIcon = selectedNode.icon;
 
   useEffect(() => {
@@ -1027,11 +1182,11 @@ export default function SignalDashboard() {
             </div>
             <h3 id="system-memory-title">Decision log</h3>
             <div className="mission-list">
-              {decisionLogs.slice(0, 4).map((decision, index) => (
-                <div className="mission-list-row" key={decision}>
+              {decisionLogs.slice(0, 4).map((decision) => (
+                <div className="mission-list-row" key={decision.id}>
                   <Sparkles aria-hidden="true" size={15} strokeWidth={2} />
-                  <span>{decision}</span>
-                  <em>{`phase2 / ${index + 1}`}</em>
+                  <span>{decision.label}</span>
+                  <em>{decision.phase}</em>
                 </div>
               ))}
             </div>
@@ -1105,6 +1260,67 @@ export default function SignalDashboard() {
             <p className="eyebrow">map</p>
             <h2>Infrastructure Map</h2>
           </div>
+          <div className="map-filters" aria-label="Infrastructure filters">
+            <span className="filter-title">
+              <Filter aria-hidden="true" size={16} strokeWidth={2} />
+              Signal filters
+            </span>
+            <label>
+              <span>Provider</span>
+              <select
+                aria-label="Filter map by provider"
+                onChange={(event) => setProviderFilter(event.target.value)}
+                value={providerFilter}
+              >
+                <option value="all">All providers</option>
+                {providerOptions.map((provider) => (
+                  <option key={provider} value={provider}>
+                    {provider}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>Region</span>
+              <select
+                aria-label="Filter map by region"
+                onChange={(event) => setRegionFilter(event.target.value)}
+                value={regionFilter}
+              >
+                <option value="all">All regions</option>
+                {regionOptions.map((region) => (
+                  <option key={region} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>Status</span>
+              <select
+                aria-label="Filter map by status"
+                onChange={(event) => setStatusFilter(event.target.value)}
+                value={statusFilter}
+              >
+                <option value="all">All signals</option>
+                <option value="online">Online</option>
+                <option value="attention">Attention</option>
+                <option value="offline">Offline</option>
+              </select>
+            </label>
+            <button
+              className="filter-reset"
+              onClick={() => {
+                setProviderFilter("all");
+                setRegionFilter("all");
+                setStatusFilter("all");
+              }}
+              type="button"
+            >
+              <RotateCcw aria-hidden="true" size={15} strokeWidth={2} />
+              Reset
+            </button>
+          </div>
           <div className="infrastructure-shell">
             <div className="infrastructure-map" aria-label="Connected infrastructure nodes">
               <div className="map-spine" aria-hidden="true" />
@@ -1116,7 +1332,7 @@ export default function SignalDashboard() {
                   return (
                     <button
                       aria-pressed={isSelected}
-                      className={`map-node trunk-node${isSelected ? " active" : ""}`}
+                      className={`map-node trunk-node health-${node.health}${isSelected ? " active" : ""}${alertNodeIds.has(node.id) ? " has-alert" : ""}`}
                       key={node.id}
                       onClick={() => setSelectedNodeId(node.id)}
                       type="button"
@@ -1129,20 +1345,23 @@ export default function SignalDashboard() {
                         <strong>{node.name}</strong>
                       </span>
                       <em>{node.status}</em>
+                      {alertNodeIds.has(node.id) ? (
+                        <span className="node-alert">Risk signal</span>
+                      ) : null}
                     </button>
                   );
                 })}
               </div>
 
               <div className="private-branches" aria-label="Private plane branches">
-                {privateServices.map((service) => {
+                {filteredPrivateServices.map((service) => {
                   const Icon = service.icon;
                   const isSelected = service.id === selectedNode.id;
 
                   return (
                     <button
                       aria-pressed={isSelected}
-                      className={`map-node branch-node${isSelected ? " active" : ""}`}
+                      className={`map-node branch-node health-${service.health}${isSelected ? " active" : ""}${alertNodeIds.has(service.id) ? " has-alert" : ""}`}
                       key={service.id}
                       onClick={() => setSelectedNodeId(service.id)}
                       type="button"
@@ -1156,9 +1375,17 @@ export default function SignalDashboard() {
                         <strong>{service.name}</strong>
                       </span>
                       <em>{service.status}</em>
+                      {alertNodeIds.has(service.id) ? (
+                        <span className="node-alert">Risk signal</span>
+                      ) : null}
                     </button>
                   );
                 })}
+                {!filteredPrivateServices.length ? (
+                  <div className="map-empty">
+                    No nodes match this signal filter.
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -1231,22 +1458,21 @@ export default function SignalDashboard() {
             <h2>Recent mission trail</h2>
           </div>
           <div className="timeline-list">
-            {[
-              "Latest source update recorded",
-              "Release validation passed",
-              "Production edge updated",
-              "Observation surface active",
-              "Browser automation optional / unavailable"
-            ].map((item) => (
-              <article className="timeline-item" key={item}>
+            {missionEvents.map((event) => (
+              <article className="timeline-item" key={event.id}>
                 <span className="timeline-dot">
                   <CheckCircle2 aria-hidden="true" size={17} strokeWidth={2} />
                 </span>
-                <div>
-                  <span>phase 2</span>
-                  <strong>{item}</strong>
-                  <p>Observation layer remains public and read-only.</p>
-                </div>
+                <button
+                  aria-label={`Open details for ${event.label}`}
+                  onClick={() => setSelectedEventId(event.id)}
+                  type="button"
+                >
+                  <span>{event.phase}</span>
+                  <strong>{event.label}</strong>
+                  <p>{event.detail}</p>
+                  <em>{event.time}</em>
+                </button>
               </article>
             ))}
           </div>
@@ -1266,6 +1492,14 @@ export default function SignalDashboard() {
                   <Icon aria-hidden="true" size={20} strokeWidth={1.9} />
                   <strong>{risk.label}</strong>
                   <p>{risk.detail}</p>
+                  {risk.nodeIds.length ? (
+                    <a
+                      href="#map"
+                      onClick={() => setSelectedNodeId(risk.nodeIds[0])}
+                    >
+                      Focus signal
+                    </a>
+                  ) : null}
                 </article>
               );
             })}
@@ -1280,11 +1514,18 @@ export default function SignalDashboard() {
           <div>
             <p className="eyebrow">system memory</p>
             <h2 id="memory-title">Black-box decision log.</h2>
-            <ol>
+            <div className="decision-stack">
               {decisionLogs.map((decision) => (
-                <li key={decision}>{decision}</li>
+                <details key={decision.id}>
+                  <summary>
+                    <span>{decision.label}</span>
+                    <ChevronDown aria-hidden="true" size={16} strokeWidth={2} />
+                  </summary>
+                  <p>{decision.detail}</p>
+                  <em>{decision.phase}</em>
+                </details>
               ))}
-            </ol>
+            </div>
           </div>
         </aside>
 
@@ -1325,6 +1566,74 @@ export default function SignalDashboard() {
           <Lock aria-hidden="true" size={18} strokeWidth={2.1} />
         </aside>
 
+        <section
+          className="console-panel control-panel"
+          id="control"
+          aria-labelledby="control-title"
+        >
+          <div className="control-heading">
+            <div className="panel-title">
+              <p className="eyebrow">control / phase 3 preview</p>
+              <h2 id="control-title">Interactive shell, deliberately unarmed.</h2>
+            </div>
+            <span className="control-lock-state">
+              <Lock aria-hidden="true" size={15} strokeWidth={2} />
+              Access + mTLS required before arming
+            </span>
+          </div>
+          <p className="control-intro">
+            These controls define the future command surface without sending,
+            storing, or executing a machine action. The Worker placeholder always
+            returns a locked response.
+          </p>
+          <div className="control-node-grid">
+            {telemetry.nodes.map((node) => (
+              <article className="control-node-card" key={node.id}>
+                <div className="control-node-head">
+                  <span className="status-dot heartbeat-dot" aria-hidden="true" />
+                  <div>
+                    <strong>{node.name}</strong>
+                    <span>{node.provider} / {node.region}</span>
+                  </div>
+                  <em>Read only</em>
+                </div>
+                <div className="control-metrics">
+                  <span>CPU {percent(node.cpu)}</span>
+                  <span>MEM {percent(node.memory)}</span>
+                  <span>DISK {percent(node.disk)}</span>
+                </div>
+                <div className="control-actions" aria-label={`Mock actions for ${node.name}`}>
+                  <button
+                    disabled
+                    title="Mock only. Requires Cloudflare Access, mTLS, authorization, and an armed command worker."
+                    type="button"
+                  >
+                    <RotateCcw aria-hidden="true" size={16} strokeWidth={2} />
+                    Restart service
+                  </button>
+                  <button
+                    disabled
+                    title="Mock only. No automation script is connected to the public console."
+                    type="button"
+                  >
+                    <Play aria-hidden="true" size={16} strokeWidth={2} />
+                    Trigger automation
+                  </button>
+                  <button
+                    disabled
+                    title="Mock only. Configuration writes are not implemented."
+                    type="button"
+                  >
+                    <Settings2 aria-hidden="true" size={16} strokeWidth={2} />
+                    Update configuration
+                  </button>
+                </div>
+                <code>/api/node/{node.id}/action</code>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <aside className="console-panel layer-map" aria-label="NX Warden layers">
           <CircleAlert aria-hidden="true" size={24} strokeWidth={1.9} />
           <div>
@@ -1346,6 +1655,43 @@ export default function SignalDashboard() {
           </div>
         </aside>
       </section>
+
+      {selectedEvent ? (
+        <div className="event-modal-backdrop" role="presentation">
+          <section
+            aria-labelledby="event-modal-title"
+            aria-modal="true"
+            className="event-modal"
+            role="dialog"
+          >
+            <button
+              aria-label="Close event details"
+              className="event-modal-close"
+              onClick={() => setSelectedEventId(null)}
+              type="button"
+            >
+              <X aria-hidden="true" size={18} strokeWidth={2} />
+            </button>
+            <p className="eyebrow">mission trail / {selectedEvent.phase}</p>
+            <h2 id="event-modal-title">{selectedEvent.label}</h2>
+            <p>{selectedEvent.detail}</p>
+            <dl>
+              <div>
+                <dt>State</dt>
+                <dd>Recorded</dd>
+              </div>
+              <div>
+                <dt>Marker</dt>
+                <dd>{selectedEvent.time}</dd>
+              </div>
+              <div>
+                <dt>Control effect</dt>
+                <dd>None / observation only</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+      ) : null}
     </>
   );
 }
