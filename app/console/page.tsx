@@ -29,13 +29,17 @@ export default function ConsolePage() {
 
       <section className="mission-header" aria-labelledby="mission-title">
         <div className="mission-copy">
-          <p className="eyebrow">personal infrastructure os</p>
-          <h1 id="mission-title">NX WARDEN / MISSION CONTROL</h1>
+          <p className="eyebrow">public-safe operations demo</p>
+          <h1 aria-label="NX WARDEN / MISSION CONTROL" id="mission-title">
+            <span className="title-line">NX WARDEN /</span>
+            <span className="title-line">MISSION</span>
+            <span className="title-line">CONTROL</span>
+          </h1>
           <div className="mission-lines" aria-label="Mission state">
-            <span>Observation layer active.</span>
+            <span>Read-only operations dashboard active.</span>
             <span>No write actions armed.</span>
             <span>Public edge online.</span>
-            <span>Private plane sealed.</span>
+            <span>Private details sealed.</span>
           </div>
         </div>
 
@@ -69,7 +73,7 @@ export default function ConsolePage() {
         <ShieldCheck aria-hidden="true" size={18} strokeWidth={2} />
         <p>
           This console shows public-safe system signals only. Secrets, internal
-          paths, and machine controls are not exposed.
+          paths, private configurations, and machine controls are not exposed.
         </p>
       </aside>
 

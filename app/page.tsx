@@ -1,79 +1,93 @@
 import {
-  Activity,
-  ArrowUpRight,
-  Bot,
-  Clapperboard,
-  Gauge,
-  House,
-  Server,
-  TerminalSquare,
-  Wrench
+  ArrowRight,
+  BarChart3,
+  CheckCircle2,
+  ClipboardList,
+  Cloud,
+  FileText,
+  Globe2,
+  LayoutDashboard,
+  Mail,
+  ShieldCheck,
+  Workflow
 } from "lucide-react";
 import ContactForm from "./contact-form";
+import SiteNav from "./site-nav";
 
-const systems = [
+const services = [
   {
     index: "01",
-    icon: Server,
-    title: "Cloud Homebase",
-    body: "Personal dashboards, service maps, reverse proxies, TLS, and uptime visibility."
+    icon: Cloud,
+    title: "Cloud Infrastructure Setup",
+    body: "Domains, edge hosting, secure application paths, uptime checks, and clean handoff notes."
   },
   {
     index: "02",
-    icon: Clapperboard,
-    title: "Media Automation",
-    body: "Download queues, OneDrive archives, filename cleanup, and Jellyfin-ready libraries."
+    icon: Workflow,
+    title: "Automation Workflow Design",
+    body: "Repeatable intake, publishing, file organization, reporting, and operations routines."
   },
   {
     index: "03",
-    icon: Activity,
-    title: "Monitoring Field",
-    body: "Kuma, Komari, alerts, and simple rituals that keep VPS fleets understandable."
+    icon: LayoutDashboard,
+    title: "Internal Dashboards",
+    body: "Read-only status views that help small teams understand services, tasks, risks, and history."
   },
   {
     index: "04",
-    icon: Bot,
-    title: "AI Workflows",
-    body: "Research, notes, lightweight tools, and repeatable workflows for fast decisions."
+    icon: ClipboardList,
+    title: "Documentation & Runbooks",
+    body: "Plain-language operating notes so useful systems can be maintained after launch."
   }
 ];
 
-const serviceLinks = [
+const workSteps = [
   {
-    icon: House,
-    label: "Homepage",
-    href: "https://home1.54614614.xyz",
-    detail: "Service map",
-    status: "Public"
+    label: "Scope",
+    text: "Turn a scattered request into a short, reviewable plan with boundaries and expected outcomes."
   },
   {
-    icon: Clapperboard,
-    label: "Jellyfin",
-    href: "https://jellyfin.54614614.xyz",
-    detail: "Media library",
-    status: "Private"
+    label: "Build",
+    text: "Create the website, workflow, dashboard, or operations surface with practical defaults."
   },
   {
-    icon: Gauge,
-    label: "Status",
-    href: "https://kuma.54614614.xyz/status/xueer",
-    detail: "Uptime board",
-    status: "Monitored"
+    label: "Document",
+    text: "Leave behind runbooks, checklists, and service notes that make the system understandable."
   },
   {
-    icon: Wrench,
-    label: "Tools",
-    href: "https://tools.54614614.xyz",
-    detail: "Utility bench",
-    status: "Experimental"
+    label: "Observe",
+    text: "Add lightweight status signals so the next issue is easier to notice and explain."
   }
 ];
 
-const audienceSignals = [
-  "Scattered tools",
-  "Messy files",
-  "Half-running servers",
-  "No calm dashboard"
+const boundaries = [
+  "No banking, lending, custody, money transmission, or regulated financial products.",
+  "No gambling, adult, cannabis, or restricted-market operations.",
+  "No public network-access resale or anonymous access products.",
+  "No handling of client credentials unless the project scope and retention rules are documented."
+];
+
+const demoSignals = [
+  {
+    icon: Globe2,
+    title: "Public Site",
+    detail: "Clear company positioning, service pages, and safe contact paths."
+  },
+  {
+    icon: BarChart3,
+    title: "Operations Demo",
+    detail: "A public-safe, read-only view of what an internal dashboard can become."
+  },
+  {
+    icon: ShieldCheck,
+    title: "Trust Boundaries",
+    detail: "Policies and service limits written plainly for reviewers and clients."
+  },
+  {
+    icon: FileText,
+    title: "Runbook Habit",
+    detail: "Decisions, deployment notes, and maintenance routines captured as work happens."
+  }
 ];
 
 export default function Home() {
@@ -83,86 +97,80 @@ export default function Home() {
         <img className="hero-bg" src="/assets/blackhole-hero.png" alt="" />
         <div className="hero-shade" aria-hidden="true" />
 
-        <header className="nav" aria-label="Primary">
-          <a className="brand" href="#top" aria-label="NX Warden home">
-            <span className="brand-mark">
-              <img src="/assets/nxwarden-icon-512.png" alt="" />
-            </span>
-            <span>NX Warden</span>
-          </a>
-          <nav className="nav-links">
-            <a href="#systems">Systems</a>
-            <a href="#work">Work</a>
-            <a href="#contact">Contact</a>
-            <a className="nav-login" href="/console/">
-              Console
-            </a>
-          </nav>
-          <a className="mobile-console-entry" href="/console/">
-            <TerminalSquare aria-hidden="true" size={16} strokeWidth={2.1} />
-            Console
-          </a>
-        </header>
+        <SiteNav />
 
         <div className="hero-copy" id="top">
-          <p className="eyebrow">private infrastructure studio</p>
-          <h1 id="hero-title">SYSTEMS I BUILD</h1>
+          <p className="eyebrow">cloud automation and operations studio</p>
+          <h1 id="hero-title">
+            <span className="title-line">Practical</span>
+            <span className="title-line">systems</span>
+            <span className="title-line">for real</span>
+            <span className="title-line">online work.</span>
+          </h1>
           <p className="lead">
-            I design personal cloud systems, automation pipelines, and quiet web
-            experiences that keep running after the first launch.
+            NX Warden builds practical cloud systems, automation workflows, and
+            internal dashboards for independent creators and small online
+            businesses.
           </p>
           <div className="actions" aria-label="Site actions">
-            <a className="button primary" href="#systems">
-              Explore systems
+            <a className="button primary" href="/services/">
+              View Services
             </a>
-            <a className="button ghost" href="#contact">
-              Start a build
+            <a className="button ghost" href="/contact/">
+              Contact
+            </a>
+            <a className="button ghost" href="/about/">
+              About NX Warden
             </a>
           </div>
+          <a className="secondary-link" href="/console/">
+            View operations demo
+            <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
+          </a>
         </div>
 
         <div className="orbit-panel panel-top">
-          <span>black hole 03</span>
-          <strong>Public Edge</strong>
-          <p>A luminous homepage for work, systems, and useful experiments.</p>
+          <span>company surface</span>
+          <strong>Business Website</strong>
+          <p>A clear public home for services, policies, and project intake.</p>
         </div>
         <div className="orbit-panel panel-left">
-          <span>01 / content engine</span>
-          <strong>Self-Media Workflow</strong>
-          <p>Downloads, archives, metadata, and publishing loops.</p>
+          <span>01 / workflow</span>
+          <strong>Automation Setup</strong>
+          <p>Repeatable routines for files, publishing, reports, and handoffs.</p>
         </div>
         <div className="orbit-panel panel-right">
-          <span>02 / signal field</span>
-          <strong>AI Intel Source</strong>
-          <p>Research surfaces, automation notes, and decision memory.</p>
+          <span>02 / operations</span>
+          <strong>Dashboard Layer</strong>
+          <p>Read-only service signals, risk notes, and maintenance memory.</p>
         </div>
         <div className="orbit-panel panel-bottom">
-          <span>03 / decision core</span>
-          <strong>Startup Thinking</strong>
-          <p>Product taste, durable systems, and fast iteration.</p>
+          <span>03 / documentation</span>
+          <strong>Runbook Trail</strong>
+          <p>Plain notes that make systems easier to maintain.</p>
         </div>
       </section>
 
-      <section className="systems" id="systems" aria-labelledby="systems-title">
+      <section className="systems" id="services" aria-labelledby="services-title">
         <div className="section-head">
-          <p className="eyebrow">what i can do</p>
-          <h2 id="systems-title">
-            A calm operating layer for small teams and personal labs.
+          <p className="eyebrow">services</p>
+          <h2 id="services-title">
+            Useful operations work without unnecessary complexity.
           </h2>
         </div>
 
         <div className="system-grid">
-          {systems.map((system) => {
-            const Icon = system.icon;
+          {services.map((service) => {
+            const Icon = service.icon;
 
             return (
-              <article className="system-card" key={system.title}>
+              <article className="system-card" key={service.title}>
                 <div className="card-signal">
-                  <span>{system.index}</span>
+                  <span>{service.index}</span>
                   <Icon aria-hidden="true" size={26} strokeWidth={1.8} />
                 </div>
-                <h3>{system.title}</h3>
-                <p>{system.body}</p>
+                <h3>{service.title}</h3>
+                <p>{service.body}</p>
               </article>
             );
           })}
@@ -171,74 +179,62 @@ export default function Home() {
 
       <section className="work" id="work" aria-labelledby="work-title">
         <div>
-          <p className="eyebrow">build trail</p>
-          <h2 id="work-title">
-            From raw servers to a useful digital company surface.
-          </h2>
+          <p className="eyebrow">how work happens</p>
+          <h2 id="work-title">Small systems, written down and kept understandable.</h2>
         </div>
         <ol className="timeline">
-          <li>
-            <span>Deploy</span>
-            <p>Ship a clean public website on the edge.</p>
-          </li>
-          <li>
-            <span>Connect</span>
-            <p>
-              Keep private services on VPS infrastructure where long-running
-              automation belongs.
-            </p>
-          </li>
-          <li>
-            <span>Observe</span>
-            <p>
-              Watch availability, storage flows, and naming hygiene before
-              complexity grows.
-            </p>
-          </li>
+          {workSteps.map((step) => (
+            <li key={step.label}>
+              <span>{step.label}</span>
+              <p>{step.text}</p>
+            </li>
+          ))}
         </ol>
       </section>
 
       <section className="audience" aria-labelledby="audience-title">
         <div className="audience-copy">
-          <p className="eyebrow">who it is for</p>
+          <p className="eyebrow">who it helps</p>
           <h2 id="audience-title">
-            For people with useful systems that have outgrown memory.
+            For creators and operators whose tools need a clearer home.
           </h2>
           <p>
-            When tools scatter, files lose names, servers keep running without a
-            map, and automation lives in half-finished scripts, NX Warden turns
-            the pile into a quiet operating layer.
+            NX Warden is for small online businesses, solo founders, and
+            independent creators who need a practical website, reliable
+            workflows, simple status visibility, and documentation that survives
+            busy weeks.
           </p>
         </div>
-        <div className="audience-signals" aria-label="Common symptoms">
-          {audienceSignals.map((signal) => (
-            <span key={signal}>{signal}</span>
-          ))}
+        <div className="audience-signals" aria-label="Common needs">
+          <span>Business website and domain operations</span>
+          <span>Workflow automation and file organization</span>
+          <span>Read-only operations dashboards</span>
+          <span>Documentation and maintenance runbooks</span>
         </div>
       </section>
 
       <section className="portal" aria-labelledby="portal-title">
         <div className="portal-copy">
-          <p className="eyebrow">service constellation</p>
-          <h2 id="portal-title">Public edge in front. Private machines behind it.</h2>
+          <p className="eyebrow">operations demo</p>
+          <h2 id="portal-title">A public-safe preview of the dashboard approach.</h2>
         </div>
-        <div className="portal-links" aria-label="Service links">
-          {serviceLinks.map((service) => {
-            const Icon = service.icon;
+        <div className="portal-links" aria-label="Public-safe demo signals">
+          {demoSignals.map((signal) => {
+            const Icon = signal.icon;
 
             return (
-              <a href={service.href} key={service.label}>
+              <a href={signal.title === "Operations Demo" ? "/console/" : "/services/"} key={signal.title}>
                 <span className="service-icon">
                   <Icon aria-hidden="true" size={24} strokeWidth={1.9} />
                 </span>
                 <span className="service-copy">
-                  <strong>{service.label}</strong>
-                  <span>{service.detail}</span>
+                  <strong>{signal.title}</strong>
+                  <span>{signal.detail}</span>
                 </span>
-                <span className="service-status">{service.status}</span>
+                <span className="service-status">Public-safe</span>
                 <span className="service-open">
                   Open
-                  <ArrowUpRight aria-hidden="true" size={16} strokeWidth={2.2} />
+                  <ArrowRight aria-hidden="true" size={16} strokeWidth={2.2} />
                 </span>
               </a>
             );
@@ -246,18 +242,36 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="trust" aria-labelledby="trust-title">
+        <div className="trust-copy">
+          <p className="eyebrow">trust boundaries</p>
+          <h2 id="trust-title">What NX Warden does not do.</h2>
+          <p>
+            NX Warden is a software automation and cloud operations studio. It
+            does not offer financial services or operate restricted businesses.
+          </p>
+        </div>
+        <div className="trust-grid">
+          {boundaries.map((boundary) => (
+            <article className="boundary-card" key={boundary}>
+              <CheckCircle2 aria-hidden="true" size={22} strokeWidth={2} />
+              <p>{boundary}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="contact" id="contact" aria-labelledby="contact-title">
         <div className="contact-copy">
           <p className="eyebrow">nxwarden.com</p>
-          <h2 id="contact-title">
-            A small company page with room to become a real operating system.
-          </h2>
+          <h2 id="contact-title">Start with a scoped project inquiry.</h2>
           <p>
-            The public site can stay serverless. The heavy work can stay on the
-            machines that already know how to move files, run containers, and
-            keep watch.
+            Tell NX Warden what needs to be organized, automated, monitored, or
+            published. If the form is unavailable, email the business intake
+            address directly.
           </p>
           <a className="contact-email" href="mailto:ceo@nxwarden.com">
+            <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
             ceo@nxwarden.com
           </a>
         </div>

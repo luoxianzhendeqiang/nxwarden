@@ -174,6 +174,11 @@ h1 {
   text-shadow: 0 7px 34px rgba(0, 0, 0, 0.54);
 }
 
+.title-line {
+  display: block;
+  white-space: nowrap;
+}
+
 .lead {
   max-width: 590px;
   margin-bottom: 30px;
@@ -187,6 +192,22 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.secondary-link {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.secondary-link:hover {
+  color: var(--ink);
 }
 
 .button {
@@ -296,6 +317,7 @@ h1 {
 .work,
 .audience,
 .portal,
+.trust,
 .contact {
   padding: clamp(78px, 10vw, 150px) clamp(20px, 5vw, 92px);
   background:
@@ -509,6 +531,53 @@ h2 {
   color: var(--ink);
 }
 
+.trust {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1fr);
+  gap: clamp(34px, 7vw, 108px);
+  align-items: start;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 9, 0.98), rgba(7, 7, 6, 0.96)),
+    radial-gradient(circle at 80% 20%, rgba(158, 216, 255, 0.09), transparent 34%);
+}
+
+.trust-copy p {
+  max-width: 660px;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.55;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.boundary-card {
+  min-height: 170px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
+    #0b0b0a;
+}
+
+.boundary-card svg {
+  color: #a9f3c0;
+}
+
+.boundary-card p {
+  margin: 0;
+  color: rgba(245, 241, 232, 0.78);
+  line-height: 1.55;
+}
+
 .timeline {
   margin: 0;
   padding: 0;
@@ -553,6 +622,8 @@ h2 {
 .contact-email {
   width: fit-content;
   display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 22px;
   color: var(--gold);
   font-size: 18px;
@@ -561,6 +632,186 @@ h2 {
 
 .contact-email:hover {
   color: var(--ink);
+}
+
+.small-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  max-width: 620px;
+  margin-top: 20px;
+  color: rgba(245, 241, 232, 0.66);
+  font-size: 14px !important;
+  line-height: 1.55;
+}
+
+.small-note svg {
+  flex: 0 0 auto;
+  color: var(--blue);
+  margin-top: 3px;
+}
+
+.subpage {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 78% 12%, rgba(241, 199, 122, 0.12), transparent 28%),
+    radial-gradient(circle at 16% 34%, rgba(158, 216, 255, 0.08), transparent 32%),
+    linear-gradient(180deg, #070706 0%, #0b0b0a 48%, #060605 100%);
+}
+
+.subpage .nav {
+  border-bottom: 1px solid rgba(245, 241, 232, 0.12);
+  background: rgba(5, 5, 5, 0.5);
+  backdrop-filter: blur(18px);
+}
+
+.subpage-hero {
+  min-height: 54svh;
+  display: grid;
+  align-content: center;
+  padding: clamp(70px, 9vw, 132px) clamp(20px, 5vw, 92px);
+}
+
+.subpage-hero h1 {
+  max-width: 1040px;
+  font-size: clamp(52px, 7.7vw, 112px);
+}
+
+.subpage-hero .lead {
+  max-width: 780px;
+}
+
+.subpage-section,
+.split-band,
+.policy-stack {
+  padding: clamp(62px, 8vw, 118px) clamp(20px, 5vw, 92px);
+}
+
+.subpage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.info-card,
+.service-line,
+.policy-card,
+.text-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.024)),
+    rgba(8, 8, 7, 0.86);
+}
+
+.info-card {
+  min-height: 240px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 24px;
+}
+
+.info-card svg,
+.service-line svg,
+.policy-card > svg {
+  color: var(--gold);
+}
+
+.info-card h2,
+.service-line h2,
+.policy-card h2 {
+  margin: 0;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.info-card p,
+.text-panel p,
+.policy-card p,
+.policy-card li {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.info-card p,
+.policy-card p {
+  margin: 0;
+}
+
+.split-band {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1fr);
+  gap: clamp(34px, 7vw, 108px);
+  align-items: start;
+  background:
+    linear-gradient(180deg, rgba(7, 7, 6, 0.98), rgba(10, 10, 9, 0.96)),
+    radial-gradient(circle at 78% 24%, rgba(241, 199, 122, 0.08), transparent 36%);
+}
+
+.text-panel {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--line);
+}
+
+.text-panel p {
+  margin: 0;
+  font-size: 18px;
+}
+
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.service-line {
+  min-height: 260px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 18px;
+  align-content: start;
+  padding: 24px;
+}
+
+.service-line ul,
+.policy-card ul {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding-left: 18px;
+}
+
+.policy-stack {
+  display: grid;
+  gap: 1px;
+  background:
+    linear-gradient(180deg, rgba(7, 7, 6, 0.98), rgba(10, 10, 9, 0.96));
+}
+
+.policy-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 20px;
+  padding: clamp(22px, 4vw, 36px);
+  border: 1px solid rgba(245, 241, 232, 0.14);
+}
+
+.policy-card + .policy-card {
+  margin-top: 1px;
+}
+
+.policy-card .eyebrow {
+  margin-bottom: 12px;
+}
+
+.policy-card p + p {
+  margin-top: 14px;
 }
 
 .contact-form {
@@ -1199,6 +1450,57 @@ textarea:focus {
   gap: 18px;
 }
 
+.truth-source-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 18px;
+  border: 1px solid rgba(245, 241, 232, 0.14);
+  background: rgba(245, 241, 232, 0.12);
+}
+
+.truth-source {
+  min-height: 142px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 18px;
+  background: rgba(8, 8, 7, 0.86);
+}
+
+.truth-source span,
+.diagnostics-grid span,
+.diagnostics-matrix span {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.truth-source strong {
+  font-size: 20px;
+}
+
+.truth-source p,
+.diagnostics-grid p,
+.diagnostics-intro {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.truth-source.tone-green {
+  box-shadow: inset 0 2px rgba(94, 227, 125, 0.7);
+}
+
+.truth-source.tone-blue {
+  box-shadow: inset 0 2px rgba(158, 216, 255, 0.7);
+}
+
+.truth-source.tone-gold {
+  box-shadow: inset 0 2px rgba(241, 199, 122, 0.7);
+}
+
 .telemetry-command {
   overflow: hidden;
 }
@@ -1252,6 +1554,97 @@ textarea:focus {
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1px;
   background: rgba(245, 241, 232, 0.12);
+}
+
+.connectivity-diagnostics {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(158, 216, 255, 0.08), transparent 30%),
+    linear-gradient(145deg, rgba(241, 199, 122, 0.07), transparent 42%),
+    rgba(8, 8, 7, 0.84);
+}
+
+.domain-mail-diagnostics {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(241, 199, 122, 0.09), transparent 30%),
+    linear-gradient(145deg, rgba(158, 216, 255, 0.06), transparent 42%),
+    rgba(8, 8, 7, 0.84);
+}
+
+.diagnostics-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px;
+  border-bottom: 1px solid rgba(245, 241, 232, 0.12);
+}
+
+.diagnostics-heading h2 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 56px);
+}
+
+.diagnostics-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(241, 199, 122, 0.26);
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.diagnostics-intro {
+  max-width: 980px;
+  padding: 18px 24px;
+}
+
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(245, 241, 232, 0.12);
+}
+
+.diagnostics-grid article {
+  min-height: 154px;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 20px;
+  background: rgba(7, 7, 6, 0.92);
+}
+
+.diagnostics-grid strong {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.diagnostics-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid rgba(245, 241, 232, 0.12);
+  background: rgba(245, 241, 232, 0.12);
+}
+
+.diagnostics-matrix div {
+  min-height: 84px;
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.diagnostics-matrix strong {
+  color: rgba(245, 241, 232, 0.82);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .metric-card {
@@ -2747,6 +3140,7 @@ textarea:focus {
   .work,
   .audience,
   .portal,
+  .trust,
   .contact,
   .login-shell,
   .mission-header,
@@ -2755,15 +3149,22 @@ textarea:focus {
   .console-grid,
   .telemetry-command-head,
   .telemetry-main-grid,
-  .architecture-cost-grid {
+  .architecture-cost-grid,
+  .split-band {
     grid-template-columns: 1fr;
   }
 
   .system-grid,
+  .subpage-grid,
+  .service-list,
+  .trust-grid,
   .pulse-grid,
   .telemetry-grid,
   .metric-rack,
-  .telemetry-lower-grid {
+  .telemetry-lower-grid,
+  .truth-source-strip,
+  .diagnostics-grid,
+  .diagnostics-matrix {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2842,15 +3243,47 @@ textarea:focus {
 
 @media (max-width: 640px) {
   h1 {
-    font-size: clamp(52px, 18vw, 86px);
+    max-width: 100%;
+    font-size: clamp(34px, 11vw, 44px);
+    line-height: 0.92;
+    overflow-wrap: anywhere;
+  }
+
+  .nav {
+    position: relative;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .nav .brand span:last-child {
+    display: none;
+  }
+
+  .mobile-console-entry {
+    position: absolute;
+    top: 17px;
+    left: 72px;
+    flex: 0 0 104px;
+    justify-content: center;
   }
 
   .hero-copy {
+    width: min(100%, 360px);
     padding-bottom: 34svh;
   }
 
+  .hero-copy .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: min(100%, 272px);
+  }
+
+  .hero-copy .actions .button {
+    width: 100%;
+  }
+
   .orbit-panel {
-    width: calc(100vw - 40px);
+    width: min(calc(100vw - 40px), 348px);
   }
 
   .panel-left,
@@ -2860,6 +3293,10 @@ textarea:focus {
 
   .console-nav {
     min-height: 72px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding-right: 14px;
+    padding-left: 14px;
   }
 
   .console-nav .brand span:last-child {
@@ -2867,11 +3304,14 @@ textarea:focus {
   }
 
   .console-nav-links {
+    min-width: 0;
+    justify-content: end;
     gap: 8px;
   }
 
   .console-nav-links a {
-    padding: 0 10px;
+    padding: 0 8px;
+    font-size: 10px;
   }
 
   .public-observation-note {
@@ -2886,7 +3326,9 @@ textarea:focus {
   }
 
   .mission-copy h1 {
-    font-size: clamp(46px, 14vw, 74px);
+    font-size: clamp(34px, 11vw, 44px);
+    line-height: 0.94;
+    overflow-wrap: anywhere;
   }
 
   .mission-lines {
@@ -2903,10 +3345,16 @@ textarea:focus {
   }
 
   .system-grid,
+  .subpage-grid,
+  .service-list,
+  .trust-grid,
   .pulse-grid,
   .telemetry-grid,
   .metric-rack,
   .telemetry-lower-grid,
+  .truth-source-strip,
+  .diagnostics-grid,
+  .diagnostics-matrix,
   .backend-badges,
   .architecture-layers ol,
   .cost-guard,
@@ -2949,6 +3397,29 @@ textarea:focus {
 
   .system-card {
     min-height: 210px;
+  }
+
+  .subpage-hero {
+    min-height: auto;
+    padding-top: 64px;
+    padding-bottom: 58px;
+  }
+
+  .subpage-hero h1 {
+    font-size: clamp(42px, 13vw, 72px);
+  }
+
+  .info-card,
+  .service-line,
+  .policy-card,
+  .text-panel,
+  .boundary-card {
+    padding: 18px;
+  }
+
+  .service-line,
+  .policy-card {
+    grid-template-columns: 1fr;
   }
 
   .card-signal {
@@ -3064,6 +3535,20 @@ textarea:focus {
 
   .control-panel {
     padding: 18px;
+  }
+
+  .diagnostics-heading {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .diagnostics-heading > span {
+    justify-content: center;
+  }
+
+  .diagnostics-intro {
+    padding: 16px 18px;
   }
 
   .event-modal-backdrop {

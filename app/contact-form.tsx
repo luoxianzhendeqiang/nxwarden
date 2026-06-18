@@ -7,10 +7,11 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 const projectTypes = [
   "Company site",
-  "Cloud infrastructure",
-  "Media automation",
-  "Monitoring",
-  "AI workflow"
+  "Cloud operations",
+  "Automation workflow",
+  "Internal dashboard",
+  "Documentation",
+  "AI-assisted workflow"
 ];
 
 // TODO: Replace the official always-pass test key with the production widget key.
@@ -30,7 +31,7 @@ function getFriendlyError(message: string) {
     return "The Cloudflare safety check did not complete. Please refresh and try once more.";
   }
 
-  return message || "The signal line is offline for a moment. Please email ceo@nxwarden.com instead.";
+  return message || "The inquiry line is offline for a moment. Please email ceo@nxwarden.com instead.";
 }
 
 export default function ContactForm() {
@@ -57,7 +58,7 @@ export default function ContactForm() {
       email: String(data.get("email") ?? "").trim() || null,
       project_type: String(data.get("projectType") ?? "Company site"),
       message: String(data.get("message") ?? "").trim(),
-      source: "nxwarden.com",
+      source: "nxwarden.com public inquiry",
       cf_turnstile_response: String(data.get("cf-turnstile-response") ?? "")
     };
 
@@ -75,7 +76,7 @@ export default function ContactForm() {
         })
       });
       const result = await response.json().catch(() => ({}));
-      errorMessage = response.ok ? "" : String(result.error ?? "Unable to send signal.");
+      errorMessage = response.ok ? "" : String(result.error ?? "Unable to send inquiry.");
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : "";
     }
@@ -126,7 +127,7 @@ export default function ContactForm() {
         </label>
 
         <label>
-          <span>Signal</span>
+          <span>Project details</span>
           <textarea
             name="message"
             rows={5}
@@ -147,7 +148,7 @@ export default function ContactForm() {
 
         <div className="form-footer">
           <button className="button primary" type="submit" disabled={status === "submitting"}>
-            {status === "submitting" ? "Sending" : "Send signal"}
+            {status === "submitting" ? "Sending" : "Send inquiry"}
           </button>
           {message ? (
             <p className={`form-status ${status}`} role={status === "error" ? "alert" : "status"}>

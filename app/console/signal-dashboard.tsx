@@ -19,6 +19,7 @@ import {
   HardDrive,
   KeyRound,
   Lock,
+  MailCheck,
   MonitorCheck,
   Play,
   RadioTower,
@@ -27,6 +28,7 @@ import {
   Settings2,
   ShieldAlert,
   ShieldCheck,
+  Smartphone,
   Sparkles,
   TerminalSquare,
   Wrench,
@@ -138,7 +140,7 @@ const consoleTabs = [
   { id: "control", label: "Control" }
 ];
 
-const mockNodes: NodeSignal[] = [
+const fallbackTelemetryNodes: NodeSignal[] = [
   {
     cpu: 18,
     disk: 28,
@@ -180,34 +182,6 @@ const mockNodes: NodeSignal[] = [
     status: "Online",
     temperature: 38,
     visibility: "private"
-  },
-  {
-    cpu: 12,
-    disk: 21,
-    id: "komari-agent",
-    lastSeen: "18:23:58",
-    memory: 29,
-    name: "komari-agent",
-    onlineUsers: 5,
-    provider: "KoMari",
-    region: "fleet",
-    status: "Online",
-    temperature: null,
-    visibility: "monitored"
-  },
-  {
-    cpu: 9,
-    disk: 18,
-    id: "telegram-bot",
-    lastSeen: "18:23:43",
-    memory: 35,
-    name: "telegram-bot",
-    onlineUsers: 1,
-    provider: "Scripts",
-    region: "DC03",
-    status: "Online",
-    temperature: null,
-    visibility: "private"
   }
 ];
 
@@ -231,10 +205,97 @@ const initialTelemetry: TelemetryState = {
   lastIngest: "18:24:31",
   lastUpdate: "Just now",
   mode: "mock",
-  nodes: mockNodes,
+  nodes: fallbackTelemetryNodes,
   protectionLabel: "protected intake",
   trend: mockTrend,
 };
+
+const truthSources = [
+  {
+    label: "Live telemetry",
+    value: "API-backed",
+    detail: "Node metrics and heartbeat counts come from the observation API when it is reachable.",
+    tone: "green" as Tone
+  },
+  {
+    label: "Visual mock",
+    value: "Architecture only",
+    detail: "Map nodes explain the intended system shape and are never counted as live machines.",
+    tone: "blue" as Tone
+  },
+  {
+    label: "Local diagnostics",
+    value: "Recorded evidence",
+    detail: "Mobile rescue findings describe completed local tests, not a live phone connection.",
+    tone: "gold" as Tone
+  }
+];
+
+const singBoxDiagnostics = [
+  {
+    label: "Android profile",
+    value: "Starts / latency present",
+    detail: "Real browsing is still failing on the test phone."
+  },
+  {
+    label: "Server path",
+    value: "HTTP 204 verified",
+    detail: "The repaired secure transport path completed a controlled request."
+  },
+  {
+    label: "Repair state",
+    value: "Compatibility layer aligned",
+    detail: "The required connection compatibility layer and bootstrap DNS are present."
+  },
+  {
+    label: "Current blocker",
+    value: "Android DNS / TUN",
+    detail: "Device routing, DNS interception, IPv6, and carrier UDP still need matrix testing."
+  },
+  {
+    label: "Firewall",
+    value: "Not primary cause",
+    detail: "Listener, TLS, time, and server-side UDP posture passed prior checks."
+  },
+  {
+    label: "ICMP warnings",
+    value: "Non-blocking",
+    detail: "Ping warnings do not explain browser name-resolution failure."
+  }
+];
+
+const domainMailDiagnostics = [
+  {
+    label: "Receive path",
+    value: "Existing route preserved",
+    detail: "The current inbound route remains unchanged during local hardening."
+  },
+  {
+    label: "Send path",
+    value: "Not armed",
+    detail: "No production sender, test message, or delivery cutover was performed."
+  },
+  {
+    label: "Cloud Mail UI",
+    value: "Built locally",
+    detail: "The frontend and Worker bundle are available for review before approval."
+  },
+  {
+    label: "Resend boundary",
+    value: "Worker secret only",
+    detail: "The API key is read from a Worker secret and is never returned to the browser."
+  },
+  {
+    label: "Production mail",
+    value: "Unchanged",
+    detail: "No MX, DNS, routing, mailbox, or Cloudflare resource was modified."
+  },
+  {
+    label: "Administration",
+    value: "Private workflow",
+    detail: "Mailbox creation and delivery tests remain outside this public console."
+  }
+];
 
 const pulseCards = [
   {
@@ -314,7 +375,7 @@ const infrastructureNodes: MapNode[] = [
     visibility: "Gate"
   },
   {
-    endpoint: "Private VPS, agents, media, scripts",
+    endpoint: "Private hosted services, agents, media, scripts",
     health: "online",
     icon: Server,
     id: "private-plane",
@@ -338,11 +399,11 @@ const privateServices: MapNode[] = [
     id: "cloudcone",
     lastCheck: "Telemetry sample available",
     name: "CloudCone",
-    nextAction: "Send only lightweight heartbeat data from VPS scripts.",
+    nextAction: "Send only lightweight heartbeat data from hosted service scripts.",
     provider: "CloudCone",
     region: "Hong Kong",
     riskNote: "Do not expose SSH, shell logs, or control actions.",
-    signal: "VPS provider",
+    signal: "Hosting provider",
     status: "Observed",
     visibility: "Private"
   },
@@ -357,7 +418,7 @@ const privateServices: MapNode[] = [
     provider: "RackNerd",
     region: "US / EU",
     riskNote: "Ingest should stay token and Turnstile protected.",
-    signal: "VPS provider",
+    signal: "Hosting provider",
     status: "Observed",
     visibility: "Private"
   },
@@ -377,16 +438,16 @@ const privateServices: MapNode[] = [
     visibility: "Monitored"
   },
   {
-    endpoint: "sing-box / proxy nodes",
+    endpoint: "Private connectivity nodes",
     health: "online",
     icon: RadioTower,
-    id: "sing-box",
+    id: "connectivity",
     lastCheck: "No direct control wired",
-    name: "Sing-box",
-    nextAction: "Keep proxy traffic domains DNS-only when needed.",
+    name: "Connectivity Layer",
+    nextAction: "Keep private traffic domains DNS-only when needed.",
     provider: "Network",
     region: "Multi-region",
-    riskNote: "Never expose live proxy credentials in this console.",
+    riskNote: "Never expose live connectivity credentials in this console.",
     signal: "Network layer",
     status: "Sealed",
     visibility: "Private"
@@ -494,7 +555,7 @@ const risks = [
   {
     icon: Database,
     label: "Backup policy missing",
-    detail: "System history, runbooks, VPS config, and archive retention need a simple backup policy.",
+    detail: "System history, runbooks, service configuration, and archive retention need a simple backup policy.",
     nodeIds: ["scripts"],
     tone: "gold" as Tone
   },
@@ -511,6 +572,13 @@ const risks = [
     detail: "Browser automation is currently unavailable and does not block observation workflows.",
     nodeIds: [],
     tone: "purple" as Tone
+  },
+  {
+    icon: Smartphone,
+    label: "Mobile client route / DNS pending",
+    detail: "Android DNS interception, TUN routing, IPv6, and carrier UDP still require the phone test matrix.",
+    nodeIds: ["connectivity"],
+    tone: "gold" as Tone
   }
 ];
 
@@ -544,6 +612,12 @@ const decisionLogs: DecisionLog[] = [
     id: "defer-r2",
     label: "Defer R2 media sync until signed URL and lifecycle rules exist.",
     phase: "future / storage"
+  },
+  {
+    detail: "The secure transport path is repaired and verified. Android DNS, TUN, IPv6, and mobile-network variants remain a device-side test.",
+    id: "mobile-rescue",
+    label: "Mobile Rescue Phase: server path fixed; Android DNS / TUN tests pending.",
+    phase: "mobile rescue / diagnostics"
   }
 ];
 
@@ -582,6 +656,13 @@ const missionEvents: MissionEvent[] = [
     label: "Browser automation optional / unavailable",
     phase: "phase 2",
     time: "known limit"
+  },
+  {
+    detail: "The server path completed a controlled request. The remaining investigation is isolated to Android DNS, TUN, IPv6, profile identity, or carrier UDP.",
+    id: "mobile-rescue-phase",
+    label: "Mobile Rescue Phase recorded",
+    phase: "diagnostics",
+    time: "device test pending"
   }
 ];
 
@@ -601,7 +682,7 @@ const accessPosture = [
     value: "Sealed, no direct exposure"
   },
   {
-    label: "Control Plane",
+    label: "Protected Actions",
     value: "Not armed"
   }
 ];
@@ -740,7 +821,7 @@ function stateFromApi(
   if (!nodes.length) {
     return {
       ...initialTelemetry,
-      backendLabel: health.mode === "live" ? "live api / visual mock" : "mock",
+      backendLabel: health.mode === "live" ? "visual fallback" : "offline fallback",
       lastUpdate: health.timestamp || initialTelemetry.lastUpdate,
       protectionLabel: "protected intake"
     };
@@ -767,7 +848,7 @@ function stateFromApi(
   }, "");
 
   return {
-    backendLabel: "live",
+    backendLabel: "live telemetry",
     lastIngest,
     lastUpdate: health.timestamp || lastIngest,
     mode: "live",
@@ -1033,6 +1114,16 @@ export default function SignalDashboard() {
             );
           })}
         </div>
+
+        <div className="truth-source-strip" aria-label="Console evidence sources">
+          {truthSources.map((source) => (
+            <article className={`truth-source tone-${source.tone}`} key={source.label}>
+              <span>{source.label}</span>
+              <strong>{source.value}</strong>
+              <p>{source.detail}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section
@@ -1117,7 +1208,9 @@ export default function SignalDashboard() {
             </div>
             <p className="table-note">
               Showing {stats.activeNodes} of {stats.configuredNodes} nodes. Data is
-              {telemetry.mode === "live" ? " from the observation backend" : " visual mock data"}.
+              {telemetry.mode === "live"
+                ? " live telemetry from the observation backend"
+                : " a clearly labeled visual fallback"}.
             </p>
           </section>
 
@@ -1212,6 +1305,80 @@ export default function SignalDashboard() {
           </section>
         </div>
 
+        <section
+          className="console-panel connectivity-diagnostics"
+          aria-labelledby="connectivity-diagnostics-title"
+        >
+          <div className="diagnostics-heading">
+            <div>
+              <p className="eyebrow">local diagnostics / mobile rescue</p>
+              <h2 id="connectivity-diagnostics-title">Connectivity Diagnostics</h2>
+            </div>
+            <span>
+              <Lock aria-hidden="true" size={15} strokeWidth={2} />
+              No public profiles
+            </span>
+          </div>
+          <p className="diagnostics-intro">
+            This card records public-safe test outcomes only. It does not reveal
+            node addresses, ports, credentials, obfuscation values, subscription
+            links, or private configuration files.
+          </p>
+          <div className="diagnostics-grid">
+            {singBoxDiagnostics.map((item) => (
+              <article key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+          <div className="diagnostics-matrix" aria-label="Mobile test matrix preview">
+            <div>
+              <span>Networks</span>
+              <strong>Wi-Fi / mobile data</strong>
+            </div>
+            <div>
+              <span>Profiles</span>
+              <strong>Baseline / IPv4-first / no-IPv6 / direct bootstrap</strong>
+            </div>
+            <div>
+              <span>Next evidence</span>
+              <strong>DNS, browsing, exit location, and redacted logs</strong>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="console-panel domain-mail-diagnostics"
+          aria-labelledby="domain-mail-diagnostics-title"
+        >
+          <div className="diagnostics-heading">
+            <div>
+              <p className="eyebrow">local audit / domain mail</p>
+              <h2 id="domain-mail-diagnostics-title">Domain Mail Diagnostics</h2>
+            </div>
+            <span>
+              <MailCheck aria-hidden="true" size={15} strokeWidth={2} />
+              Production unchanged
+            </span>
+          </div>
+          <p className="diagnostics-intro">
+            This is a public-safe readiness summary. Addresses, provider secrets,
+            routing destinations, DNS records, and administrative controls are
+            intentionally omitted.
+          </p>
+          <div className="diagnostics-grid">
+            {domainMailDiagnostics.map((item) => (
+              <article key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <div className="architecture-cost-grid">
           <aside className="console-panel architecture-layers" aria-label="NX Warden architecture layers">
             <div className="panel-title">
@@ -1231,7 +1398,7 @@ export default function SignalDashboard() {
               </li>
               <li>
                 <span>Layer 3</span>
-                <strong>Control Plane</strong>
+                <strong>Protected Actions</strong>
                 <p>Future protected actions and automation.</p>
               </li>
             </ol>
@@ -1648,7 +1815,7 @@ export default function SignalDashboard() {
                 <span>Signals, risks, logs, service memory.</span>
               </li>
               <li>
-                <strong>Layer 3: Protected Control Plane</strong>
+                <strong>Layer 3: Protected Actions Layer</strong>
                 <span>Access-gated controls, scripts, sync, reports.</span>
               </li>
             </ol>

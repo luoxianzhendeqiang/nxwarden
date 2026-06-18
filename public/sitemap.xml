@@ -2,6 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nxwarden.com/</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>https://nxwarden.com/about/</loc>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>https://nxwarden.com/services/</loc>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>https://nxwarden.com/contact/</loc>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>https://nxwarden.com/policies/</loc>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>https://nxwarden.com/console/</loc>
+    <lastmod>2026-06-17</lastmod>
   </url>
 </urlset>
