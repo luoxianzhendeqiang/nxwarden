@@ -144,13 +144,13 @@ const fallbackTelemetryNodes: NodeSignal[] = [
   {
     cpu: 18,
     disk: 28,
-    id: "cloudcone-hk-01",
+    id: "edge-node-01",
     lastSeen: "18:24:31",
     memory: 32,
-    name: "cloudcone-hk-01",
+    name: "edge-node-01",
     onlineUsers: 56,
-    provider: "CloudCone",
-    region: "Hong Kong",
+    provider: "Edge provider",
+    region: "APAC",
     status: "Online",
     temperature: 41,
     visibility: "private"
@@ -158,13 +158,13 @@ const fallbackTelemetryNodes: NodeSignal[] = [
   {
     cpu: 42,
     disk: 36,
-    id: "racknerd-us-01",
+    id: "archive-node-01",
     lastSeen: "18:24:28",
     memory: 48,
-    name: "racknerd-us-01",
+    name: "archive-node-01",
     onlineUsers: 38,
-    provider: "RackNerd",
-    region: "Los Angeles",
+    provider: "Hosting provider",
+    region: "North America",
     status: "Online",
     temperature: 47,
     visibility: "private"
@@ -172,13 +172,13 @@ const fallbackTelemetryNodes: NodeSignal[] = [
   {
     cpu: 26,
     disk: 49,
-    id: "racknerd-eu-01",
+    id: "workflow-node-01",
     lastSeen: "18:24:29",
     memory: 44,
-    name: "racknerd-eu-01",
+    name: "workflow-node-01",
     onlineUsers: 34,
-    provider: "RackNerd",
-    region: "Frankfurt",
+    provider: "Compute provider",
+    region: "Europe",
     status: "Online",
     temperature: 38,
     visibility: "private"
@@ -226,14 +226,14 @@ const truthSources = [
   {
     label: "Local diagnostics",
     value: "Recorded evidence",
-    detail: "Mobile rescue findings describe completed local tests, not a live phone connection.",
+    detail: "Mobile diagnostics describe completed local tests, not a live phone connection.",
     tone: "gold" as Tone
   }
 ];
 
-const singBoxDiagnostics = [
+const mobileConnectivityDiagnostics = [
   {
-    label: "Android profile",
+    label: "Mobile profile",
     value: "Starts / latency present",
     detail: "Real browsing is still failing on the test phone."
   },
@@ -245,22 +245,22 @@ const singBoxDiagnostics = [
   {
     label: "Repair state",
     value: "Compatibility layer aligned",
-    detail: "The required connection compatibility layer and bootstrap DNS are present."
+    detail: "The required connection compatibility layer and bootstrap resolver are present."
   },
   {
     label: "Current blocker",
-    value: "Android DNS / TUN",
-    detail: "Device routing, DNS interception, IPv6, and carrier UDP still need matrix testing."
+    value: "Mobile routing matrix",
+    detail: "Device routing, name resolution, and mobile-network variants still need matrix testing."
   },
   {
-    label: "Firewall",
+    label: "Edge listener",
     value: "Not primary cause",
-    detail: "Listener, TLS, time, and server-side UDP posture passed prior checks."
+    detail: "Listener, certificate timing, and server-side transport posture passed prior checks."
   },
   {
-    label: "ICMP warnings",
+    label: "Connectivity warnings",
     value: "Non-blocking",
-    detail: "Ping warnings do not explain browser name-resolution failure."
+    detail: "Basic reachability warnings do not explain browser resolution failure."
   }
 ];
 
@@ -276,19 +276,19 @@ const domainMailDiagnostics = [
     detail: "No production sender, test message, or delivery cutover was performed."
   },
   {
-    label: "Cloud Mail UI",
+    label: "Mail readiness UI",
     value: "Built locally",
     detail: "The frontend and Worker bundle are available for review before approval."
   },
   {
-    label: "Resend boundary",
-    value: "Worker secret only",
-    detail: "The API key is read from a Worker secret and is never returned to the browser."
+    label: "Sender boundary",
+    value: "Private setting only",
+    detail: "Sensitive sender settings are never returned to the browser."
   },
   {
     label: "Production mail",
     value: "Unchanged",
-    detail: "No MX, DNS, routing, mailbox, or Cloudflare resource was modified."
+    detail: "No production routing, mailbox, or Cloudflare resource was modified."
   },
   {
     label: "Administration",
@@ -393,44 +393,44 @@ const infrastructureNodes: MapNode[] = [
 
 const privateServices: MapNode[] = [
   {
-    endpoint: "CloudCone nodes",
+    endpoint: "Private compute group",
     health: "online",
     icon: Cloud,
-    id: "cloudcone",
+    id: "edge-hosting",
     lastCheck: "Telemetry sample available",
-    name: "CloudCone",
+    name: "Edge Hosting",
     nextAction: "Send only lightweight heartbeat data from hosted service scripts.",
-    provider: "CloudCone",
-    region: "Hong Kong",
-    riskNote: "Do not expose SSH, shell logs, or control actions.",
+    provider: "Hosting",
+    region: "APAC",
+    riskNote: "Do not expose shell logs, internal paths, or control actions.",
     signal: "Hosting provider",
     status: "Observed",
     visibility: "Private"
   },
   {
-    endpoint: "RackNerd / DC03 nodes",
+    endpoint: "Regional compute group",
     health: "online",
     icon: Server,
-    id: "racknerd",
+    id: "regional-hosting",
     lastCheck: "Telemetry sample available",
-    name: "RackNerd",
-    nextAction: "Keep Telegram bot and AList behind current service rules.",
-    provider: "RackNerd",
-    region: "US / EU",
+    name: "Regional Hosting",
+    nextAction: "Keep automation and file services behind current service rules.",
+    provider: "Hosting",
+    region: "Regional",
     riskNote: "Ingest should stay token and Turnstile protected.",
     signal: "Hosting provider",
     status: "Observed",
     visibility: "Private"
   },
   {
-    endpoint: "Komari monitor field",
+    endpoint: "Fleet monitor field",
     health: "online",
     icon: Gauge,
-    id: "komari",
+    id: "fleet-monitor",
     lastCheck: "Dashboard visual source",
-    name: "KoMari",
-    nextAction: "Map Komari data into normalized telemetry later.",
-    provider: "KoMari",
+    name: "Fleet Monitor",
+    nextAction: "Map monitor data into normalized telemetry later.",
+    provider: "Monitor",
     region: "Fleet",
     riskNote: "Public metric labels should stay bland and non-sensitive.",
     signal: "Fleet monitor",
@@ -444,7 +444,7 @@ const privateServices: MapNode[] = [
     id: "connectivity",
     lastCheck: "No direct control wired",
     name: "Connectivity Layer",
-    nextAction: "Keep private traffic domains DNS-only when needed.",
+    nextAction: "Keep private traffic domains on the approved routing posture.",
     provider: "Network",
     region: "Multi-region",
     riskNote: "Never expose live connectivity credentials in this console.",
@@ -456,13 +456,13 @@ const privateServices: MapNode[] = [
     endpoint: "Protected media endpoint",
     health: "attention",
     icon: MonitorCheck,
-    id: "jellyfin",
+    id: "media-library",
     lastCheck: "Known reachable through public domain",
-    name: "Jellyfin",
+    name: "Media Library",
     nextAction: "Confirm Access rules before exposing deeper controls.",
     provider: "Self-hosted",
-    region: "Xueer",
-    riskNote: "OneDrive mount should stay read-only for library scans.",
+    region: "Private plane",
+    riskNote: "Archive mounts should stay read-only for library scans.",
     signal: "Media library",
     status: "Protected",
     visibility: "Private"
@@ -471,11 +471,11 @@ const privateServices: MapNode[] = [
     endpoint: "Protected archive storage",
     health: "attention",
     icon: Archive,
-    id: "onedrive",
+    id: "archive-storage",
     lastCheck: "Archive policy still needs final retention decision",
-    name: "OneDrive",
+    name: "Archive Storage",
     nextAction: "Confirm cleanup and retention before R2 Phase 2.",
-    provider: "Microsoft",
+    provider: "Cloud storage",
     region: "Global",
     riskNote: "R2 media sync stays deferred and private by default.",
     signal: "Storage flow",
@@ -486,12 +486,12 @@ const privateServices: MapNode[] = [
     endpoint: "Private automation worker",
     health: "online",
     icon: Bot,
-    id: "telegram-bot",
+    id: "message-automation",
     lastCheck: "Download flow known",
-    name: "Telegram Bot",
+    name: "Message Automation",
     nextAction: "Expose only heartbeat, not task controls.",
     provider: "Scripts",
-    region: "DC03",
+    region: "Automation plane",
     riskNote: "Downloads and cache deletion should not be controlled from public UI.",
     signal: "Automation loop",
     status: "Watching",
@@ -519,8 +519,8 @@ const mapNodes = [...infrastructureNodes, ...privateServices];
 const flows = [
   {
     icon: Cloud,
-    title: "Downloads -> Rename -> Archive -> Jellyfin",
-    detail: "Telegram media enters a guarded loop: download, clean numeric prefixes, archive to OneDrive, then wait for a selected Jellyfin scan.",
+    title: "Downloads -> Rename -> Archive -> Media library",
+    detail: "A guarded media loop cleans noisy filenames, archives completed files, then waits for a selected library scan.",
     signal: "Observed"
   },
   {
@@ -549,7 +549,7 @@ const risks = [
     icon: ShieldAlert,
     label: "Private services exposed?",
     detail: "Review Access rules before adding any control-plane route.",
-    nodeIds: ["private-plane", "jellyfin"],
+    nodeIds: ["private-plane", "media-library"],
     tone: "red" as Tone
   },
   {
@@ -561,9 +561,9 @@ const risks = [
   },
   {
     icon: Archive,
-    label: "OneDrive archive path",
+    label: "Archive path",
     detail: "Archive cleanup rules need a final naming and retention decision.",
-    nodeIds: ["onedrive"],
+    nodeIds: ["archive-storage"],
     tone: "blue" as Tone
   },
   {
@@ -575,8 +575,8 @@ const risks = [
   },
   {
     icon: Smartphone,
-    label: "Mobile client route / DNS pending",
-    detail: "Android DNS interception, TUN routing, IPv6, and carrier UDP still require the phone test matrix.",
+    label: "Mobile client routing pending",
+    detail: "Mobile name resolution, routing, and network variants still require the phone test matrix.",
     nodeIds: ["connectivity"],
     tone: "gold" as Tone
   }
@@ -614,9 +614,9 @@ const decisionLogs: DecisionLog[] = [
     phase: "future / storage"
   },
   {
-    detail: "The secure transport path is repaired and verified. Android DNS, TUN, IPv6, and mobile-network variants remain a device-side test.",
+    detail: "The secure transport path is repaired and verified. Mobile routing and network variants remain a device-side test.",
     id: "mobile-rescue",
-    label: "Mobile Rescue Phase: server path fixed; Android DNS / TUN tests pending.",
+    label: "Mobile diagnostics phase: server path fixed; device routing tests pending.",
     phase: "mobile rescue / diagnostics"
   }
 ];
@@ -658,9 +658,9 @@ const missionEvents: MissionEvent[] = [
     time: "known limit"
   },
   {
-    detail: "The server path completed a controlled request. The remaining investigation is isolated to Android DNS, TUN, IPv6, profile identity, or carrier UDP.",
+    detail: "The server path completed a controlled request. The remaining investigation is isolated to mobile routing, profile identity, or carrier behavior.",
     id: "mobile-rescue-phase",
-    label: "Mobile Rescue Phase recorded",
+    label: "Mobile diagnostics phase recorded",
     phase: "diagnostics",
     time: "device test pending"
   }
@@ -1325,7 +1325,7 @@ export default function SignalDashboard() {
             links, or private configuration files.
           </p>
           <div className="diagnostics-grid">
-            {singBoxDiagnostics.map((item) => (
+            {mobileConnectivityDiagnostics.map((item) => (
               <article key={item.label}>
                 <span>{item.label}</span>
                 <strong>{item.value}</strong>
@@ -1340,11 +1340,11 @@ export default function SignalDashboard() {
             </div>
             <div>
               <span>Profiles</span>
-              <strong>Baseline / IPv4-first / no-IPv6 / direct bootstrap</strong>
+              <strong>Baseline / compatibility / guarded bootstrap</strong>
             </div>
             <div>
               <span>Next evidence</span>
-              <strong>DNS, browsing, exit location, and redacted logs</strong>
+              <strong>Name resolution, browsing, exit check, and redacted logs</strong>
             </div>
           </div>
         </section>
