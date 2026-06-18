@@ -1,3 +1,5 @@
+import { sanitizeNode } from "./_shared/public-telemetry.js";
+
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8"
 };
@@ -51,7 +53,7 @@ export async function onRequestGet({ env }) {
 
   return json({
     ok: true,
-    nodes,
+    nodes: nodes.map(sanitizeNode),
     timestamp: new Date().toISOString()
   });
 }

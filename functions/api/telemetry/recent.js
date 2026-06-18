@@ -1,3 +1,5 @@
+import { sanitizeTelemetry } from "../_shared/public-telemetry.js";
+
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8"
 };
@@ -53,7 +55,7 @@ export async function onRequestGet({ request, env }) {
 
   return json({
     ok: true,
-    telemetry: result.results || [],
+    telemetry: (result.results || []).map(sanitizeTelemetry),
     limit,
     timestamp: new Date().toISOString()
   });
