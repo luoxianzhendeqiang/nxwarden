@@ -64,12 +64,12 @@ export async function onRequestPost({ params, request }) {
       mode: "mock",
       node_id: nodeId,
       requested_action: action,
-      error: "Control plane is not armed.",
+      error: "Protected actions are not armed.",
       requirements: [
-        "Cloudflare Access identity boundary",
-        "mTLS device identity",
+        "Protected identity boundary",
+        "Device trust",
         "per-user authorization",
-        "audited command worker"
+        "audited action path"
       ],
       timestamp: new Date().toISOString()
     },

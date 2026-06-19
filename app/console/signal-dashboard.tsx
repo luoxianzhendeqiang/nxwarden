@@ -384,7 +384,7 @@ const infrastructureNodes: MapNode[] = [
     nextAction: "Only heartbeat data should enter this public console.",
     provider: "Mixed",
     region: "Multi-region",
-    riskNote: "Private services need Access before any future control plane is connected.",
+    riskNote: "Private services need Access before any future action layer is connected.",
     signal: "Sealed services",
     status: "Sealed",
     visibility: "Private"
@@ -447,7 +447,7 @@ const privateServices: MapNode[] = [
     nextAction: "Keep private traffic domains on the approved routing posture.",
     provider: "Network",
     region: "Multi-region",
-    riskNote: "Never expose live connectivity credentials in this console.",
+    riskNote: "Never expose live connectivity secrets in this console.",
     signal: "Network layer",
     status: "Sealed",
     visibility: "Private"
@@ -504,7 +504,7 @@ const privateServices: MapNode[] = [
     id: "scripts",
     lastCheck: "Read-only map item",
     name: "Scripts",
-    nextAction: "Promote scripts into a protected control plane later.",
+    nextAction: "Promote scripts into a protected action layer later.",
     provider: "Internal",
     region: "Multi-region",
     riskNote: "No write actions are armed in Phase 2.",
@@ -604,7 +604,7 @@ const decisionLogs: DecisionLog[] = [
   {
     detail: "Signals and system memory must become trustworthy before any action endpoint can be armed.",
     id: "observe-first",
-    label: "Build observation layer before control plane.",
+    label: "Build observation layer before protected actions.",
     phase: "phase 3 / boundary"
   },
   {
@@ -1321,8 +1321,8 @@ export default function SignalDashboard() {
           </div>
           <p className="diagnostics-intro">
             This card records public-safe test outcomes only. It does not reveal
-            node addresses, ports, credentials, obfuscation values, subscription
-            links, or private configuration files.
+            infrastructure addresses, routing details, secrets, connection
+            hints, subscription links, or private configuration files.
           </p>
           <div className="diagnostics-grid">
             {mobileConnectivityDiagnostics.map((item) => (
@@ -1724,7 +1724,7 @@ export default function SignalDashboard() {
           <ShieldCheck aria-hidden="true" size={26} strokeWidth={1.8} />
           <div>
             <p className="eyebrow">gate</p>
-            <h2>Public prototype. Protected control plane later.</h2>
+            <h2>Public prototype. Protected action layer later.</h2>
             <p>
               Login, write actions, and machine commands stay out of this layer
               until Cloudflare Access and a real authorization model are chosen.

@@ -61,10 +61,10 @@ const workSteps = [
 ];
 
 const boundaries = [
-  "No banking, lending, custody, money transmission, or regulated financial products.",
-  "No gambling, adult, cannabis, or restricted-market operations.",
+  "No regulated financial products or services that require specialized licensing.",
+  "No restricted-market operations.",
   "No public network-access resale or anonymous access products.",
-  "No handling of client credentials unless the project scope and retention rules are documented."
+  "No handling of sensitive access materials unless the project scope and retention rules are documented."
 ];
 
 const demoSignals = [

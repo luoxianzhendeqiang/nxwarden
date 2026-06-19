@@ -13,7 +13,7 @@ export default function ContactPage() {
         <p className="lead">
           Use this page for business website, cloud operations, dashboard,
           automation, and documentation requests. Do not submit passwords,
-          payment details, or private access tokens through this form.
+          billing details, or private access tokens through this form.
         </p>
       </section>
 
@@ -24,7 +24,8 @@ export default function ContactPage() {
           <p>
             A useful inquiry explains the business goal, current tools, desired
             outcome, timeline, and any review requirements. If the form is not
-            available, email the intake address directly.
+            available, email the intake address directly. NX Warden is operated
+            by NexusWarden Technology LLC.
           </p>
           <a className="contact-email" href="mailto:ceo@nxwarden.com">
             <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
@@ -32,7 +33,7 @@ export default function ContactPage() {
           </a>
           <p className="small-note">
             <ShieldCheck aria-hidden="true" size={16} strokeWidth={2.1} />
-            NX Warden does not ask for client credentials until a written scope
+            NX Warden does not ask for sensitive access materials until a written scope
             and access method are agreed.
           </p>
         </div>

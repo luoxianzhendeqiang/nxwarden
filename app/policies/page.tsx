@@ -2,10 +2,10 @@ import { FileCheck2, ShieldAlert, ShieldCheck } from "lucide-react";
 import SiteNav from "../site-nav";
 
 const acceptableUse = [
-  "No banking, lending, custody, money transmission, payment processing, securities, or regulated financial products.",
-  "No gambling, adult services, cannabis, weapons, illegal marketplaces, or other restricted-market operations.",
-  "No public VPN/proxy resale, anonymous access resale, abuse infrastructure, spam, phishing, malware, or credential harvesting.",
-  "No submission of passwords, private keys, payment card data, or sensitive credentials unless a written project scope defines the secure handling method."
+  "No regulated financial products or services that require specialized licensing.",
+  "No restricted-market operations or illegal marketplaces.",
+  "No anonymous access resale, abuse infrastructure, spam, phishing, malware, or account-data harvesting.",
+  "No submission of passwords, private keys, payment card data, or sensitive access materials unless a written project scope defines the secure handling method."
 ];
 
 export default function PoliciesPage() {
@@ -17,8 +17,9 @@ export default function PoliciesPage() {
         <p className="eyebrow">policies</p>
         <h1 id="policies-title">Public policies and acceptable use.</h1>
         <p className="lead">
-          These simple policies describe how NX Warden presents its services,
-          handles inquiries, and limits the type of work it accepts.
+          These simple policies describe how NX Warden, operated by
+          NexusWarden Technology LLC, presents its services, handles inquiries,
+          and limits the type of work it accepts.
         </p>
       </section>
 
@@ -32,11 +33,12 @@ export default function PoliciesPage() {
               NX Warden may collect the name, email address, project type, and
               message submitted through the contact form. This information is
               used to review and respond to the inquiry. NX Warden does not sell
-              inquiry data.
+              inquiry data. NexusWarden Technology LLC operates the NX Warden
+              public site and business intake process.
             </p>
             <p>
               Visitors should not submit passwords, private keys, payment card
-              details, or highly sensitive credentials through public forms.
+              details, or highly sensitive access materials through public forms.
             </p>
           </div>
         </article>

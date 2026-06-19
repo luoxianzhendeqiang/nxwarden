@@ -5,7 +5,7 @@ const facts = [
   {
     icon: Building2,
     title: "Company",
-    body: "NX Warden LLC is a Wyoming limited liability company."
+    body: "NX Warden is operated by NexusWarden Technology LLC, a Wyoming limited liability company."
   },
   {
     icon: Sparkles,
@@ -20,7 +20,7 @@ const facts = [
   {
     icon: ShieldCheck,
     title: "Boundaries",
-    body: "NX Warden does not provide financial services, custody of funds, or money transmission."
+    body: "NX Warden does not provide regulated financial products or licensed fund-movement services."
   }
 ];
 
@@ -33,9 +33,9 @@ export default function AboutPage() {
         <p className="eyebrow">about nx warden</p>
         <h1 id="about-title">A small cloud automation and operations studio.</h1>
         <p className="lead">
-          NX Warden LLC helps independent creators, small online businesses, and
-          technical operators turn useful but scattered digital work into clearer
-          websites, workflows, dashboards, and operating notes.
+          NX Warden is the public-facing cloud automation and operations studio
+          operated by NexusWarden Technology LLC, a Wyoming limited liability
+          company.
         </p>
       </section>
 
@@ -67,9 +67,14 @@ export default function AboutPage() {
             service visibility, documentation, and simple reporting surfaces.
           </p>
           <p>
-            The business is not a bank, lender, broker, payment processor, or
-            custodian. It does not hold client funds and does not provide money
-            transmission or regulated financial products.
+            The studio helps independent creators, small online businesses, and
+            technical operators turn useful but scattered digital work into
+            clearer websites, workflows, dashboards, and operating notes.
+          </p>
+          <p>
+            The business is a software operations studio. It does not hold
+            client funds and does not provide regulated financial products or
+            services that require financial licensing.
           </p>
         </div>
       </section>

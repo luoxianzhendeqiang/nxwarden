@@ -76,6 +76,7 @@ export default function ServicesPage() {
         <p className="lead">
           NX Warden focuses on practical deliverables: public websites, workflow
           automation, internal dashboards, status visibility, and documentation.
+          The studio is operated by NexusWarden Technology LLC.
         </p>
       </section>
 
