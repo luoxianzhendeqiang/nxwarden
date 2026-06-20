@@ -14,9 +14,9 @@ const projectTypes = [
   "AI-assisted workflow"
 ];
 
-// TODO: Replace the official always-pass test key with the production widget key.
+// Public Turnstile site key for the nxwarden-contact-production widget.
 const turnstileSiteKey =
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADoUGDAGkH7tbk_G";
 
 function getFriendlyError(message: string) {
   if (/D1 database binding is missing/i.test(message)) {
