@@ -253,7 +253,7 @@ export default function ContactForm() {
           <p className={`turnstile-note ${turnstileUnavailable ? "warning" : ""}`}>
             {turnstileUnavailable
               ? "If the verification widget does not load, you can email us directly."
-              : "Cloudflare verification is required before the form can send."}
+              : "Cloudflare verification is required before the form can send. If the verification widget does not load, you can email us directly."}
           </p>
           <div className="fallback-contact" aria-label="Fallback contact options">
             <a href="mailto:ceo@nxwarden.com?subject=NX%20Warden%20Inquiry">
