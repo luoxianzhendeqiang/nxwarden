@@ -1081,6 +1081,7 @@ textarea:focus {
 
 .turnstile-shell {
   display: grid;
+  gap: 10px;
   min-height: 66px;
   align-items: center;
   padding: 10px;
@@ -1088,6 +1089,39 @@ textarea:focus {
   background:
     linear-gradient(90deg, rgba(158, 216, 255, 0.06), rgba(241, 199, 122, 0.04)),
     rgba(0, 0, 0, 0.2);
+}
+
+.turnstile-widget {
+  min-height: 65px;
+}
+
+.turnstile-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.turnstile-note.warning {
+  color: #ffd69a;
+}
+
+.fallback-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.fallback-contact a {
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.fallback-contact a:hover {
+  color: var(--ink);
 }
 
 .form-status {

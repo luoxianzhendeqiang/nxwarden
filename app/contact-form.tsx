@@ -1,9 +1,32 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
 type Status = "idle" | "submitting" | "success" | "error";
+type TurnstileStatus = "loading" | "ready" | "verified" | "failed";
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      theme: "dark";
+      size: "flexible";
+      callback: (token: string) => void;
+      "expired-callback": () => void;
+      "error-callback": () => void;
+      "timeout-callback": () => void;
+    }
+  ) => string;
+  reset: (widgetId?: string) => void;
+  remove: (widgetId?: string) => void;
+};
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
 
 const projectTypes = [
   "Company site",
@@ -37,9 +60,89 @@ function getFriendlyError(message: string) {
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [scriptReady, setScriptReady] = useState(false);
+  const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatus>("loading");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
+
+  const turnstileUnavailable = turnstileStatus === "failed";
+  const canSubmit = status !== "submitting" && Boolean(turnstileToken);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (!scriptReady && !turnstileToken) {
+        setTurnstileStatus("failed");
+      }
+    }, 12000);
+
+    return () => window.clearTimeout(timer);
+  }, [scriptReady, turnstileToken]);
+
+  useEffect(() => {
+    if (!scriptReady || !turnstileRef.current || widgetIdRef.current) {
+      return;
+    }
+
+    if (!window.turnstile) {
+      setTurnstileStatus("failed");
+      return;
+    }
+
+    try {
+      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: turnstileSiteKey,
+        theme: "dark",
+        size: "flexible",
+        callback: (token) => {
+          setTurnstileToken(token);
+          setTurnstileStatus("verified");
+          setMessage("");
+          setStatus("idle");
+        },
+        "expired-callback": () => {
+          setTurnstileToken("");
+          setTurnstileStatus("ready");
+        },
+        "error-callback": () => {
+          setTurnstileToken("");
+          setTurnstileStatus("failed");
+        },
+        "timeout-callback": () => {
+          setTurnstileToken("");
+          setTurnstileStatus("failed");
+        }
+      });
+      setTurnstileStatus("ready");
+    } catch {
+      setTurnstileStatus("failed");
+    }
+
+    return () => {
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.remove(widgetIdRef.current);
+        widgetIdRef.current = null;
+      }
+    };
+  }, [scriptReady]);
+
+  function resetTurnstile() {
+    setTurnstileToken("");
+    setTurnstileStatus(scriptReady ? "ready" : "loading");
+    if (widgetIdRef.current) {
+      window.turnstile?.reset(widgetIdRef.current);
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!turnstileToken) {
+      setStatus("error");
+      setMessage("Please complete the Cloudflare safety check before sending, or email us directly if the widget does not load.");
+      return;
+    }
+
     setStatus("submitting");
     setMessage("");
 
@@ -59,7 +162,7 @@ export default function ContactForm() {
       project_type: String(data.get("projectType") ?? "Company site"),
       message: String(data.get("message") ?? "").trim(),
       source: "nxwarden.com public inquiry",
-      cf_turnstile_response: String(data.get("cf-turnstile-response") ?? "")
+      cf_turnstile_response: turnstileToken
     };
 
     let errorMessage = "";
@@ -84,21 +187,29 @@ export default function ContactForm() {
     if (errorMessage) {
       setStatus("error");
       setMessage(getFriendlyError(errorMessage));
-      (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+      resetTurnstile();
       return;
     }
 
     setStatus("success");
     setMessage("Received. I will read it soon.");
     form.reset();
-    (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+    resetTurnstile();
   }
 
   return (
     <>
       <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
+        onLoad={() => {
+          setScriptReady(true);
+          setTurnstileStatus("ready");
+        }}
+        onError={() => {
+          setScriptReady(false);
+          setTurnstileStatus("failed");
+        }}
       />
       <form className="contact-form" onSubmit={handleSubmit}>
         <div className="form-row">
@@ -138,16 +249,23 @@ export default function ContactForm() {
         </label>
 
         <div className="turnstile-shell" aria-label="Cloudflare Turnstile challenge">
-          <div
-            className="cf-turnstile"
-            data-sitekey={turnstileSiteKey}
-            data-theme="dark"
-            data-size="flexible"
-          />
+          <div ref={turnstileRef} className="turnstile-widget" />
+          <p className={`turnstile-note ${turnstileUnavailable ? "warning" : ""}`}>
+            {turnstileUnavailable
+              ? "If the verification widget does not load, you can email us directly."
+              : "Cloudflare verification is required before the form can send."}
+          </p>
+          <div className="fallback-contact" aria-label="Fallback contact options">
+            <a href="mailto:ceo@nxwarden.com?subject=NX%20Warden%20Inquiry">
+              Open email client
+            </a>
+            <a href="mailto:ceo@nxwarden.com">ceo@nxwarden.com</a>
+            <a href="mailto:info@nxwarden.com">info@nxwarden.com</a>
+          </div>
         </div>
 
         <div className="form-footer">
-          <button className="button primary" type="submit" disabled={status === "submitting"}>
+          <button className="button primary" type="submit" disabled={!canSubmit}>
             {status === "submitting" ? "Sending" : "Send inquiry"}
           </button>
           {message ? (
