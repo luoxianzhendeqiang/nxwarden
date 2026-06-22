@@ -153,7 +153,7 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     region: "APAC",
     status: "Online",
     temperature: 41,
-    visibility: "private"
+    visibility: "protected"
   },
   {
     cpu: 42,
@@ -167,7 +167,7 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     region: "North America",
     status: "Online",
     temperature: 47,
-    visibility: "private"
+    visibility: "protected"
   },
   {
     cpu: 26,
@@ -181,7 +181,7 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     region: "Europe",
     status: "Online",
     temperature: 38,
-    visibility: "private"
+    visibility: "protected"
   }
 ];
 
@@ -282,7 +282,7 @@ const domainMailDiagnostics = [
   },
   {
     label: "Sender boundary",
-    value: "Private setting only",
+    value: "Protected setting only",
     detail: "Sensitive sender settings are never returned to the browser."
   },
   {
@@ -292,7 +292,7 @@ const domainMailDiagnostics = [
   },
   {
     label: "Administration",
-    value: "Private workflow",
+    value: "Protected workflow",
     detail: "Mailbox creation and delivery tests remain outside this public console."
   }
 ];
@@ -302,7 +302,7 @@ const pulseCards = [
     icon: Activity,
     label: "Mission Pulse",
     value: "Observation",
-    body: "Public edge is online, private plane is sealed, and no write actions are armed.",
+    body: "Public edge is online, protected systems are sealed, and no write actions are armed.",
     tone: "green" as Tone
   },
   {
@@ -316,7 +316,7 @@ const pulseCards = [
     icon: Server,
     label: "Infrastructure Map",
     value: "4 layers",
-    body: "Public Edge, Pages, Access Boundary, and Private Plane read as one topology.",
+    body: "Public Edge, Pages, Access Boundary, and Protected Systems read as one topology.",
     tone: "gold" as Tone
   },
   {
@@ -354,7 +354,7 @@ const infrastructureNodes: MapNode[] = [
     nextAction: "Use Pages plus Functions as the observation edge.",
     provider: "Cloudflare",
     region: "Global",
-    riskNote: "Pages should receive public UI and observation endpoints, not machine-control secrets.",
+    riskNote: "Pages should receive public UI and observation endpoints, not machine-control access data.",
     signal: "Edge deployment",
     status: "Serving",
     visibility: "Public"
@@ -375,25 +375,25 @@ const infrastructureNodes: MapNode[] = [
     visibility: "Gate"
   },
   {
-    endpoint: "Private hosted services, agents, media, scripts",
+    endpoint: "Protected service group",
     health: "online",
     icon: Server,
-    id: "private-plane",
+    id: "protected-systems",
     lastCheck: "Represented as static topology plus telemetry signals",
-    name: "Private Plane",
+    name: "Protected Systems",
     nextAction: "Only heartbeat data should enter this public console.",
     provider: "Mixed",
     region: "Multi-region",
-    riskNote: "Private services need Access before any future action layer is connected.",
-    signal: "Sealed services",
+    riskNote: "Protected services need Access before any future action layer is connected.",
+    signal: "Sealed systems",
     status: "Sealed",
-    visibility: "Private"
+    visibility: "Protected"
   }
 ];
 
-const privateServices: MapNode[] = [
+const protectedServices: MapNode[] = [
   {
-    endpoint: "Private compute group",
+    endpoint: "Protected compute group",
     health: "online",
     icon: Cloud,
     id: "edge-hosting",
@@ -405,7 +405,7 @@ const privateServices: MapNode[] = [
     riskNote: "Do not expose shell logs, internal paths, or control actions.",
     signal: "Hosting provider",
     status: "Observed",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
     endpoint: "Regional compute group",
@@ -420,7 +420,7 @@ const privateServices: MapNode[] = [
     riskNote: "Ingest should stay token and Turnstile protected.",
     signal: "Hosting provider",
     status: "Observed",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
     endpoint: "Fleet monitor field",
@@ -438,19 +438,19 @@ const privateServices: MapNode[] = [
     visibility: "Monitored"
   },
   {
-    endpoint: "Private connectivity nodes",
+    endpoint: "Protected connectivity group",
     health: "online",
     icon: RadioTower,
     id: "connectivity",
     lastCheck: "No direct control wired",
     name: "Connectivity Layer",
-    nextAction: "Keep private traffic domains on the approved routing posture.",
+    nextAction: "Keep protected routing domains on the approved posture.",
     provider: "Network",
     region: "Multi-region",
-    riskNote: "Never expose live connectivity secrets in this console.",
+    riskNote: "Never expose live connectivity access data in this console.",
     signal: "Network layer",
     status: "Sealed",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
     endpoint: "Protected media endpoint",
@@ -461,11 +461,11 @@ const privateServices: MapNode[] = [
     name: "Media Library",
     nextAction: "Confirm Access rules before exposing deeper controls.",
     provider: "Self-hosted",
-    region: "Private plane",
+    region: "Protected layer",
     riskNote: "Archive mounts should stay read-only for library scans.",
     signal: "Media library",
     status: "Protected",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
     endpoint: "Protected archive storage",
@@ -477,13 +477,13 @@ const privateServices: MapNode[] = [
     nextAction: "Confirm cleanup and retention before R2 Phase 2.",
     provider: "Cloud storage",
     region: "Global",
-    riskNote: "R2 media sync stays deferred and private by default.",
+    riskNote: "R2 media sync stays deferred and closed by default.",
     signal: "Storage flow",
     status: "Connected",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
-    endpoint: "Private automation worker",
+    endpoint: "Protected automation worker",
     health: "online",
     icon: Bot,
     id: "message-automation",
@@ -495,7 +495,7 @@ const privateServices: MapNode[] = [
     riskNote: "Downloads and cache deletion should not be controlled from public UI.",
     signal: "Automation loop",
     status: "Watching",
-    visibility: "Private"
+    visibility: "Protected"
   },
   {
     endpoint: "organizers / sync scripts",
@@ -510,11 +510,11 @@ const privateServices: MapNode[] = [
     riskNote: "No write actions are armed in Phase 2.",
     signal: "Automation layer",
     status: "Mapped",
-    visibility: "Private"
+    visibility: "Protected"
   }
 ];
 
-const mapNodes = [...infrastructureNodes, ...privateServices];
+const mapNodes = [...infrastructureNodes, ...protectedServices];
 
 const flows = [
   {
@@ -547,9 +547,9 @@ const risks = [
   },
   {
     icon: ShieldAlert,
-    label: "Private services exposed?",
+    label: "Protected systems exposed?",
     detail: "Review Access rules before adding any control-plane route.",
-    nodeIds: ["private-plane", "media-library"],
+    nodeIds: ["protected-systems", "media-library"],
     tone: "red" as Tone
   },
   {
@@ -608,7 +608,7 @@ const decisionLogs: DecisionLog[] = [
     phase: "phase 3 / boundary"
   },
   {
-    detail: "Future object storage requires private buckets, signed URLs, lifecycle cleanup, upload caps, and no public listings.",
+    detail: "Future object storage requires closed buckets, signed URLs, lifecycle cleanup, upload caps, and no public listings.",
     id: "defer-r2",
     label: "Defer R2 media sync until signed URL and lifecycle rules exist.",
     phase: "future / storage"
@@ -678,7 +678,7 @@ const accessPosture = [
     value: "Public read-only"
   },
   {
-    label: "Private Plane",
+    label: "Protected Systems",
     value: "Sealed, no direct exposure"
   },
   {
@@ -789,7 +789,7 @@ function normalizeTelemetry(row: ApiTelemetry, fallback?: ApiNode): NodeSignal |
     region: String(row.region || fallback?.region || "Unknown"),
     status: "Online",
     temperature: numberOrNull(row.temperature_c),
-    visibility: String(row.visibility || fallback?.visibility || "private")
+    visibility: String(row.visibility || fallback?.visibility || "protected")
   };
 }
 
@@ -956,16 +956,16 @@ export default function SignalDashboard() {
   const selectedEvent =
     missionEvents.find((event) => event.id === selectedEventId) ?? null;
   const providerOptions = useMemo(
-    () => Array.from(new Set(privateServices.map((node) => node.provider))).sort(),
+    () => Array.from(new Set(protectedServices.map((node) => node.provider))).sort(),
     []
   );
   const regionOptions = useMemo(
-    () => Array.from(new Set(privateServices.map((node) => node.region))).sort(),
+    () => Array.from(new Set(protectedServices.map((node) => node.region))).sort(),
     []
   );
-  const filteredPrivateServices = useMemo(
+  const filteredProtectedServices = useMemo(
     () =>
-      privateServices.filter(
+      protectedServices.filter(
         (node) =>
           (providerFilter === "all" || node.provider === providerFilter) &&
           (regionFilter === "all" || node.region === regionFilter) &&
@@ -1321,8 +1321,8 @@ export default function SignalDashboard() {
           </div>
           <p className="diagnostics-intro">
             This card records public-safe test outcomes only. It does not reveal
-            infrastructure addresses, routing details, secrets, connection
-            hints, subscription links, or private configuration files.
+            infrastructure addresses, routing details, sensitive access data,
+            connection hints, subscription links, or protected configuration files.
           </p>
           <div className="diagnostics-grid">
             {mobileConnectivityDiagnostics.map((item) => (
@@ -1364,7 +1364,7 @@ export default function SignalDashboard() {
             </span>
           </div>
           <p className="diagnostics-intro">
-            This is a public-safe readiness summary. Addresses, provider secrets,
+            This is a public-safe readiness summary. Addresses, provider access data,
             routing destinations, DNS records, and administrative controls are
             intentionally omitted.
           </p>
@@ -1520,8 +1520,8 @@ export default function SignalDashboard() {
                 })}
               </div>
 
-              <div className="private-branches" aria-label="Private plane branches">
-                {filteredPrivateServices.map((service) => {
+              <div className="private-branches" aria-label="Protected system branches">
+                {filteredProtectedServices.map((service) => {
                   const Icon = service.icon;
                   const isSelected = service.id === selectedNode.id;
 
@@ -1548,7 +1548,7 @@ export default function SignalDashboard() {
                     </button>
                   );
                 })}
-                {!filteredPrivateServices.length ? (
+                {!filteredProtectedServices.length ? (
                   <div className="map-empty">
                     No nodes match this signal filter.
                   </div>

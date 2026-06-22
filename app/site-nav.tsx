@@ -2,6 +2,8 @@ import { TerminalSquare } from "lucide-react";
 
 const links = [
   { href: "/services/", label: "Services" },
+  { href: "/work/", label: "Work" },
+  { href: "/roadmap/", label: "Roadmap" },
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
   { href: "/policies/", label: "Policies" }

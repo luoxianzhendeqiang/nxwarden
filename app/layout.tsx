@@ -2,23 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NX Warden - Cloud Automation & Operations Studio",
+  title: "NX Warden — Cloud Automation & Operations Studio",
   description:
-    "Practical cloud infrastructure, automation workflows, and internal dashboards for small businesses, creators, and technical operators.",
+    "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
   metadataBase: new URL("https://nxwarden.com"),
   openGraph: {
     type: "website",
-    title: "NX Warden - Cloud Automation & Operations Studio",
+    title: "NX Warden — Cloud Automation & Operations Studio",
     description:
-      "Practical cloud infrastructure, automation workflows, and internal dashboards for small businesses, creators, and technical operators.",
+      "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
     images: ["/assets/blackhole-hero.png"],
     url: "https://nxwarden.com/"
   },
   twitter: {
     card: "summary_large_image",
-    title: "NX Warden - Cloud Automation & Operations Studio",
+    title: "NX Warden — Cloud Automation & Operations Studio",
     description:
-      "Practical cloud infrastructure, automation workflows, and internal dashboards for small businesses, creators, and technical operators.",
+      "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
     images: ["/assets/blackhole-hero.png"]
   },
   icons: {

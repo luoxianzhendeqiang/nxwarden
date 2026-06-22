@@ -12,21 +12,26 @@ export default function ContactPage() {
         <h1 id="contact-page-title">Send a project inquiry.</h1>
         <p className="lead">
           Use this page for business website, cloud operations, dashboard,
-          automation, and documentation requests. Do not submit passwords,
-          billing details, or private access tokens through this form.
+          automation, and documentation requests. Do not submit sensitive login,
+          billing, or access details through this form.
         </p>
       </section>
 
       <section className="contact contact-page" aria-label="Project inquiry form">
         <div className="contact-copy">
           <p className="eyebrow">business intake</p>
-          <h2>Start with scope, not secrets.</h2>
+          <h2>Start with scope, not sensitive data.</h2>
           <p>
             A useful inquiry explains the business goal, current tools, desired
             outcome, timeline, and any review requirements. If the form is not
             available, email the intake address directly. NX Warden is operated
             by NexusWarden Technology LLC.
           </p>
+          <ul className="inquiry-guide" aria-label="Useful inquiry details">
+            <li>Project type: website, workflow, dashboard, monitoring, or documentation.</li>
+            <li>Current tools: where the work lives today and what feels scattered.</li>
+            <li>Desired outcome: what should be organized, automated, monitored, or documented.</li>
+          </ul>
           <a className="contact-email" href="mailto:ceo@nxwarden.com">
             <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
             ceo@nxwarden.com

@@ -18,13 +18,13 @@ const services = [
   {
     index: "01",
     icon: Cloud,
-    title: "Cloud Infrastructure Setup",
-    body: "Domains, edge hosting, secure application paths, uptime checks, and clean handoff notes."
+    title: "Cloud Systems",
+    body: "Public websites, edge hosting, status checks, and clear launch notes for small operations."
   },
   {
     index: "02",
     icon: Workflow,
-    title: "Automation Workflow Design",
+    title: "Workflow Automation",
     body: "Repeatable intake, publishing, file organization, reporting, and operations routines."
   },
   {
@@ -35,6 +35,18 @@ const services = [
   },
   {
     index: "04",
+    icon: Globe2,
+    title: "Website & Domain Operations",
+    body: "Professional public pages, metadata, contact paths, policy pages, and release checklists."
+  },
+  {
+    index: "05",
+    icon: BarChart3,
+    title: "Monitoring",
+    body: "Lightweight signals for public health, recent changes, and operational follow-up."
+  },
+  {
+    index: "06",
     icon: ClipboardList,
     title: "Documentation & Runbooks",
     body: "Plain-language operating notes so useful systems can be maintained after launch."
@@ -43,25 +55,29 @@ const services = [
 
 const workSteps = [
   {
-    label: "Scope",
-    text: "Turn a scattered request into a short, reviewable plan with boundaries and expected outcomes."
+    label: "Discover",
+    text: "Clarify the current tools, rough edges, desired outcome, and review requirements."
   },
   {
-    label: "Build",
-    text: "Create the website, workflow, dashboard, or operations surface with practical defaults."
+    label: "Set up",
+    text: "Put the website, dashboard, workflow, or operating surface in a stable starting shape."
+  },
+  {
+    label: "Automate",
+    text: "Turn repeated steps into reviewable routines that stay understandable."
   },
   {
     label: "Document",
     text: "Leave behind runbooks, checklists, and service notes that make the system understandable."
   },
   {
-    label: "Observe",
-    text: "Add lightweight status signals so the next issue is easier to notice and explain."
+    label: "Handoff",
+    text: "Summarize what changed, what to watch, and where future work should begin."
   }
 ];
 
 const boundaries = [
-  "No regulated financial products or services that require specialized licensing.",
+  "No regulated finance activities or specialized licensed products.",
   "No restricted-market operations.",
   "No public network-access resale or anonymous access products.",
   "No handling of sensitive access materials unless the project scope and retention rules are documented."
@@ -117,10 +133,10 @@ export default function Home() {
               View Services
             </a>
             <a className="button ghost" href="/contact/">
-              Contact
+              Send Inquiry
             </a>
-            <a className="button ghost" href="/about/">
-              About NX Warden
+            <a className="button ghost" href="/work/">
+              View Work
             </a>
           </div>
           <a className="secondary-link" href="/console/">
@@ -153,7 +169,7 @@ export default function Home() {
 
       <section className="systems" id="services" aria-labelledby="services-title">
         <div className="section-head">
-          <p className="eyebrow">services</p>
+          <p className="eyebrow">what nx warden does</p>
           <h2 id="services-title">
             Useful operations work without unnecessary complexity.
           </h2>
@@ -179,7 +195,7 @@ export default function Home() {
 
       <section className="work" id="work" aria-labelledby="work-title">
         <div>
-          <p className="eyebrow">how work happens</p>
+          <p className="eyebrow">how we work</p>
           <h2 id="work-title">Small systems, written down and kept understandable.</h2>
         </div>
         <ol className="timeline">
@@ -194,7 +210,7 @@ export default function Home() {
 
       <section className="audience" aria-labelledby="audience-title">
         <div className="audience-copy">
-          <p className="eyebrow">who it helps</p>
+          <p className="eyebrow">built for</p>
           <h2 id="audience-title">
             For creators and operators whose tools need a clearer home.
           </h2>
@@ -248,7 +264,7 @@ export default function Home() {
           <h2 id="trust-title">What NX Warden does not do.</h2>
           <p>
             NX Warden is a software automation and cloud operations studio. It
-            does not offer financial services or operate restricted businesses.
+            does not offer regulated finance activities or operate restricted businesses.
           </p>
         </div>
         <div className="trust-grid">

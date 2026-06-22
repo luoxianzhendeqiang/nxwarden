@@ -814,6 +814,205 @@ h2 {
   margin-top: 14px;
 }
 
+.compact-head {
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+.service-detail-grid,
+.proof-grid,
+.roadmap-grid,
+.faq-grid,
+.limits-grid {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.service-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.proof-grid,
+.roadmap-grid,
+.faq-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.limits-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.service-detail-card,
+.proof-card,
+.roadmap-card,
+.faq-card,
+.limit-card,
+.deliverable-panel,
+.sample-boundary,
+.roadmap-note {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.024)),
+    rgba(8, 8, 7, 0.86);
+}
+
+.service-detail-card,
+.proof-card,
+.roadmap-card,
+.faq-card,
+.limit-card {
+  min-height: 220px;
+  padding: 24px;
+}
+
+.service-detail-top,
+.roadmap-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.service-detail-top svg,
+.proof-card svg,
+.roadmap-card-head svg,
+.limit-card svg,
+.sample-boundary > svg,
+.roadmap-note > svg {
+  flex: 0 0 auto;
+  color: var(--gold);
+}
+
+.service-detail-card h2,
+.proof-card h2,
+.roadmap-card h2,
+.faq-card h3,
+.sample-boundary h2,
+.roadmap-note h2 {
+  margin: 0;
+  font-size: clamp(23px, 2.4vw, 34px);
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.service-detail-card dl {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  border: 1px solid rgba(245, 241, 232, 0.12);
+  background: rgba(245, 241, 232, 0.12);
+}
+
+.service-detail-card dl div {
+  display: grid;
+  grid-template-columns: 134px minmax(0, 1fr);
+  gap: 14px;
+  padding: 13px;
+  background: rgba(7, 7, 6, 0.72);
+}
+
+.service-detail-card dt {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.service-detail-card dd {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.fit-button {
+  width: fit-content;
+  margin-top: 6px;
+}
+
+.limit-card {
+  min-height: 150px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.limit-card p,
+.proof-card p,
+.faq-card p,
+.sample-boundary p,
+.roadmap-note p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.proof-card,
+.roadmap-card,
+.faq-card {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.roadmap-card ul {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.deliverable-panel {
+  display: grid;
+  gap: 1px;
+  padding: 1px;
+  border: 1px solid var(--line);
+}
+
+.deliverable-row {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 0 18px;
+  background: rgba(7, 7, 6, 0.78);
+  color: rgba(245, 241, 232, 0.84);
+  font-weight: 760;
+}
+
+.deliverable-row svg {
+  color: var(--blue);
+}
+
+.sample-boundary,
+.roadmap-note {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  border-top: 1px solid rgba(245, 241, 232, 0.12);
+}
+
+.sample-boundary p,
+.roadmap-note p {
+  max-width: 880px;
+  margin-bottom: 18px;
+  font-size: 18px;
+}
+
+.inquiry-guide {
+  display: grid;
+  gap: 10px;
+  max-width: 680px;
+  margin: 20px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .contact-form {
   display: grid;
   gap: 16px;
@@ -3158,6 +3357,11 @@ textarea:focus {
   .subpage-grid,
   .service-list,
   .trust-grid,
+  .service-detail-grid,
+  .proof-grid,
+  .roadmap-grid,
+  .faq-grid,
+  .limits-grid,
   .pulse-grid,
   .telemetry-grid,
   .metric-rack,
@@ -3348,6 +3552,11 @@ textarea:focus {
   .subpage-grid,
   .service-list,
   .trust-grid,
+  .service-detail-grid,
+  .proof-grid,
+  .roadmap-grid,
+  .faq-grid,
+  .limits-grid,
   .pulse-grid,
   .telemetry-grid,
   .metric-rack,
@@ -3419,6 +3628,12 @@ textarea:focus {
 
   .service-line,
   .policy-card {
+    grid-template-columns: 1fr;
+  }
+
+  .service-detail-card dl div,
+  .sample-boundary,
+  .roadmap-note {
     grid-template-columns: 1fr;
   }
 

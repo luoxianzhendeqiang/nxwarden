@@ -1,67 +1,116 @@
 import {
   BarChart3,
+  Bot,
   Cloud,
   FileText,
   Globe2,
   ListChecks,
+  MonitorCheck,
+  ShieldCheck,
   Sparkles
 } from "lucide-react";
 import SiteNav from "../site-nav";
 
 const serviceLines = [
   {
-    icon: Cloud,
-    title: "Cloud Infrastructure Setup",
-    points: [
-      "Domain and hosting setup",
-      "Edge deployment and basic availability checks",
-      "Service documentation and safe handoff notes"
-    ]
+    icon: Globe2,
+    title: "Website and domain operations",
+    solves: "A clearer public home for a small business, studio, or technical project.",
+    deliverable: "A launch checklist, public pages, metadata, policy links, and contact flow review.",
+    outOfScope: "Brand claims, customer logos, or business history that cannot be verified."
   },
   {
     icon: ListChecks,
-    title: "Automation Workflow Design",
-    points: [
-      "File organization and naming routines",
-      "Publishing and reporting workflows",
-      "Repeatable operating checklists"
-    ]
-  },
-  {
-    icon: Globe2,
-    title: "Website & Domain Operations",
-    points: [
-      "Public company pages",
-      "Contact and inquiry flows",
-      "Professional metadata, policy pages, and launch notes"
-    ]
+    title: "Workflow automation",
+    solves: "Repeated steps that live in memory, scattered notes, or manual routines.",
+    deliverable: "A small workflow map, automation checklist, naming rules, and handoff notes.",
+    outOfScope: "Unreviewed automation that changes production systems without approval."
   },
   {
     icon: BarChart3,
-    title: "Internal Dashboards & Monitoring",
-    points: [
-      "Read-only service status surfaces",
-      "Risk notes and timeline views",
-      "Lightweight operations summaries"
-    ]
+    title: "Internal dashboards",
+    solves: "Operators needing a calm view of services, tasks, risks, and recent events.",
+    deliverable: "A read-only dashboard shell with clear cards, filters, and status language.",
+    outOfScope: "Public exposure of sensitive operational details."
+  },
+  {
+    icon: MonitorCheck,
+    title: "Monitoring and status pages",
+    solves: "Small systems that need basic reachability signals and incident context.",
+    deliverable: "A monitor list, status summary, alert notes, and review cadence.",
+    outOfScope: "Guaranteed uptime unless a written agreement defines the service level."
   },
   {
     icon: FileText,
-    title: "Documentation & Runbooks",
-    points: [
-      "Deployment notes",
-      "Maintenance routines",
-      "Decision logs and ownership boundaries"
-    ]
+    title: "Documentation and runbooks",
+    solves: "Useful work that becomes difficult to maintain after the initial setup.",
+    deliverable: "Runbook pages, decision notes, ownership boundaries, and maintenance steps.",
+    outOfScope: "Storing sensitive access material in public documents."
+  },
+  {
+    icon: Cloud,
+    title: "Cloud setup and maintenance",
+    solves: "A practical baseline for hosting, deployment, policies, and public availability.",
+    deliverable: "Deployment notes, environment checklist, health endpoint review, and rollback notes.",
+    outOfScope: "High-risk or restricted-market operations."
   },
   {
     icon: Sparkles,
-    title: "AI-Assisted Workflow Tooling",
-    points: [
-      "Research and drafting surfaces",
-      "Structured prompts and review loops",
-      "Human-reviewed automation support"
-    ]
+    title: "AI-assisted workflow tooling",
+    solves: "Research, drafting, review loops, and operational memory that need structure.",
+    deliverable: "Prompt kits, review checklists, intake templates, and human-reviewed output flows.",
+    outOfScope: "Fully autonomous decisions without human review."
+  }
+];
+
+const limits = [
+  "Regulated finance activities or specialized licensed products.",
+  "Fund handling, card handling, or client-asset holding.",
+  "Restricted-market operations or illegal marketplaces.",
+  "Public anonymous network access resale.",
+  "Handling sensitive access material without a written scope and secure method."
+];
+
+const faqs = [
+  {
+    question: "What does NX Warden do?",
+    answer:
+      "NX Warden builds practical cloud systems, automation workflows, read-only dashboards, monitoring surfaces, and runbooks for small online operations."
+  },
+  {
+    question: "Who is NX Warden for?",
+    answer:
+      "It is built for independent creators, small online businesses, solo operators, and small technical teams that need clearer systems without heavy overhead."
+  },
+  {
+    question: "Is NX Warden a regulated finance provider?",
+    answer:
+      "No. NX Warden is a cloud automation and operations studio, not a regulated finance provider."
+  },
+  {
+    question: "Does NX Warden handle client billing or client funds?",
+    answer:
+      "No. The studio focuses on software operations, documentation, dashboards, and workflow support."
+  },
+  {
+    question: "Can NX Warden build internal dashboards?",
+    answer:
+      "Yes. The first version is usually a read-only signal surface that helps organize status, risks, recent changes, and operating notes."
+  },
+  {
+    question: "Can NX Warden help organize workflows and documentation?",
+    answer:
+      "Yes. Workflow maps, naming rules, runbooks, and handoff templates are a core part of the work."
+  },
+  {
+    question: "How do inquiries work?",
+    answer:
+      "Send a scoped inquiry with the project type, current tools, goal, timeline, and what needs to be organized, automated, monitored, or documented."
+  },
+  {
+    question: "What should a new inquiry include?",
+    answer:
+      "Include the business goal, current setup, pain points, desired deliverables, and any review or handoff needs. Do not include sensitive access details in the first message."
   }
 ];
 
@@ -75,27 +124,37 @@ export default function ServicesPage() {
         <h1 id="services-title">Cloud operations work for small online businesses.</h1>
         <p className="lead">
           NX Warden focuses on practical deliverables: public websites, workflow
-          automation, internal dashboards, status visibility, and documentation.
-          The studio is operated by NexusWarden Technology LLC.
+          automation, internal dashboards, status visibility, documentation, and
+          maintainable handoff notes. The studio is operated by NexusWarden
+          Technology LLC.
         </p>
       </section>
 
       <section className="subpage-section" aria-label="Service lines">
-        <div className="service-list">
+        <div className="service-detail-grid">
           {serviceLines.map((service) => {
             const Icon = service.icon;
 
             return (
-              <article className="service-line" key={service.title}>
-                <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
-                <div>
+              <article className="service-detail-card" key={service.title}>
+                <div className="service-detail-top">
+                  <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
                   <h2>{service.title}</h2>
-                  <ul>
-                    {service.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
                 </div>
+                <dl>
+                  <div>
+                    <dt>Solves</dt>
+                    <dd>{service.solves}</dd>
+                  </div>
+                  <div>
+                    <dt>Small deliverable</dt>
+                    <dd>{service.deliverable}</dd>
+                  </div>
+                  <div>
+                    <dt>Out of scope</dt>
+                    <dd>{service.outOfScope}</dd>
+                  </div>
+                </dl>
               </article>
             );
           })}
@@ -110,14 +169,47 @@ export default function ServicesPage() {
         <div className="text-panel">
           <p>
             Every project starts with a written scope: what will be built, what
-            access is needed, what data is handled, and what handoff notes should
-            exist when the work is complete.
+            access method is needed, what data is handled, and what handoff
+            notes should exist when the work is complete.
           </p>
           <p>
-            Public deliverables are written for clients and reviewers. Private
-            operational details stay out of the public website unless there is a
-            clear business reason to publish them.
+            Public deliverables are written for clients and reviewers. Sensitive
+            operational details stay out of public pages unless there is a clear
+            business reason to publish a safe summary.
           </p>
+          <a className="button primary fit-button" href="/contact/">
+            Send Inquiry
+          </a>
+        </div>
+      </section>
+
+      <section className="subpage-section" aria-labelledby="limits-title">
+        <div className="section-head compact-head">
+          <p className="eyebrow">service boundaries</p>
+          <h2 id="limits-title">What NX Warden does not do.</h2>
+        </div>
+        <div className="limits-grid">
+          {limits.map((item) => (
+            <article className="limit-card" key={item}>
+              <ShieldCheck aria-hidden="true" size={22} strokeWidth={2} />
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="subpage-section faq-section" aria-labelledby="faq-title">
+        <div className="section-head compact-head">
+          <p className="eyebrow">faq</p>
+          <h2 id="faq-title">Clear answers before a scoped inquiry.</h2>
+        </div>
+        <div className="faq-grid">
+          {faqs.map((item) => (
+            <article className="faq-card" key={item.question}>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))}
         </div>
       </section>
     </main>

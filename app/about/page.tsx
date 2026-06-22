@@ -20,7 +20,7 @@ const facts = [
   {
     icon: ShieldCheck,
     title: "Boundaries",
-    body: "NX Warden does not provide regulated financial products or licensed fund-movement services."
+    body: "NX Warden does not provide regulated finance activities or licensed fund-movement products."
   }
 ];
 
@@ -73,8 +73,28 @@ export default function AboutPage() {
           </p>
           <p>
             The business is a software operations studio. It does not hold
-            client funds and does not provide regulated financial products or
-            services that require financial licensing.
+            client funds and does not provide regulated finance products that
+            require specialized licensing.
+          </p>
+        </div>
+      </section>
+
+      <section className="split-band founder-note" aria-labelledby="founder-note-title">
+        <div>
+          <p className="eyebrow">founder / operator note</p>
+          <h2 id="founder-note-title">Systems are only useful when someone can maintain them.</h2>
+        </div>
+        <div className="text-panel">
+          <p>
+            NX Warden is intentionally small and practical. The work is less
+            about flashy launch theater and more about making a website,
+            workflow, dashboard, or runbook easier to understand the next time
+            something changes.
+          </p>
+          <p>
+            A good handoff should answer simple questions: what exists, why it
+            exists, where the public surface lives, what should be watched, and
+            what should stay out of public view.
           </p>
         </div>
       </section>

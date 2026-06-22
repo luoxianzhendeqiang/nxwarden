@@ -39,7 +39,7 @@ export default function ConsolePage() {
             <span>Read-only operations dashboard active.</span>
             <span>No write actions armed.</span>
             <span>Public edge online.</span>
-            <span>Private details sealed.</span>
+            <span>Protected details sealed.</span>
           </div>
         </div>
 
@@ -72,8 +72,9 @@ export default function ConsolePage() {
       <aside className="public-observation-note" aria-label="Public observation layer notice">
         <ShieldCheck aria-hidden="true" size={18} strokeWidth={2} />
         <p>
-          This console shows public-safe system signals only. Secrets, internal
-          paths, private configurations, and machine controls are not exposed.
+          This console shows public-safe system signals only. Sensitive access
+          details, internal paths, protected setup details, and machine controls
+          are not exposed.
         </p>
       </aside>
 
