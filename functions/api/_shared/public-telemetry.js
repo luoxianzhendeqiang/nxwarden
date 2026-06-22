@@ -23,10 +23,15 @@ function safeNumber(value) {
 }
 
 function safeVisibility(value) {
-  const visibility = String(value || "private").toLowerCase();
-  return ["public", "private", "monitored", "experimental", "gate"].includes(visibility)
+  const visibility = String(value || "protected").toLowerCase();
+
+  if (visibility === "private") {
+    return "protected";
+  }
+
+  return ["public", "protected", "monitored", "experimental", "gate"].includes(visibility)
     ? visibility
-    : "private";
+    : "protected";
 }
 
 export function sanitizeTelemetry(row = {}) {
