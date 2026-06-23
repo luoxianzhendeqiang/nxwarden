@@ -1,5 +1,14 @@
-import { ArrowRight, BookOpenCheck, ClipboardCheck, Compass, Layers3 } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  CalendarCheck,
+  ClipboardCheck,
+  Compass,
+  Layers3
+} from "lucide-react";
 import SiteNav from "../site-nav";
+
+const lastUpdated = "June 23, 2026";
 
 const roadmap = [
   {
@@ -34,6 +43,29 @@ const roadmap = [
   }
 ];
 
+const operatingEvidence = [
+  {
+    title: "Public website",
+    detail: "Brand, services, policies, and business boundaries are available for review."
+  },
+  {
+    title: "Contact path",
+    detail: "Direct email and a verified form path support project inquiries without sensitive first-message details."
+  },
+  {
+    title: "Work samples",
+    detail: "Public-safe screenshots and templates show approach without exposing protected systems."
+  },
+  {
+    title: "Read-only operations demo",
+    detail: "The public console demonstrates signal language while keeping control actions locked."
+  },
+  {
+    title: "Documentation pack",
+    detail: "Decision notes and runbook-style records support reviewable handoff habits."
+  }
+];
+
 export default function RoadmapPage() {
   return (
     <main className="subpage">
@@ -47,6 +79,25 @@ export default function RoadmapPage() {
           service examples, better intake, reusable templates, and documentation
           that helps future work start from evidence instead of memory.
         </p>
+        <p className="last-updated">
+          <CalendarCheck aria-hidden="true" size={16} strokeWidth={2.1} />
+          Last updated: {lastUpdated}
+        </p>
+      </section>
+
+      <section className="subpage-section" aria-labelledby="current-evidence-title">
+        <div className="section-head compact-head">
+          <p className="eyebrow">current operating evidence</p>
+          <h2 id="current-evidence-title">What is available to review now.</h2>
+        </div>
+        <div className="evidence-grid">
+          {operatingEvidence.map((item) => (
+            <article className="evidence-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="subpage-section" aria-label="Roadmap phases">

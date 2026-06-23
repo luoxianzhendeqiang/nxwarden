@@ -71,6 +71,34 @@ const limits = [
   "Handling sensitive access material without a written scope and secure method."
 ];
 
+const engagementModel = [
+  {
+    step: "01",
+    title: "Inquiry",
+    text: "Start with the project type, current tools, desired outcome, timeline, and review needs."
+  },
+  {
+    step: "02",
+    title: "Scope",
+    text: "Agree on deliverables, access method, data handling boundaries, and what should stay out of public view."
+  },
+  {
+    step: "03",
+    title: "Setup",
+    text: "Create or improve the website, dashboard, workflow, monitor list, or documentation structure."
+  },
+  {
+    step: "04",
+    title: "Documentation",
+    text: "Capture decisions, maintenance notes, review cadence, and handoff instructions in plain language."
+  },
+  {
+    step: "05",
+    title: "Handoff",
+    text: "Review what changed, what to watch, and what future work should begin with."
+  }
+];
+
 const faqs = [
   {
     question: "What does NX Warden do?",
@@ -159,6 +187,27 @@ export default function ServicesPage() {
             );
           })}
         </div>
+      </section>
+
+      <section className="subpage-section engagement-section" aria-labelledby="engagement-title">
+        <div className="section-head compact-head">
+          <p className="eyebrow">engagement model</p>
+          <h2 id="engagement-title">A small, written path from inquiry to handoff.</h2>
+        </div>
+        <div className="engagement-grid">
+          {engagementModel.map((item) => (
+            <article className="engagement-card" key={item.step}>
+              <span>{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+        <p className="engagement-note">
+          First inquiries should describe goals and constraints only. Sensitive
+          access details should wait until there is written scope and an agreed
+          secure handling method.
+        </p>
       </section>
 
       <section className="split-band" aria-labelledby="service-process-title">

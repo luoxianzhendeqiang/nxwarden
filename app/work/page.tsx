@@ -12,23 +12,43 @@ import SiteNav from "../site-nav";
 const samples = [
   {
     icon: LayoutDashboard,
-    title: "Read-only operations dashboard",
-    body: "A public-safe dashboard shell that separates live signals, visual mock data, risk notes, and decision memory."
+    title: "Homepage proof",
+    image: "/assets/proof/home-proof.png",
+    shows: "A public website surface with positioning, services, operating boundaries, and inquiry paths.",
+    safe: "It shows the public brand and service language a reviewer can inspect.",
+    excluded: "Sensitive access details, operational addresses, and restricted diagrams are intentionally excluded."
   },
   {
     icon: MonitorCheck,
     title: "Contact form safety check",
-    body: "A production Turnstile contact path with clear inquiry guidance and no sensitive data requested up front."
+    image: "/assets/proof/contact-proof.png",
+    shows: "A production contact path with direct email fallback and Cloudflare verification.",
+    safe: "It asks for scope, goals, and review needs instead of sensitive setup material.",
+    excluded: "Secrets, login material, card details, and private access instructions are not requested."
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Read-only operations demo",
+    image: "/assets/proof/console-proof.png",
+    shows: "A locked Mission Control demo for status, risks, evidence sources, and decision memory.",
+    safe: "It is public-safe and read-only, with no command path exposed.",
+    excluded: "Protected service details, sensitive access material, and machine controls are not shown."
   },
   {
     icon: Workflow,
-    title: "Workflow automation map",
-    body: "A small process map showing how repeated steps move from intake to setup, automation, documentation, and handoff."
+    title: "Roadmap and work sample proof",
+    image: "/assets/proof/work-sample-proof.png",
+    shows: "A public-safe work sample surface with templates, runbooks, and reviewable deliverables.",
+    safe: "It demonstrates process and handoff style without claiming unverified scale.",
+    excluded: "Customer data, testimonials, and unsupported operating history are intentionally absent."
   },
   {
     icon: ClipboardList,
     title: "Runbook handoff template",
-    body: "A practical handoff format for launch notes, ownership boundaries, review cadence, and maintenance reminders."
+    image: "",
+    shows: "A practical handoff format for launch notes, ownership boundaries, review cadence, and maintenance reminders.",
+    safe: "It can be reviewed as a template before any sensitive project material is shared.",
+    excluded: "Passwords, restricted access material, and private setup values are not part of public samples."
   }
 ];
 
@@ -67,9 +87,33 @@ export default function WorkPage() {
 
             return (
               <article className="proof-card" key={sample.title}>
-                <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
-                <h2>{sample.title}</h2>
-                <p>{sample.body}</p>
+                {sample.image ? (
+                  <img className="proof-image" src={sample.image} alt="" />
+                ) : (
+                  <div className="proof-placeholder" aria-hidden="true">
+                    <Icon size={34} strokeWidth={1.8} />
+                  </div>
+                )}
+                <div className="proof-card-body">
+                  <div className="proof-title-row">
+                    <Icon aria-hidden="true" size={24} strokeWidth={1.8} />
+                    <h2>{sample.title}</h2>
+                  </div>
+                  <dl className="proof-facts">
+                    <div>
+                      <dt>Shows</dt>
+                      <dd>{sample.shows}</dd>
+                    </div>
+                    <div>
+                      <dt>Public-safe</dt>
+                      <dd>{sample.safe}</dd>
+                    </div>
+                    <div>
+                      <dt>Excluded</dt>
+                      <dd>{sample.excluded}</dd>
+                    </div>
+                  </dl>
+                </div>
               </article>
             );
           })}

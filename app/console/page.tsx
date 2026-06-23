@@ -6,6 +6,15 @@ import {
 } from "lucide-react";
 import SignalDashboard from "./signal-dashboard";
 
+const consoleLinks = [
+  { href: "/services/", label: "Services" },
+  { href: "/work/", label: "Work" },
+  { href: "/roadmap/", label: "Roadmap" },
+  { href: "/about/", label: "About" },
+  { href: "/contact/", label: "Contact" },
+  { href: "/policies/", label: "Policies" }
+];
+
 export default function ConsolePage() {
   return (
     <main className="console-page">
@@ -21,6 +30,11 @@ export default function ConsolePage() {
             <ArrowLeft aria-hidden="true" size={16} strokeWidth={2.2} />
             Home
           </a>
+          {consoleLinks.map((link) => (
+            <a href={link.href} key={link.href}>
+              {link.label}
+            </a>
+          ))}
           <a className="active" href="/console/">
             Console
           </a>

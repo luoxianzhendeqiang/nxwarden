@@ -212,6 +212,15 @@ export default function ContactForm() {
         }}
       />
       <form className="contact-form" onSubmit={handleSubmit}>
+        <div className="form-intro">
+          <p className="eyebrow">verified form</p>
+          <h3>Secondary inquiry path</h3>
+          <p>
+            Use this form when the Cloudflare verification widget loads normally.
+            If verification is unavailable, email NX Warden directly instead.
+          </p>
+        </div>
+
         <div className="form-row">
           <label>
             <span>Name</span>

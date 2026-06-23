@@ -1,6 +1,21 @@
-import { Mail, ShieldCheck } from "lucide-react";
+import { ArrowRight, Mail, ShieldCheck } from "lucide-react";
 import ContactForm from "../contact-form";
 import SiteNav from "../site-nav";
+
+const directContacts = [
+  {
+    label: "Founder inbox",
+    href: "mailto:ceo@nxwarden.com?subject=NX%20Warden%20Inquiry",
+    value: "ceo@nxwarden.com",
+    note: "Best for scoped project inquiries and reviewer follow-up."
+  },
+  {
+    label: "General intake",
+    href: "mailto:info@nxwarden.com?subject=NX%20Warden%20Inquiry",
+    value: "info@nxwarden.com",
+    note: "Use this if the safety check is unavailable or the form cannot send."
+  }
+];
 
 export default function ContactPage() {
   return (
@@ -17,22 +32,52 @@ export default function ContactPage() {
         </p>
       </section>
 
+      <section className="subpage-section contact-priority" aria-labelledby="direct-contact-title">
+        <div className="section-head compact-head">
+          <p className="eyebrow">direct contact</p>
+          <h2 id="direct-contact-title">Email is the primary contact path.</h2>
+        </div>
+        <div className="direct-contact-grid">
+          {directContacts.map((contact) => (
+            <article className="direct-contact-card" key={contact.value}>
+              <span>{contact.label}</span>
+              <a href={contact.href}>
+                <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
+                {contact.value}
+              </a>
+              <p>{contact.note}</p>
+            </article>
+          ))}
+          <article className="direct-contact-card action-card">
+            <span>email client</span>
+            <a href="mailto:ceo@nxwarden.com?cc=info@nxwarden.com&subject=NX%20Warden%20Inquiry">
+              Open email client
+              <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
+            </a>
+            <p>
+              Start with project type, goal, timeline, and review needs. Do not
+              send sensitive access details in the first message.
+            </p>
+          </article>
+        </div>
+      </section>
+
       <section className="contact contact-page" aria-label="Project inquiry form">
         <div className="contact-copy">
-          <p className="eyebrow">business intake</p>
-          <h2>Start with scope, not sensitive data.</h2>
+          <p className="eyebrow">secondary form path</p>
+          <h2>Use the form if verification loads normally.</h2>
           <p>
             A useful inquiry explains the business goal, current tools, desired
-            outcome, timeline, and any review requirements. If the form is not
-            available, email the intake address directly. NX Warden is operated
-            by NexusWarden Technology LLC.
+            outcome, timeline, and any review requirements. If Cloudflare
+            verification is unavailable, email the intake addresses directly.
+            NX Warden is operated by NexusWarden Technology LLC.
           </p>
           <ul className="inquiry-guide" aria-label="Useful inquiry details">
             <li>Project type: website, workflow, dashboard, monitoring, or documentation.</li>
             <li>Current tools: where the work lives today and what feels scattered.</li>
             <li>Desired outcome: what should be organized, automated, monitored, or documented.</li>
           </ul>
-          <a className="contact-email" href="mailto:ceo@nxwarden.com">
+          <a className="contact-email" href="mailto:ceo@nxwarden.com?subject=NX%20Warden%20Inquiry">
             <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
             ceo@nxwarden.com
           </a>
