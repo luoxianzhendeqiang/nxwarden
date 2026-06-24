@@ -1321,6 +1321,28 @@ textarea:focus {
   min-height: 65px;
 }
 
+.turnstile-fallback-panel {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid rgba(241, 199, 122, 0.32);
+  background:
+    linear-gradient(90deg, rgba(241, 199, 122, 0.12), rgba(158, 216, 255, 0.05)),
+    rgba(0, 0, 0, 0.24);
+}
+
+.turnstile-fallback-panel strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.turnstile-fallback-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .turnstile-note {
   margin: 0;
   color: var(--muted);
