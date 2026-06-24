@@ -1021,6 +1021,16 @@ h2 {
   color: var(--gold);
 }
 
+.proof-kind {
+  display: inline-block;
+  margin: 0 0 6px;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .proof-facts {
   display: grid;
   gap: 1px;

@@ -12,6 +12,7 @@ import SiteNav from "../site-nav";
 const samples = [
   {
     icon: LayoutDashboard,
+    kind: "Public screenshot",
     title: "Homepage proof",
     image: "/assets/proof/home-proof.png",
     shows: "A public website surface with positioning, services, operating boundaries, and inquiry paths.",
@@ -20,14 +21,16 @@ const samples = [
   },
   {
     icon: MonitorCheck,
+    kind: "Public screenshot",
     title: "Contact form safety check",
     image: "/assets/proof/contact-proof.png",
-    shows: "A production contact path with direct email fallback and Cloudflare verification.",
+    shows: "A published contact path with direct email fallback and Cloudflare verification.",
     safe: "It asks for scope, goals, and review needs instead of sensitive setup material.",
     excluded: "Secrets, login material, card details, and private access instructions are not requested."
   },
   {
     icon: LayoutDashboard,
+    kind: "Read-only demo",
     title: "Read-only operations demo",
     image: "/assets/proof/console-proof.png",
     shows: "A locked Mission Control demo for status, risks, evidence sources, and decision memory.",
@@ -36,6 +39,7 @@ const samples = [
   },
   {
     icon: Workflow,
+    kind: "Public-safe sample",
     title: "Roadmap and work sample proof",
     image: "/assets/proof/work-sample-proof.png",
     shows: "A public-safe work sample surface with templates, runbooks, and reviewable deliverables.",
@@ -44,6 +48,7 @@ const samples = [
   },
   {
     icon: ClipboardList,
+    kind: "Internal template",
     title: "Runbook handoff template",
     image: "",
     shows: "A practical handoff format for launch notes, ownership boundaries, review cadence, and maintenance reminders.",
@@ -97,7 +102,10 @@ export default function WorkPage() {
                 <div className="proof-card-body">
                   <div className="proof-title-row">
                     <Icon aria-hidden="true" size={24} strokeWidth={1.8} />
-                    <h2>{sample.title}</h2>
+                    <div>
+                      <span className="proof-kind">{sample.kind}</span>
+                      <h2>{sample.title}</h2>
+                    </div>
                   </div>
                   <dl className="proof-facts">
                     <div>

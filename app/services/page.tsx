@@ -24,7 +24,7 @@ const serviceLines = [
     title: "Workflow automation",
     solves: "Repeated steps that live in memory, scattered notes, or manual routines.",
     deliverable: "A small workflow map, automation checklist, naming rules, and handoff notes.",
-    outOfScope: "Unreviewed automation that changes production systems without approval."
+    outOfScope: "Unreviewed automation that changes live systems without approval."
   },
   {
     icon: BarChart3,
@@ -222,7 +222,7 @@ export default function ServicesPage() {
             notes should exist when the work is complete.
           </p>
           <p>
-            Public deliverables are written for clients and reviewers. Sensitive
+            Public deliverables are written for reviewers and future buyers. Sensitive
             operational details stay out of public pages unless there is a clear
             business reason to publish a safe summary.
           </p>

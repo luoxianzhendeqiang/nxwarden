@@ -68,7 +68,7 @@ export async function onRequestPost({ params, request }) {
       requirements: [
         "Protected identity boundary",
         "Device trust",
-        "per-user authorization",
+        "per-actor authorization",
         "audited action path"
       ],
       timestamp: new Date().toISOString()

@@ -105,7 +105,7 @@ type NodeSignal = {
   lastSeen: string;
   memory: number | null;
   name: string;
-  onlineUsers: number | null;
+  observedChecks: number | null;
   provider: string;
   region: string;
   status: string;
@@ -148,9 +148,9 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     lastSeen: "18:24:31",
     memory: 32,
     name: "edge-node-01",
-    onlineUsers: 56,
-    provider: "Edge provider",
-    region: "APAC",
+    observedChecks: 56,
+    provider: "Sample edge",
+    region: "Public-safe sample",
     status: "Online",
     temperature: 41,
     visibility: "protected"
@@ -162,9 +162,9 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     lastSeen: "18:24:28",
     memory: 48,
     name: "archive-node-01",
-    onlineUsers: 38,
-    provider: "Hosting provider",
-    region: "North America",
+    observedChecks: 38,
+    provider: "Sample archive",
+    region: "Public-safe sample",
     status: "Online",
     temperature: 47,
     visibility: "protected"
@@ -176,9 +176,9 @@ const fallbackTelemetryNodes: NodeSignal[] = [
     lastSeen: "18:24:29",
     memory: 44,
     name: "workflow-node-01",
-    onlineUsers: 34,
-    provider: "Compute provider",
-    region: "Europe",
+    observedChecks: 34,
+    provider: "Sample workflow",
+    region: "Public-safe sample",
     status: "Online",
     temperature: 38,
     visibility: "protected"
@@ -212,9 +212,9 @@ const initialTelemetry: TelemetryState = {
 
 const truthSources = [
   {
-    label: "Live telemetry",
-    value: "API-backed",
-    detail: "Node metrics and heartbeat counts come from the observation API when it is reachable.",
+    label: "Observation API",
+    value: "Public-safe",
+    detail: "Only low-sensitivity sample metrics and checks are shown when the API is reachable.",
     tone: "green" as Tone
   },
   {
@@ -273,7 +273,7 @@ const domainMailDiagnostics = [
   {
     label: "Send path",
     value: "Not armed",
-    detail: "No production sender, test message, or delivery cutover was performed."
+    detail: "No outbound sender, test message, or delivery cutover was performed."
   },
   {
     label: "Mail readiness UI",
@@ -286,9 +286,9 @@ const domainMailDiagnostics = [
     detail: "Sensitive sender settings are never returned to the browser."
   },
   {
-    label: "Production mail",
+    label: "Mail posture",
     value: "Unchanged",
-    detail: "No production routing, mailbox, or Cloudflare resource was modified."
+    detail: "No routing, mailbox, or Cloudflare resource was modified."
   },
   {
     label: "Administration",
@@ -316,14 +316,14 @@ const pulseCards = [
     icon: Server,
     label: "Infrastructure Map",
     value: "4 layers",
-    body: "Public Edge, Pages, Access Boundary, and Protected Systems read as one topology.",
+    body: "Public Edge, Pages, Access Boundary, and Protected Systems are shown as a high-level topology.",
     tone: "gold" as Tone
   },
   {
     icon: FileClock,
     label: "Telemetry Phase",
     value: "Phase 2",
-    body: "Latest heartbeat and structured history stay available through the observation layer.",
+    body: "Sample signals and structured history stay inside the observation layer.",
     tone: "purple" as Tone
   }
 ];
@@ -334,10 +334,10 @@ const infrastructureNodes: MapNode[] = [
     health: "online",
     icon: Globe2,
     id: "public-edge",
-    lastCheck: "Production domain confirmed on Cloudflare Pages",
+    lastCheck: "Public domain confirmed on Cloudflare Pages",
     name: "Public Edge",
     nextAction: "Keep this as the clean public surface for NX Warden.",
-    provider: "Cloudflare",
+    provider: "Public edge",
     region: "Global",
     riskNote: "Public content is safe to expose; no control actions belong here.",
     signal: "Visitor-facing entry",
@@ -352,7 +352,7 @@ const infrastructureNodes: MapNode[] = [
     lastCheck: "Current public release recorded",
     name: "Cloudflare Pages",
     nextAction: "Use Pages plus Functions as the observation edge.",
-    provider: "Cloudflare",
+    provider: "Public edge",
     region: "Global",
     riskNote: "Pages should receive public UI and observation endpoints, not machine-control access data.",
     signal: "Edge deployment",
@@ -367,7 +367,7 @@ const infrastructureNodes: MapNode[] = [
     lastCheck: "Not wired by design",
     name: "Access Boundary",
     nextAction: "Create protected /control only after the observation layer is stable.",
-    provider: "Cloudflare",
+    provider: "Access boundary",
     region: "Global",
     riskNote: "Auth is not armed. Keep the current console read-only and harmless.",
     signal: "Safety gate",
@@ -382,8 +382,8 @@ const infrastructureNodes: MapNode[] = [
     lastCheck: "Represented as static topology plus telemetry signals",
     name: "Protected Systems",
     nextAction: "Only heartbeat data should enter this public console.",
-    provider: "Mixed",
-    region: "Multi-region",
+    provider: "Protected group",
+    region: "Redacted scope",
     riskNote: "Protected services need Access before any future action layer is connected.",
     signal: "Sealed systems",
     status: "Sealed",
@@ -400,10 +400,10 @@ const protectedServices: MapNode[] = [
     lastCheck: "Telemetry sample available",
     name: "Edge Hosting",
     nextAction: "Send only lightweight heartbeat data from hosted service scripts.",
-    provider: "Hosting",
-    region: "APAC",
+    provider: "Protected app",
+    region: "Redacted scope",
     riskNote: "Do not expose shell logs, internal paths, or control actions.",
-    signal: "Hosting provider",
+    signal: "Sample compute",
     status: "Observed",
     visibility: "Protected"
   },
@@ -415,10 +415,10 @@ const protectedServices: MapNode[] = [
     lastCheck: "Telemetry sample available",
     name: "Regional Hosting",
     nextAction: "Keep automation and file services behind current service rules.",
-    provider: "Hosting",
-    region: "Regional",
+    provider: "Protected app",
+    region: "Redacted scope",
     riskNote: "Ingest should stay token and Turnstile protected.",
-    signal: "Hosting provider",
+    signal: "Sample compute",
     status: "Observed",
     visibility: "Protected"
   },
@@ -430,8 +430,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "Dashboard visual source",
     name: "Fleet Monitor",
     nextAction: "Map monitor data into normalized telemetry later.",
-    provider: "Monitor",
-    region: "Fleet",
+    provider: "Monitor group",
+    region: "Redacted scope",
     riskNote: "Public metric labels should stay bland and non-sensitive.",
     signal: "Fleet monitor",
     status: "Watching",
@@ -445,8 +445,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "No direct control wired",
     name: "Connectivity Layer",
     nextAction: "Keep protected routing domains on the approved posture.",
-    provider: "Network",
-    region: "Multi-region",
+    provider: "Connectivity group",
+    region: "Redacted scope",
     riskNote: "Never expose live connectivity access data in this console.",
     signal: "Network layer",
     status: "Sealed",
@@ -460,8 +460,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "Known reachable through public domain",
     name: "Media Library",
     nextAction: "Confirm Access rules before exposing deeper controls.",
-    provider: "Self-hosted",
-    region: "Protected layer",
+    provider: "Media group",
+    region: "Redacted scope",
     riskNote: "Archive mounts should stay read-only for library scans.",
     signal: "Media library",
     status: "Protected",
@@ -475,8 +475,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "Archive policy still needs final retention decision",
     name: "Archive Storage",
     nextAction: "Confirm cleanup and retention before R2 Phase 2.",
-    provider: "Cloud storage",
-    region: "Global",
+    provider: "Storage group",
+    region: "Redacted scope",
     riskNote: "R2 media sync stays deferred and closed by default.",
     signal: "Storage flow",
     status: "Connected",
@@ -490,8 +490,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "Download flow known",
     name: "Message Automation",
     nextAction: "Expose only heartbeat, not task controls.",
-    provider: "Scripts",
-    region: "Automation plane",
+    provider: "Automation group",
+    region: "Redacted scope",
     riskNote: "Downloads and cache deletion should not be controlled from public UI.",
     signal: "Automation loop",
     status: "Watching",
@@ -505,8 +505,8 @@ const protectedServices: MapNode[] = [
     lastCheck: "Read-only map item",
     name: "Scripts",
     nextAction: "Promote scripts into a protected action layer later.",
-    provider: "Internal",
-    region: "Multi-region",
+    provider: "Script group",
+    region: "Redacted scope",
     riskNote: "No write actions are armed in Phase 2.",
     signal: "Automation layer",
     status: "Mapped",
@@ -525,14 +525,14 @@ const flows = [
   },
   {
     icon: Bot,
-    title: "Node heartbeat -> Observation edge -> Latest state -> History",
+    title: "Sample signal -> Observation edge -> Latest state -> History",
     detail: "Telemetry enters through a protected intake and becomes a current status signal plus structured history.",
     signal: "Phase 2"
   },
   {
     icon: GitBranch,
     title: "Website -> GitHub -> Cloudflare Pages",
-    detail: "Public changes move through GitHub main, local build checks, and a Pages production deployment.",
+    detail: "Public changes move through GitHub main, local build checks, and a Pages release.",
     signal: "Live"
   }
 ];
@@ -575,7 +575,7 @@ const risks = [
   },
   {
     icon: Smartphone,
-    label: "Mobile client routing pending",
+    label: "Mobile routing pending",
     detail: "Mobile name resolution, routing, and network variants still require the phone test matrix.",
     nodeIds: ["connectivity"],
     tone: "gold" as Tone
@@ -596,7 +596,7 @@ const decisionLogs: DecisionLog[] = [
     phase: "phase 2 / workflow"
   },
   {
-    detail: "Desktop and mobile screenshots are part of release validation so layout regressions are caught before production.",
+    detail: "Desktop and mobile screenshots are part of release validation so layout regressions are caught before publishing.",
     id: "visual-validation",
     label: "Use browser checks as the visual validation fallback.",
     phase: "phase 2 / quality"
@@ -623,7 +623,7 @@ const decisionLogs: DecisionLog[] = [
 
 const missionEvents: MissionEvent[] = [
   {
-    detail: "The latest source update reached the production branch after local build validation.",
+    detail: "The latest source update reached the public release branch after local build validation.",
     id: "source-update",
     label: "Latest source update recorded",
     phase: "phase 2",
@@ -639,7 +639,7 @@ const missionEvents: MissionEvent[] = [
   {
     detail: "Cloudflare Pages received the current public observation surface.",
     id: "edge-updated",
-    label: "Production edge updated",
+    label: "Public edge updated",
     phase: "phase 2",
     time: "edge deploy"
   },
@@ -784,9 +784,9 @@ function normalizeTelemetry(row: ApiTelemetry, fallback?: ApiNode): NodeSignal |
     lastSeen: row.created_at || fallback?.created_at || "",
     memory: numberOrNull(row.memory_percent),
     name: String(row.node_name || fallback?.name || id),
-    onlineUsers: numberOrNull(row.online_users),
-    provider: String(row.provider || fallback?.provider || "Unknown"),
-    region: String(row.region || fallback?.region || "Unknown"),
+    observedChecks: numberOrNull(row.online_users),
+    provider: "Public-safe sample",
+    region: "Redacted scope",
     status: "Online",
     temperature: numberOrNull(row.temperature_c),
     visibility: String(row.visibility || fallback?.visibility || "protected")
@@ -1011,8 +1011,8 @@ export default function SignalDashboard() {
 
   const stats = useMemo(() => {
     const activeNodes = telemetry.nodes.filter((node) => node.status !== "Offline").length;
-    const onlineUsers = telemetry.nodes.reduce(
-      (sum, node) => sum + (node.onlineUsers || 0),
+    const observedChecks = telemetry.nodes.reduce(
+      (sum, node) => sum + (node.observedChecks || 0),
       0
     );
 
@@ -1022,49 +1022,49 @@ export default function SignalDashboard() {
       averageDisk: average(telemetry.nodes, "disk"),
       averageMemory: average(telemetry.nodes, "memory"),
       configuredNodes: telemetry.nodes.length,
-      onlineUsers
+      observedChecks
     };
   }, [telemetry.nodes]);
 
   const summaryCards = [
     {
       color: "#5ee37d",
-      detail: `/ ${stats.configuredNodes} configured`,
-      label: "Active nodes",
+      detail: `/ ${stats.configuredNodes} sample signals`,
+      label: "Demo signals",
       spark: telemetry.trend.map((point) => point.cpu / 2),
       value: String(stats.activeNodes)
     },
     {
       color: "#64aaff",
-      detail: "All nodes average",
+      detail: "Sample average",
       label: "CPU (avg)",
       spark: telemetry.trend.map((point) => point.cpu),
       value: percent(stats.averageCpu)
     },
     {
       color: "#bb78ff",
-      detail: "All nodes average",
+      detail: "Sample average",
       label: "Memory (avg)",
       spark: telemetry.trend.map((point) => point.memory),
       value: percent(stats.averageMemory)
     },
     {
       color: "#f1c77a",
-      detail: "All nodes average",
+      detail: "Sample average",
       label: "Disk (avg)",
       spark: telemetry.trend.map((point) => point.disk),
       value: percent(stats.averageDisk)
     },
     {
       color: "#59d4e8",
-      detail: "Across all nodes",
-      label: "Online users",
+      detail: "Not customer data",
+      label: "Observed checks",
       spark: telemetry.trend.map((point) => Math.min(100, point.cpu + 12)),
-      value: String(stats.onlineUsers)
+      value: String(stats.observedChecks)
     },
     {
       color: "#f5f1e8",
-      detail: telemetry.mode === "live" ? "UTC edge signal" : "visual fallback",
+      detail: telemetry.mode === "live" ? "Public-safe API signal" : "visual fallback",
       label: "Last ingest",
       spark: telemetry.trend.map((point) => point.disk + 8),
       value: formatClock(telemetry.lastIngest)
@@ -1090,11 +1090,11 @@ export default function SignalDashboard() {
         <div className="console-section-head">
           <div>
             <p className="eyebrow">signal</p>
-            <h2 id="signal-title">Observation layer, now reading edge telemetry.</h2>
+            <h2 id="signal-title">Public-safe observation layer.</h2>
           </div>
           <p>
             This cockpit remains read-only. It watches public-safe status,
-            heartbeat, and history signals without exposing a control surface.
+            sample telemetry, and history signals without exposing a control surface.
           </p>
         </div>
 
@@ -1134,8 +1134,8 @@ export default function SignalDashboard() {
         <div className="console-panel telemetry-command">
           <div className="telemetry-command-head">
             <div>
-              <p className="eyebrow">telemetry center</p>
-              <h2 id="telemetry-title">Real-time heartbeat from your nodes.</h2>
+              <p className="eyebrow">telemetry center / public-safe demo</p>
+              <h2 id="telemetry-title">Sample telemetry from the observation layer.</h2>
             </div>
             <div className="backend-badges" aria-label="Telemetry backend status">
               <span>
@@ -1168,30 +1168,30 @@ export default function SignalDashboard() {
         <div className="telemetry-main-grid">
           <section className="console-panel node-heartbeat" aria-labelledby="node-heartbeat-title">
             <div className="panel-title">
-              <p className="eyebrow">node heartbeat</p>
-              <h2 id="node-heartbeat-title">Active nodes</h2>
+              <p className="eyebrow">sample telemetry</p>
+              <h2 id="node-heartbeat-title">Demo signals</h2>
             </div>
             <div className="node-table-scroll">
               <table className="node-table">
                 <thead>
                   <tr>
-                    <th>Node</th>
-                    <th>Provider</th>
-                    <th>Location</th>
+                    <th>Signal</th>
+                    <th>Category</th>
+                    <th>Scope</th>
                     <th>CPU</th>
                     <th>Memory</th>
                     <th>Disk</th>
                     <th>Temp</th>
-                    <th>Online users</th>
+                    <th>Observed checks</th>
                     <th>Last seen</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {telemetry.nodes.map((node) => (
+                  {telemetry.nodes.map((node, index) => (
                     <tr key={node.id}>
                       <td>
                         <span className="status-dot" aria-hidden="true" />
-                        {node.name}
+                        Sample signal {index + 1}
                       </td>
                       <td>{node.provider}</td>
                       <td>{node.region}</td>
@@ -1199,7 +1199,7 @@ export default function SignalDashboard() {
                       <td>{percent(node.memory)}</td>
                       <td>{percent(node.disk)}</td>
                       <td>{node.temperature === null ? "--" : `${metric(node.temperature)}C`}</td>
-                      <td>{metric(node.onlineUsers)}</td>
+                      <td>{metric(node.observedChecks)}</td>
                       <td>{formatClock(node.lastSeen)}</td>
                     </tr>
                   ))}
@@ -1207,17 +1207,17 @@ export default function SignalDashboard() {
               </table>
             </div>
             <p className="table-note">
-              Showing {stats.activeNodes} of {stats.configuredNodes} nodes. Data is
+              Showing {stats.activeNodes} of {stats.configuredNodes} sample signals. Data is
               {telemetry.mode === "live"
-                ? " live telemetry from the observation backend"
+                ? " public-safe observation API output, not customer data"
                 : " a clearly labeled visual fallback"}.
             </p>
           </section>
 
           <section className="console-panel trend-panel-v2" aria-labelledby="trend-title">
             <div className="panel-title">
-              <p className="eyebrow">heartbeat trend (24h)</p>
-              <h2 id="trend-title">Signal drift</h2>
+              <p className="eyebrow">demo signal trend (24h)</p>
+              <h2 id="trend-title">Sample drift</h2>
             </div>
             <HeartbeatTrend trend={telemetry.trend} />
           </section>
@@ -1232,10 +1232,10 @@ export default function SignalDashboard() {
             <h3 id="recent-trail-title">Latest system events</h3>
             <div className="mission-list">
               {[
-                "Telemetry signal accepted",
-                "Latest heartbeat state refreshed",
+                "Sample telemetry signal accepted",
+                "Sample status state refreshed",
                 "Observation endpoint healthy",
-                "Nodes snapshot normalized",
+                "Demo signal snapshot normalized",
                 "Public observation release active"
               ].map((item, index) => (
                 <div className="mission-list-row" key={item}>
@@ -1360,7 +1360,7 @@ export default function SignalDashboard() {
             </div>
             <span>
               <MailCheck aria-hidden="true" size={15} strokeWidth={2} />
-              Production unchanged
+              Mail settings unchanged
             </span>
           </div>
           <p className="diagnostics-intro">
@@ -1433,13 +1433,13 @@ export default function SignalDashboard() {
               Signal filters
             </span>
             <label>
-              <span>Provider</span>
+              <span>Category</span>
               <select
-                aria-label="Filter map by provider"
+                aria-label="Filter map by category"
                 onChange={(event) => setProviderFilter(event.target.value)}
                 value={providerFilter}
               >
-                <option value="all">All providers</option>
+                <option value="all">All categories</option>
                 {providerOptions.map((provider) => (
                   <option key={provider} value={provider}>
                     {provider}
@@ -1448,13 +1448,13 @@ export default function SignalDashboard() {
               </select>
             </label>
             <label>
-              <span>Region</span>
+              <span>Scope</span>
               <select
-                aria-label="Filter map by region"
+                aria-label="Filter map by scope"
                 onChange={(event) => setRegionFilter(event.target.value)}
                 value={regionFilter}
               >
-                <option value="all">All regions</option>
+                <option value="all">All scopes</option>
                 {regionOptions.map((region) => (
                   <option key={region} value={region}>
                     {region}
@@ -1754,12 +1754,12 @@ export default function SignalDashboard() {
             returns a locked response.
           </p>
           <div className="control-node-grid">
-            {telemetry.nodes.map((node) => (
+            {telemetry.nodes.map((node, index) => (
               <article className="control-node-card" key={node.id}>
                 <div className="control-node-head">
                   <span className="status-dot heartbeat-dot" aria-hidden="true" />
                   <div>
-                    <strong>{node.name}</strong>
+                    <strong>Sample signal {index + 1}</strong>
                     <span>{node.provider} / {node.region}</span>
                   </div>
                   <em>Read only</em>
@@ -1769,7 +1769,7 @@ export default function SignalDashboard() {
                   <span>MEM {percent(node.memory)}</span>
                   <span>DISK {percent(node.disk)}</span>
                 </div>
-                <div className="control-actions" aria-label={`Mock actions for ${node.name}`}>
+                <div className="control-actions" aria-label={`Mock actions for sample signal ${index + 1}`}>
                   <button
                     disabled
                     title="Mock only. Requires Cloudflare Access, mTLS, authorization, and an armed command worker."
@@ -1795,7 +1795,7 @@ export default function SignalDashboard() {
                     Update configuration
                   </button>
                 </div>
-                <code>/api/node/{node.id}/action</code>
+                <code>/api/node/sample-signal/action</code>
               </article>
             ))}
           </div>

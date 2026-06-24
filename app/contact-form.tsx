@@ -37,7 +37,7 @@ const projectTypes = [
   "AI-assisted workflow"
 ];
 
-// Public Turnstile site key for the nxwarden-contact-production widget.
+// Public Turnstile site key for the NX Warden contact widget.
 const turnstileSiteKey =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADoUGDAGkH7tbk_G";
 

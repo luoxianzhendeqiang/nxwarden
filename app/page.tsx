@@ -97,7 +97,7 @@ const demoSignals = [
   {
     icon: ShieldCheck,
     title: "Trust Boundaries",
-    detail: "Policies and service limits written plainly for reviewers and clients."
+    detail: "Policies and service limits written plainly for reviewers and future buyers."
   },
   {
     icon: FileText,

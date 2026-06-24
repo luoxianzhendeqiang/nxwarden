@@ -54,7 +54,7 @@ export function onRequestGet({ request, env }) {
       turnstileMode: String(env.TURNSTILE_SECRET_KEY || "").startsWith("1x000")
         ? "test"
         : env.TURNSTILE_SECRET_KEY
-          ? "production"
+          ? "configured"
           : "missing",
       ingestRequiresTurnstile: true
     }

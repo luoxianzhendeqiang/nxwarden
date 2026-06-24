@@ -35,7 +35,7 @@ const roadmap = [
     phase: "Later",
     icon: Layers3,
     items: [
-      "Lightweight client intake",
+      "Lightweight inquiry intake",
       "Dashboard templates",
       "Runbook kits",
       "Content library for small operators"
