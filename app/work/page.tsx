@@ -8,6 +8,12 @@ import {
   Workflow
 } from "lucide-react";
 import SiteNav from "../site-nav";
+import EvidenceCard from "../components/evidence-card";
+import GlassCard from "../components/glass-card";
+import PageHero from "../components/page-hero";
+import PageShell from "../components/page-shell";
+import SectionHeader from "../components/section-header";
+import SiteFooter from "../components/site-footer";
 
 const samples = [
   {
@@ -15,6 +21,7 @@ const samples = [
     kind: "Public screenshot",
     title: "Homepage proof",
     image: "/assets/proof/home-proof.png",
+    href: "/",
     shows: "A public website surface with positioning, services, operating boundaries, and inquiry paths.",
     safe: "It shows the public brand and service language a reviewer can inspect.",
     excluded: "Sensitive access details, operational addresses, and restricted diagrams are intentionally excluded."
@@ -24,6 +31,7 @@ const samples = [
     kind: "Public screenshot",
     title: "Contact form safety check",
     image: "/assets/proof/contact-proof.png",
+    href: "/contact/",
     shows: "A published contact path with direct email fallback and Cloudflare verification.",
     safe: "It asks for scope, goals, and review needs instead of sensitive setup material.",
     excluded: "Secrets, login material, card details, and private access instructions are not requested."
@@ -33,6 +41,7 @@ const samples = [
     kind: "Read-only demo",
     title: "Read-only operations demo",
     image: "/assets/proof/console-proof.png",
+    href: "/console/",
     shows: "A locked Mission Control demo for status, risks, evidence sources, and decision memory.",
     safe: "It is public-safe and read-only, with no command path exposed.",
     excluded: "Protected service details, sensitive access material, and machine controls are not shown."
@@ -42,6 +51,7 @@ const samples = [
     kind: "Public-safe sample",
     title: "Roadmap and work sample proof",
     image: "/assets/proof/work-sample-proof.png",
+    href: "/roadmap/",
     shows: "A public-safe work sample surface with templates, runbooks, and reviewable deliverables.",
     safe: "It demonstrates process and handoff style without claiming unverified scale.",
     excluded: "Customer data, testimonials, and unsupported operating history are intentionally absent."
@@ -51,6 +61,7 @@ const samples = [
     kind: "Internal template",
     title: "Runbook handoff template",
     image: "",
+    href: "",
     shows: "A practical handoff format for launch notes, ownership boundaries, review cadence, and maintenance reminders.",
     safe: "It can be reviewed as a template before any sensitive project material is shared.",
     excluded: "Passwords, restricted access material, and private setup values are not part of public samples."
@@ -68,37 +79,59 @@ const deliverables = [
 
 export default function WorkPage() {
   return (
-    <main className="subpage">
+    <PageShell className="subpage subpage-v2 work-page">
       <SiteNav />
 
-      <section className="subpage-hero" aria-labelledby="work-title">
-        <p className="eyebrow">work samples</p>
-        <h1 id="work-title">Operating evidence without exposing sensitive systems.</h1>
-        <p className="lead">
+      <PageHero
+        eyebrow="work samples"
+        id="work-title"
+        title="Operating evidence without exposing sensitive systems."
+        description={<p>
           These examples are public-safe samples and internal operating
           artifacts, not customer data. They show how NX Warden turns scattered
           digital work into clearer systems, dashboards, and handoff notes.
-        </p>
-      </section>
+        </p>}
+      />
 
-      <section className="subpage-section" aria-labelledby="samples-title">
-        <div className="section-head compact-head">
-          <p className="eyebrow">public-safe proof</p>
-          <h2 id="samples-title">Evidence a reviewer can inspect.</h2>
-        </div>
-        <div className="proof-grid">
+      <section className="subpage-section content-band" aria-labelledby="samples-title">
+        <SectionHeader
+          eyebrow="public-safe proof"
+          id="samples-title"
+          title="Evidence a reviewer can inspect."
+        />
+        <div className="proof-grid proof-grid-v2">
           {samples.map((sample) => {
             const Icon = sample.icon;
 
+            if (sample.image) {
+              return (
+                <div className="work-evidence-item" key={sample.title}>
+                  <EvidenceCard
+                    href={sample.href}
+                    image={sample.image}
+                    eyebrow={sample.kind}
+                    title={sample.title}
+                    description={sample.shows}
+                  />
+                  <dl className="proof-facts">
+                    <div>
+                      <dt>Public-safe</dt>
+                      <dd>{sample.safe}</dd>
+                    </div>
+                    <div>
+                      <dt>Excluded</dt>
+                      <dd>{sample.excluded}</dd>
+                    </div>
+                  </dl>
+                </div>
+              );
+            }
+
             return (
-              <article className="proof-card" key={sample.title}>
-                {sample.image ? (
-                  <img className="proof-image" src={sample.image} alt="" />
-                ) : (
-                  <div className="proof-placeholder" aria-hidden="true">
-                    <Icon size={34} strokeWidth={1.8} />
-                  </div>
-                )}
+              <GlassCard className="proof-card" key={sample.title}>
+                <div className="proof-placeholder" aria-hidden="true">
+                  <Icon size={34} strokeWidth={1.8} />
+                </div>
                 <div className="proof-card-body">
                   <div className="proof-title-row">
                     <Icon aria-hidden="true" size={24} strokeWidth={1.8} />
@@ -122,13 +155,13 @@ export default function WorkPage() {
                     </div>
                   </dl>
                 </div>
-              </article>
+              </GlassCard>
             );
           })}
         </div>
       </section>
 
-      <section className="split-band" aria-labelledby="deliverables-title">
+      <section className="split-band content-band" aria-labelledby="deliverables-title">
         <div>
           <p className="eyebrow">example deliverables</p>
           <h2 id="deliverables-title">Small artifacts that make operations easier to review.</h2>
@@ -143,7 +176,7 @@ export default function WorkPage() {
         </div>
       </section>
 
-      <section className="subpage-section sample-boundary" aria-labelledby="boundary-title">
+      <section className="subpage-section content-band sample-boundary" aria-labelledby="boundary-title">
         <ShieldCheck aria-hidden="true" size={30} strokeWidth={1.8} />
         <div>
           <p className="eyebrow">public boundary</p>
@@ -160,6 +193,7 @@ export default function WorkPage() {
           </a>
         </div>
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

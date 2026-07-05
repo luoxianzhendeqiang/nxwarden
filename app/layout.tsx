@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./visual-system.css";
 
 export const metadata: Metadata = {
   title: "NX Warden — Cloud Automation & Operations Studio",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     title: "NX Warden — Cloud Automation & Operations Studio",
     description:
       "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
-    images: ["/assets/blackhole-hero.png"],
+    images: ["/assets/nxwarden-orbit-field.png"],
     url: "https://nxwarden.com/"
   },
   twitter: {
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     title: "NX Warden — Cloud Automation & Operations Studio",
     description:
       "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
-    images: ["/assets/blackhole-hero.png"]
+    images: ["/assets/nxwarden-orbit-field.png"]
   },
   icons: {
     icon: [

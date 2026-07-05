@@ -10,6 +10,11 @@ import {
   Sparkles
 } from "lucide-react";
 import SiteNav from "../site-nav";
+import GlassCard from "../components/glass-card";
+import PageHero from "../components/page-hero";
+import PageShell from "../components/page-shell";
+import SectionHeader from "../components/section-header";
+import SiteFooter from "../components/site-footer";
 
 const serviceLines = [
   {
@@ -144,27 +149,33 @@ const faqs = [
 
 export default function ServicesPage() {
   return (
-    <main className="subpage">
+    <PageShell className="subpage subpage-v2 services-page">
       <SiteNav />
 
-      <section className="subpage-hero" aria-labelledby="services-title">
-        <p className="eyebrow">services</p>
-        <h1 id="services-title">Cloud operations work for small online businesses.</h1>
-        <p className="lead">
+      <PageHero
+        eyebrow="services"
+        id="services-title"
+        title="Cloud operations work for small online businesses."
+        description={<p>
           NX Warden focuses on practical deliverables: public websites, workflow
           automation, internal dashboards, status visibility, documentation, and
           maintainable handoff notes. The studio is operated by NexusWarden
           Technology LLC.
-        </p>
-      </section>
+        </p>}
+      />
 
-      <section className="subpage-section" aria-label="Service lines">
+      <section className="subpage-section content-band" aria-labelledby="service-lines-title">
+        <SectionHeader
+          eyebrow="service lines"
+          id="service-lines-title"
+          title="Practical deliverables with explicit boundaries."
+        />
         <div className="service-detail-grid">
           {serviceLines.map((service) => {
             const Icon = service.icon;
 
             return (
-              <article className="service-detail-card" key={service.title}>
+              <GlassCard className="service-detail-card" key={service.title}>
                 <div className="service-detail-top">
                   <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
                   <h2>{service.title}</h2>
@@ -183,24 +194,25 @@ export default function ServicesPage() {
                     <dd>{service.outOfScope}</dd>
                   </div>
                 </dl>
-              </article>
+              </GlassCard>
             );
           })}
         </div>
       </section>
 
-      <section className="subpage-section engagement-section" aria-labelledby="engagement-title">
-        <div className="section-head compact-head">
-          <p className="eyebrow">engagement model</p>
-          <h2 id="engagement-title">A small, written path from inquiry to handoff.</h2>
-        </div>
+      <section className="subpage-section content-band engagement-section" aria-labelledby="engagement-title">
+        <SectionHeader
+          eyebrow="engagement model"
+          id="engagement-title"
+          title="A small, written path from inquiry to handoff."
+        />
         <div className="engagement-grid">
           {engagementModel.map((item) => (
-            <article className="engagement-card" key={item.step}>
+            <GlassCard className="engagement-card" key={item.step}>
               <span>{item.step}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-            </article>
+            </GlassCard>
           ))}
         </div>
         <p className="engagement-note">
@@ -210,7 +222,7 @@ export default function ServicesPage() {
         </p>
       </section>
 
-      <section className="split-band" aria-labelledby="service-process-title">
+      <section className="split-band content-band" aria-labelledby="service-process-title">
         <div>
           <p className="eyebrow">project rhythm</p>
           <h2 id="service-process-title">Scoped, documented, and reviewable.</h2>
@@ -232,35 +244,38 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="subpage-section" aria-labelledby="limits-title">
-        <div className="section-head compact-head">
-          <p className="eyebrow">service boundaries</p>
-          <h2 id="limits-title">What NX Warden does not do.</h2>
-        </div>
+      <section className="subpage-section content-band" aria-labelledby="limits-title">
+        <SectionHeader
+          eyebrow="service boundaries"
+          id="limits-title"
+          title="What NX Warden does not do."
+        />
         <div className="limits-grid">
           {limits.map((item) => (
-            <article className="limit-card" key={item}>
+            <GlassCard className="limit-card" key={item}>
               <ShieldCheck aria-hidden="true" size={22} strokeWidth={2} />
               <p>{item}</p>
-            </article>
+            </GlassCard>
           ))}
         </div>
       </section>
 
-      <section className="subpage-section faq-section" aria-labelledby="faq-title">
-        <div className="section-head compact-head">
-          <p className="eyebrow">faq</p>
-          <h2 id="faq-title">Clear answers before a scoped inquiry.</h2>
-        </div>
+      <section className="subpage-section content-band faq-section" aria-labelledby="faq-title">
+        <SectionHeader
+          eyebrow="faq"
+          id="faq-title"
+          title="Clear answers before a scoped inquiry."
+        />
         <div className="faq-grid">
           {faqs.map((item) => (
-            <article className="faq-card" key={item.question}>
+            <GlassCard className="faq-card" key={item.question}>
               <h3>{item.question}</h3>
               <p>{item.answer}</p>
-            </article>
+            </GlassCard>
           ))}
         </div>
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

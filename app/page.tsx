@@ -12,7 +12,10 @@ import {
   Workflow
 } from "lucide-react";
 import ContactForm from "./contact-form";
-import SiteNav from "./site-nav";
+import EvidenceBand from "./components/evidence-band";
+import HomeHero from "./components/home-hero";
+import PageShell from "./components/page-shell";
+import SiteFooter from "./components/site-footer";
 
 const services = [
   {
@@ -108,64 +111,9 @@ const demoSignals = [
 
 export default function Home() {
   return (
-    <main>
-      <section className="hero" aria-labelledby="hero-title">
-        <img className="hero-bg" src="/assets/blackhole-hero.png" alt="" />
-        <div className="hero-shade" aria-hidden="true" />
-
-        <SiteNav />
-
-        <div className="hero-copy" id="top">
-          <p className="eyebrow">cloud automation and operations studio</p>
-          <h1 id="hero-title">
-            <span className="title-line">Practical</span>
-            <span className="title-line">systems</span>
-            <span className="title-line">for real</span>
-            <span className="title-line">online work.</span>
-          </h1>
-          <p className="lead">
-            NX Warden builds practical cloud systems, automation workflows, and
-            internal dashboards for independent creators and small online
-            businesses.
-          </p>
-          <div className="actions" aria-label="Site actions">
-            <a className="button primary" href="/services/">
-              View Services
-            </a>
-            <a className="button ghost" href="/contact/">
-              Send Inquiry
-            </a>
-            <a className="button ghost" href="/work/">
-              View Work
-            </a>
-          </div>
-          <a className="secondary-link" href="/console/">
-            View operations demo
-            <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
-          </a>
-        </div>
-
-        <div className="orbit-panel panel-top">
-          <span>company surface</span>
-          <strong>Business Website</strong>
-          <p>A clear public home for services, policies, and project intake.</p>
-        </div>
-        <div className="orbit-panel panel-left">
-          <span>01 / workflow</span>
-          <strong>Automation Setup</strong>
-          <p>Repeatable routines for files, publishing, reports, and handoffs.</p>
-        </div>
-        <div className="orbit-panel panel-right">
-          <span>02 / operations</span>
-          <strong>Dashboard Layer</strong>
-          <p>Read-only service signals, risk notes, and maintenance memory.</p>
-        </div>
-        <div className="orbit-panel panel-bottom">
-          <span>03 / documentation</span>
-          <strong>Runbook Trail</strong>
-          <p>Plain notes that make systems easier to maintain.</p>
-        </div>
-      </section>
+    <PageShell className="home-page">
+      <HomeHero />
+      <EvidenceBand />
 
       <section className="systems" id="services" aria-labelledby="services-title">
         <div className="section-head">
@@ -293,6 +241,7 @@ export default function Home() {
         </div>
         <ContactForm />
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

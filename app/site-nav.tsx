@@ -1,4 +1,4 @@
-import { TerminalSquare } from "lucide-react";
+import { Menu, TerminalSquare } from "lucide-react";
 
 const links = [
   { href: "/services/", label: "Services" },
@@ -11,27 +11,37 @@ const links = [
 
 export default function SiteNav() {
   return (
-    <header className="nav" aria-label="Primary">
-      <a className="brand" href="/" aria-label="NX Warden home">
+    <header className="site-nav" aria-label="Primary">
+      <a className="site-brand" href="/" aria-label="NX Warden home">
         <span className="brand-mark">
           <img src="/assets/nxwarden-icon-512.png" alt="" />
         </span>
         <span>NX Warden</span>
       </a>
-      <nav className="nav-links">
+      <nav className="site-nav__desktop">
         {links.map((link) => (
           <a href={link.href} key={link.href}>
             {link.label}
           </a>
         ))}
-        <a className="nav-login" href="/console/">
+        <a className="site-nav__console" href="/console/">
+          <TerminalSquare aria-hidden="true" size={15} />
           Console
         </a>
       </nav>
-      <a className="mobile-console-entry" href="/console/">
-        <TerminalSquare aria-hidden="true" size={16} strokeWidth={2.1} />
-        Console
-      </a>
+      <details className="site-nav__mobile">
+        <summary aria-label="Open navigation">
+          <Menu aria-hidden="true" size={21} />
+        </summary>
+        <nav aria-label="Mobile">
+          {links.map((link) => (
+            <a href={link.href} key={link.href}>
+              {link.label}
+            </a>
+          ))}
+          <a href="/console/">Console</a>
+        </nav>
+      </details>
     </header>
   );
 }

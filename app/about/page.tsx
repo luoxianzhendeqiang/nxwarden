@@ -1,5 +1,9 @@
 import { Building2, FileCheck2, ShieldCheck, Sparkles } from "lucide-react";
 import SiteNav from "../site-nav";
+import GlassCard from "../components/glass-card";
+import PageHero from "../components/page-hero";
+import PageShell from "../components/page-shell";
+import SiteFooter from "../components/site-footer";
 
 const facts = [
   {
@@ -26,36 +30,37 @@ const facts = [
 
 export default function AboutPage() {
   return (
-    <main className="subpage">
+    <PageShell className="subpage subpage-v2 about-page">
       <SiteNav />
 
-      <section className="subpage-hero" aria-labelledby="about-title">
-        <p className="eyebrow">about nx warden</p>
-        <h1 id="about-title">A small cloud automation and operations studio.</h1>
-        <p className="lead">
+      <PageHero
+        eyebrow="about nx warden"
+        id="about-title"
+        title="A small cloud automation and operations studio."
+        description={<p>
           NX Warden is the public-facing cloud automation and operations studio
           operated by NexusWarden Technology LLC, a Wyoming limited liability
           company.
-        </p>
-      </section>
+        </p>}
+      />
 
-      <section className="subpage-section" aria-label="Company facts">
+      <section className="subpage-section content-band" aria-label="Company facts">
         <div className="subpage-grid">
           {facts.map((fact) => {
             const Icon = fact.icon;
 
             return (
-              <article className="info-card" key={fact.title}>
+              <GlassCard className="info-card" key={fact.title}>
                 <Icon aria-hidden="true" size={26} strokeWidth={1.8} />
                 <h2>{fact.title}</h2>
                 <p>{fact.body}</p>
-              </article>
+              </GlassCard>
             );
           })}
         </div>
       </section>
 
-      <section className="split-band" aria-labelledby="about-focus-title">
+      <section className="split-band content-band" aria-labelledby="about-focus-title">
         <div>
           <p className="eyebrow">focus</p>
           <h2 id="about-focus-title">Practical systems that stay understandable.</h2>
@@ -79,7 +84,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="split-band founder-note" aria-labelledby="founder-note-title">
+      <section className="split-band content-band founder-note" aria-labelledby="founder-note-title">
         <div>
           <p className="eyebrow">founder / operator note</p>
           <h2 id="founder-note-title">Systems are only useful when someone can maintain them.</h2>
@@ -98,6 +103,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

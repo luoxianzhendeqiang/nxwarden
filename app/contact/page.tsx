@@ -1,6 +1,11 @@
 import { ArrowRight, Mail, ShieldCheck } from "lucide-react";
 import ContactForm from "../contact-form";
 import SiteNav from "../site-nav";
+import GlassCard from "../components/glass-card";
+import PageHero from "../components/page-hero";
+import PageShell from "../components/page-shell";
+import SectionHeader from "../components/section-header";
+import SiteFooter from "../components/site-footer";
 
 const directContacts = [
   {
@@ -19,36 +24,38 @@ const directContacts = [
 
 export default function ContactPage() {
   return (
-    <main className="subpage">
+    <PageShell className="subpage subpage-v2 contact-view">
       <SiteNav />
 
-      <section className="subpage-hero" aria-labelledby="contact-page-title">
-        <p className="eyebrow">contact</p>
-        <h1 id="contact-page-title">Send a project inquiry.</h1>
-        <p className="lead">
+      <PageHero
+        eyebrow="contact"
+        id="contact-page-title"
+        title="Send a project inquiry."
+        description={<p>
           Use this page for business website, cloud operations, dashboard,
           automation, and documentation requests. Do not submit sensitive login,
           billing, or access details through this form.
-        </p>
-      </section>
+        </p>}
+      />
 
-      <section className="subpage-section contact-priority" aria-labelledby="direct-contact-title">
-        <div className="section-head compact-head">
-          <p className="eyebrow">direct contact</p>
-          <h2 id="direct-contact-title">Email is the primary contact path.</h2>
-        </div>
+      <section className="subpage-section content-band contact-priority" aria-labelledby="direct-contact-title">
+        <SectionHeader
+          eyebrow="direct contact"
+          id="direct-contact-title"
+          title="Email is the primary contact path."
+        />
         <div className="direct-contact-grid">
           {directContacts.map((contact) => (
-            <article className="direct-contact-card" key={contact.value}>
+            <GlassCard className="direct-contact-card" key={contact.value}>
               <span>{contact.label}</span>
               <a href={contact.href}>
                 <Mail aria-hidden="true" size={18} strokeWidth={2.1} />
                 {contact.value}
               </a>
               <p>{contact.note}</p>
-            </article>
+            </GlassCard>
           ))}
-          <article className="direct-contact-card action-card">
+          <GlassCard className="direct-contact-card action-card">
             <span>email client</span>
             <a href="mailto:ceo@nxwarden.com?cc=info@nxwarden.com&subject=NX%20Warden%20Inquiry">
               Open email client
@@ -58,7 +65,7 @@ export default function ContactPage() {
               Start with project type, goal, timeline, and review needs. Do not
               send sensitive access details in the first message.
             </p>
-          </article>
+          </GlassCard>
         </div>
       </section>
 
@@ -89,6 +96,7 @@ export default function ContactPage() {
         </div>
         <ContactForm />
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

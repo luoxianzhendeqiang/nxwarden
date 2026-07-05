@@ -1,5 +1,9 @@
 import { FileCheck2, ShieldAlert, ShieldCheck } from "lucide-react";
 import SiteNav from "../site-nav";
+import GlassCard from "../components/glass-card";
+import PageHero from "../components/page-hero";
+import PageShell from "../components/page-shell";
+import SiteFooter from "../components/site-footer";
 
 const acceptableUse = [
   "No regulated finance activities or specialized licensed products.",
@@ -10,21 +14,22 @@ const acceptableUse = [
 
 export default function PoliciesPage() {
   return (
-    <main className="subpage">
+    <PageShell className="subpage subpage-v2 policies-page">
       <SiteNav />
 
-      <section className="subpage-hero" aria-labelledby="policies-title">
-        <p className="eyebrow">policies</p>
-        <h1 id="policies-title">Public policies and acceptable use.</h1>
-        <p className="lead">
+      <PageHero
+        eyebrow="policies"
+        id="policies-title"
+        title="Public policies and acceptable use."
+        description={<p>
           These simple policies describe how NX Warden, operated by
           NexusWarden Technology LLC, presents its services, handles inquiries,
           and limits the type of work it accepts.
-        </p>
-      </section>
+        </p>}
+      />
 
-      <section className="policy-stack" aria-label="NX Warden public policies">
-        <article className="policy-card" id="privacy">
+      <section className="policy-stack content-band" aria-label="NX Warden public policies">
+        <GlassCard className="policy-card" id="privacy">
           <ShieldCheck aria-hidden="true" size={28} strokeWidth={1.8} />
           <div>
             <p className="eyebrow">privacy policy</p>
@@ -41,9 +46,9 @@ export default function PoliciesPage() {
               details, or highly sensitive access materials through public forms.
             </p>
           </div>
-        </article>
+        </GlassCard>
 
-        <article className="policy-card" id="terms">
+        <GlassCard className="policy-card" id="terms">
           <FileCheck2 aria-hidden="true" size={28} strokeWidth={1.8} />
           <div>
             <p className="eyebrow">service boundaries</p>
@@ -66,9 +71,9 @@ export default function PoliciesPage() {
               Otherwise, public examples and demos are informational.
             </p>
           </div>
-        </article>
+        </GlassCard>
 
-        <article className="policy-card" id="acceptable-use">
+        <GlassCard className="policy-card" id="acceptable-use">
           <ShieldAlert aria-hidden="true" size={28} strokeWidth={1.8} />
           <div>
             <p className="eyebrow">acceptable use policy</p>
@@ -79,8 +84,9 @@ export default function PoliciesPage() {
               ))}
             </ul>
           </div>
-        </article>
+        </GlassCard>
       </section>
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }

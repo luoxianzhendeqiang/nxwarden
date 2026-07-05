@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test:api": "node --no-warnings --test tests/api-contract.test.mjs",
+    "test:public-scan": "node tests/public-output-scan.mjs",
+    "test:visual": "playwright test tests/visual-refresh.spec.ts",
+    "verify:visual-refresh": "npm run test:api && npm run build && npm run test:public-scan && npm run test:visual"
   },
   "dependencies": {
     "lucide-react": "^1.17.0",
@@ -19,6 +23,7 @@
     }
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@types/node": "25.9.1",
     "@types/react": "19.2.16",
     "typescript": "6.0.3"

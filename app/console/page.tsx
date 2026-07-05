@@ -5,6 +5,8 @@ import {
   Sparkles
 } from "lucide-react";
 import SignalDashboard from "./signal-dashboard";
+import PageShell from "../components/page-shell";
+import SiteFooter from "../components/site-footer";
 
 const consoleLinks = [
   { href: "/services/", label: "Services" },
@@ -17,7 +19,7 @@ const consoleLinks = [
 
 export default function ConsolePage() {
   return (
-    <main className="console-page">
+    <PageShell className="console-page console-page-v2">
       <header className="console-nav" aria-label="Console navigation">
         <a className="brand" href="/" aria-label="NX Warden home">
           <span className="brand-mark">
@@ -93,6 +95,7 @@ export default function ConsolePage() {
       </aside>
 
       <SignalDashboard />
-    </main>
+      <SiteFooter />
+    </PageShell>
   );
 }
