@@ -34,6 +34,27 @@ async function expectNoHorizontalOverflow(
   expect(overflow).toBeLessThanOrEqual(1);
 }
 
+async function expectNoElementOverlap(
+  first: import("@playwright/test").Locator,
+  second: import("@playwright/test").Locator
+) {
+  const [firstBox, secondBox] = await Promise.all([
+    first.boundingBox(),
+    second.boundingBox()
+  ]);
+
+  expect(firstBox).not.toBeNull();
+  expect(secondBox).not.toBeNull();
+
+  const overlaps = !(
+    firstBox!.x + firstBox!.width <= secondBox!.x ||
+    secondBox!.x + secondBox!.width <= firstBox!.x ||
+    firstBox!.y + firstBox!.height <= secondBox!.y ||
+    secondBox!.y + secondBox!.height <= firstBox!.y
+  );
+  expect(overlaps).toBe(false);
+}
+
 test("desktop homepage exposes the refreshed hero and real evidence", async ({
   page
 }) => {
@@ -129,6 +150,48 @@ test("hero card hover does not shift its layout box", async ({ page }) => {
   await card.hover();
   const after = await card.boundingBox();
   expect(after).toEqual(before);
+});
+
+test("split-band headings never overlap their content panels", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  for (const route of ["/roadmap/", "/about/"]) {
+    await page.goto(route);
+
+    const bands = page.locator(".split-band");
+    const count = await bands.count();
+    for (let index = 0; index < count; index += 1) {
+      const band = bands.nth(index);
+      await expectNoElementOverlap(
+        band.locator(":scope > div:first-child h2"),
+        band.locator(":scope > .text-panel")
+      );
+    }
+  }
+});
+
+test("incomplete subpage grids do not render fake empty cells", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  for (const route of ["/services/", "/roadmap/", "/about/"]) {
+    await page.goto(route);
+    const grids = page.locator(
+      ".service-detail-grid, .evidence-grid, .roadmap-grid, .subpage-grid"
+    );
+    const count = await grids.count();
+
+    for (let index = 0; index < count; index += 1) {
+      const surface = await grids.nth(index).evaluate((node) => {
+        const styles = getComputedStyle(node);
+        return {
+          backgroundColor: styles.backgroundColor,
+          backgroundImage: styles.backgroundImage
+        };
+      });
+      expect(surface.backgroundColor).toBe("rgba(0, 0, 0, 0)");
+      expect(surface.backgroundImage).toBe("none");
+    }
+  }
 });
 
 test("contact remains email-first and keeps the protected secondary form", async ({
