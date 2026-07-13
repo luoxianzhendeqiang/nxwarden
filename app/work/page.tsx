@@ -77,6 +77,13 @@ const deliverables = [
   "Public launch verification checklist"
 ];
 
+const auditSampleDeliverables = [
+  "System inventory",
+  "Risk-priority map",
+  "Missing-documentation list",
+  "30-day action plan"
+];
+
 export default function WorkPage() {
   return (
     <PageShell className="subpage subpage-v2 work-page">
@@ -158,6 +165,26 @@ export default function WorkPage() {
               </GlassCard>
             );
           })}
+        </div>
+      </section>
+
+      <section className="split-band content-band" aria-labelledby="audit-sample-title">
+        <div>
+          <p className="eyebrow">internal / sanitized sample</p>
+          <h2 id="audit-sample-title">Operations Clarity Audit sample</h2>
+          <p>
+            This is an internal, sanitized sample created to show the delivery
+            format. It is not a customer engagement and does not represent a
+            customer outcome, testimonial, or operating history.
+          </p>
+        </div>
+        <div className="deliverable-panel" aria-label="Audit sample deliverables">
+          {auditSampleDeliverables.map((item) => (
+            <div className="deliverable-row" key={item}>
+              <FileCheck2 aria-hidden="true" size={19} strokeWidth={2} />
+              <span>{item}</span>
+            </div>
+          ))}
         </div>
       </section>
 

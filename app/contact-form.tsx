@@ -29,12 +29,11 @@ declare global {
 }
 
 const projectTypes = [
-  "Company site",
-  "Cloud operations",
-  "Automation workflow",
-  "Internal dashboard",
-  "Documentation",
-  "AI-assisted workflow"
+  "Operations Clarity Audit",
+  "Operations Foundation Sprint",
+  "Runbook & Handoff System",
+  "Website / workflow / dashboard project",
+  "Not sure yet"
 ];
 
 // Public Turnstile site key for the NX Warden contact widget.
@@ -159,7 +158,7 @@ export default function ContactForm() {
     const payload = {
       name: String(data.get("name") ?? "").trim(),
       email: String(data.get("email") ?? "").trim() || null,
-      project_type: String(data.get("projectType") ?? "Company site"),
+      project_type: String(data.get("projectType") ?? "Not sure yet"),
       message: String(data.get("message") ?? "").trim(),
       source: "nxwarden.com public inquiry",
       cf_turnstile_response: turnstileToken
@@ -234,7 +233,7 @@ export default function ContactForm() {
 
         <label>
           <span>Project</span>
-          <select name="projectType" defaultValue="Company site">
+          <select name="projectType" defaultValue="Not sure yet">
             {projectTypes.map((type) => (
               <option key={type}>{type}</option>
             ))}

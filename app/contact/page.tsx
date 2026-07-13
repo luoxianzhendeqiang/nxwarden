@@ -30,11 +30,11 @@ export default function ContactPage() {
       <PageHero
         eyebrow="contact"
         id="contact-page-title"
-        title="Send a project inquiry."
+        title="Start with the operations problem."
         description={<p>
-          Use this page for business website, cloud operations, dashboard,
-          automation, and documentation requests. Do not submit sensitive login,
-          billing, or access details through this form.
+          Ask about an Operations Clarity Audit, Operations Foundation Sprint,
+          Runbook &amp; Handoff System, or a bounded website, workflow, or dashboard
+          project. Do not submit sensitive login, billing, or access details.
         </p>}
       />
 
@@ -74,13 +74,15 @@ export default function ContactPage() {
           <p className="eyebrow">secondary form path</p>
           <h2>Use the form if verification loads normally.</h2>
           <p>
-            A useful inquiry explains the business goal, current tools, desired
-            outcome, timeline, and any review requirements. If Cloudflare
-            verification is unavailable, email the intake addresses directly.
-            NX Warden is operated by NexusWarden Technology LLC.
+            A useful inquiry explains the operating problem, current tools,
+            desired outcome, timeline, and review requirements. The Operations
+            Clarity Audit is the no-credentials-first starting point when the
+            current setup or priority is unclear. If Cloudflare verification is
+            unavailable, email the intake addresses directly. NX Warden is
+            operated by NexusWarden Technology LLC.
           </p>
           <ul className="inquiry-guide" aria-label="Useful inquiry details">
-            <li>Project type: website, workflow, dashboard, monitoring, or documentation.</li>
+            <li>Project type: choose one service offer, a bounded project, or Not sure yet.</li>
             <li>Current tools: where the work lives today and what feels scattered.</li>
             <li>Desired outcome: what should be organized, automated, monitored, or documented.</li>
           </ul>

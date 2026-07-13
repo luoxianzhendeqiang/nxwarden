@@ -1,6 +1,5 @@
 import {
   BarChart3,
-  Bot,
   Cloud,
   FileText,
   Globe2,
@@ -15,6 +14,45 @@ import PageHero from "../components/page-hero";
 import PageShell from "../components/page-shell";
 import SectionHeader from "../components/section-header";
 import SiteFooter from "../components/site-footer";
+
+const serviceOffers = [
+  {
+    icon: ShieldCheck,
+    title: "Operations Clarity Audit",
+    scope:
+      "A no-credentials-first review of public pages plus client-provided screenshots, exports, and documentation. Read-only access is considered only after explicit authorization.",
+    deliverables:
+      "System inventory, risk-priority map, missing-documentation list, and 30-day action plan.",
+    boundaries:
+      "No system changes during the audit, no shared master passwords, and no long-term credential retention.",
+    startingPoint:
+      "Recommended starting point when the current setup is scattered, undocumented, or not yet ready for implementation."
+  },
+  {
+    icon: Cloud,
+    title: "Operations Foundation Sprint",
+    scope:
+      "One agreed, bounded operations improvement across a website, cloud service, workflow, monitoring surface, or related operating layer.",
+    deliverables:
+      "The agreed configuration, supporting documentation, and clear handoff instructions for the completed scope.",
+    boundaries:
+      "The customer owns the infrastructure and accounts. Work uses least privilege, excludes out-of-scope legacy problems, does not include continuous management or 24/7 response, and does not retain credentials long term.",
+    startingPoint:
+      "Best after an audit or when one priority and its success criteria are already clear."
+  },
+  {
+    icon: FileText,
+    title: "Runbook & Handoff System",
+    scope:
+      "A maintainable operating record for one agreed service, system, or workflow whose knowledge currently lives in a founder's memory or scattered notes.",
+    deliverables:
+      "System overview, ownership and dependency notes, operating procedures, maintenance guidance, and handoff instructions.",
+    boundaries:
+      "The customer retains ownership and access. Work is limited to the agreed scope, uses least privilege, does not absorb unrelated legacy issues, does not promise 24/7 support, and does not retain credentials long term.",
+    startingPoint:
+      "Best when work must become repeatable, reviewable, or transferable to another operator."
+  }
+];
 
 const serviceLines = [
   {
@@ -43,7 +81,7 @@ const serviceLines = [
     title: "Monitoring and status pages",
     solves: "Small systems that need basic reachability signals and incident context.",
     deliverable: "A monitor list, status summary, alert notes, and review cadence.",
-    outOfScope: "Guaranteed uptime unless a written agreement defines the service level."
+    outOfScope: "Continuous managed operations, guaranteed uptime, or 24/7 response."
   },
   {
     icon: FileText,
@@ -73,6 +111,7 @@ const limits = [
   "Fund handling, card handling, or client-asset holding.",
   "Restricted-market operations or illegal marketplaces.",
   "Public anonymous network access resale.",
+  "Continuous managed operations, emergency response, or 24/7 on-call coverage.",
   "Handling sensitive access material without a written scope and secure method."
 ];
 
@@ -108,12 +147,17 @@ const faqs = [
   {
     question: "What does NX Warden do?",
     answer:
-      "NX Warden builds practical cloud systems, automation workflows, read-only dashboards, monitoring surfaces, and runbooks for small online operations."
+      "NX Warden turns scattered websites, cloud services, automations, monitoring, and runbooks into a clearer, maintainable operations layer through three bounded service offers."
   },
   {
     question: "Who is NX Warden for?",
     answer:
-      "It is built for independent creators, small online businesses, solo operators, and small technical teams that need clearer systems without heavy overhead."
+      "It is built first for independent developers, solo founders, and founder-led micro-SaaS operators. Small technical studios and small technical teams without dedicated DevOps are a secondary fit."
+  },
+  {
+    question: "Where should a new customer start?",
+    answer:
+      "Start with the no-credentials-first Operations Clarity Audit when the current setup or priority is unclear. Start with a sprint or runbook engagement only when the bounded outcome is already understood."
   },
   {
     question: "Is NX Warden a regulated finance provider?",
@@ -155,20 +199,69 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="services"
         id="services-title"
-        title="Cloud operations work for small online businesses."
+        title="A clearer operations layer for founder-run systems."
         description={<p>
-          NX Warden focuses on practical deliverables: public websites, workflow
-          automation, internal dashboards, status visibility, documentation, and
-          maintainable handoff notes. The studio is operated by NexusWarden
-          Technology LLC.
+          NX Warden provides bounded operations work for independent developers,
+          solo founders, and founder-led micro-SaaS operators, with small
+          technical studios and teams without dedicated DevOps as a secondary
+          fit. The studio is operated by NexusWarden Technology LLC.
         </p>}
       />
 
+      <section className="subpage-section content-band" aria-labelledby="service-offers-title">
+        <SectionHeader
+          eyebrow="service offers"
+          id="service-offers-title"
+          title="Three bounded ways to create operational clarity."
+          description={<p>
+            Each offer has a defined scope, tangible handoff, and explicit
+            boundary. The audit is the safest starting point when the current
+            operating picture is incomplete.
+          </p>}
+        />
+        <div className="service-detail-grid">
+          {serviceOffers.map((offer) => {
+            const Icon = offer.icon;
+
+            return (
+              <GlassCard className="service-detail-card" key={offer.title}>
+                <div className="service-detail-top">
+                  <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
+                  <h2>{offer.title}</h2>
+                </div>
+                <dl>
+                  <div>
+                    <dt>Scope</dt>
+                    <dd>{offer.scope}</dd>
+                  </div>
+                  <div>
+                    <dt>Deliverables</dt>
+                    <dd>{offer.deliverables}</dd>
+                  </div>
+                  <div>
+                    <dt>Boundaries</dt>
+                    <dd>{offer.boundaries}</dd>
+                  </div>
+                  <div>
+                    <dt>Starting point</dt>
+                    <dd>{offer.startingPoint}</dd>
+                  </div>
+                </dl>
+              </GlassCard>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="subpage-section content-band" aria-labelledby="service-lines-title">
         <SectionHeader
-          eyebrow="service lines"
+          eyebrow="supporting capabilities"
           id="service-lines-title"
-          title="Practical deliverables with explicit boundaries."
+          title="Supporting capabilities"
+          description={<p>
+            These capabilities support the three offers above. They are not a
+            separate menu of unbounded products.
+          </p>}
         />
         <div className="service-detail-grid">
           {serviceLines.map((service) => {

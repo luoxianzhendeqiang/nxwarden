@@ -13,37 +13,37 @@ import PageShell from "../components/page-shell";
 import SectionHeader from "../components/section-header";
 import SiteFooter from "../components/site-footer";
 
-const lastUpdated = "June 23, 2026";
+const lastUpdated = "July 13, 2026";
 
 const roadmap = [
   {
     phase: "Current",
     icon: ClipboardCheck,
     items: [
-      "Public website and service boundary pages",
-      "Inquiry flow with safety check",
-      "Read-only operations demo",
-      "Documentation pack and decision notes"
+      "Approved primary and secondary customer profiles",
+      "Three bounded service-offer definitions",
+      "Public website and protected inquiry flow",
+      "Internal sanitized Operations Clarity Audit sample"
     ]
   },
   {
     phase: "Next",
     icon: Compass,
     items: [
-      "More public service examples",
-      "Reusable public templates",
-      "Clearer contact workflow",
-      "Founder notes about practical operations"
+      "Service-offer validation",
+      "Public sample deliverables",
+      "Customer discovery interviews",
+      "Recorded replies, objections, and willingness-to-pay evidence"
     ]
   },
   {
     phase: "Later",
     icon: Layers3,
     items: [
-      "Lightweight inquiry intake",
-      "Dashboard templates",
-      "Runbook kits",
-      "Content library for small operators"
+      "Refine scopes from observed customer problems",
+      "Publish additional sanitized templates when evidence supports them",
+      "Improve intake only after real inquiry patterns emerge",
+      "Keep ProofPack product validation on its own track"
     ]
   }
 ];
@@ -79,13 +79,18 @@ export default function RoadmapPage() {
       <PageHero
         eyebrow="roadmap"
         id="roadmap-title"
-        title="A practical path for the studio and its public evidence."
+        title="Validate the offers before expanding the product surface."
         description={
           <>
             <p>
-              NX Warden grows through small, reviewable improvements: clearer
-              service examples, better intake, reusable templates, and documentation
-              that helps future work start from evidence instead of memory.
+              NX Warden is testing whether the approved audience experiences the
+              stated operations problems and will pay for bounded help. The next
+              evidence comes from honest interviews, public samples, and real
+              inquiry patterns, not assumed customer outcomes.
+            </p>
+            <p>
+              ProofPack is a separate local-first product. Its product roadmap
+              does not define or inflate NX Warden service claims.
             </p>
             <p className="last-updated">
               <CalendarCheck aria-hidden="true" size={16} strokeWidth={2.1} />
@@ -140,14 +145,14 @@ export default function RoadmapPage() {
         </div>
         <div className="text-panel">
           <p>
-            The roadmap is intentionally plain. NX Warden is building a small
-            public body of work around cloud systems, workflow automation,
-            dashboards, monitoring, and runbooks.
+            The roadmap is intentionally plain. NX Warden is validating three
+            bounded service offers around operational clarity, focused
+            improvements, and maintainable handoff systems.
           </p>
           <p>
-            Future features should make the studio easier to evaluate and easier
-            to work with, while keeping sensitive operational details out of the
-            public surface.
+            Website or product development should follow observed customer
+            problems. Public samples remain clearly labeled, and ProofPack stays
+            a separate local-first product rather than a service engagement.
           </p>
           <a className="secondary-link" href="/work/">
             View work samples
@@ -162,10 +167,10 @@ export default function RoadmapPage() {
           <p className="eyebrow">review posture</p>
           <h2 id="roadmap-review-title">Evidence first, expansion later.</h2>
           <p>
-            The next useful step is collecting public-safe evidence: screenshots,
-            work samples, templates, and founder notes that show how NX Warden
-            works without claiming customers, revenue, or operational history it
-            cannot verify.
+            The next useful step is collecting public-safe evidence through
+            discovery interviews, inquiry records, rejection reasons, paid
+            willingness, and clearly labeled samples. Nothing here claims
+            completed customer work, revenue, or outcomes that do not exist.
           </p>
         </div>
       </section>

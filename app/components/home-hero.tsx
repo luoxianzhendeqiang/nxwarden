@@ -57,15 +57,16 @@ export default function HomeHero() {
       <div className="home-hero__copy" id="top">
         <p className="eyebrow">cloud automation and operations studio</p>
         <h1 id="hero-title">
-          <span>Practical</span>
-          <span>systems</span>
-          <span>for real</span>
-          <span>online work.</span>
+          <span>Turn scattered</span>
+          <span>systems into</span>
+          <span>a clear</span>
+          <span>operations layer.</span>
         </h1>
         <p className="home-hero__lead">
-          NX Warden builds practical cloud systems, automation workflows, and
-          internal dashboards for independent creators and small online
-          businesses.
+          NX Warden helps independent developers, solo founders, and founder-led
+          micro-SaaS businesses turn scattered websites, cloud services,
+          automations, monitoring, and runbooks into a clear, maintainable
+          operations layer.
         </p>
         <div className="home-hero__actions" aria-label="Site actions">
           <a className="button primary" href="/services/">

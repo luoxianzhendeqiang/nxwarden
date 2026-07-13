@@ -160,13 +160,15 @@ export default function Home() {
         <div className="audience-copy">
           <p className="eyebrow">built for</p>
           <h2 id="audience-title">
-            For creators and operators whose tools need a clearer home.
+            For founder-operators carrying the operational memory.
           </h2>
           <p>
-            NX Warden is for small online businesses, solo founders, and
-            independent creators who need a practical website, reliable
-            workflows, simple status visibility, and documentation that survives
-            busy weeks.
+            NX Warden is built first for independent developers, solo founders,
+            and founder-led micro-SaaS businesses who personally carry most of
+            the knowledge behind their online systems. It also supports small
+            technical studios and small technical teams without dedicated DevOps
+            when their websites, services, automations, monitoring, and runbooks
+            need a clearer operating layer.
           </p>
         </div>
         <div className="audience-signals" aria-label="Common needs">

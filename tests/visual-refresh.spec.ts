@@ -64,7 +64,7 @@ test("desktop homepage exposes the refreshed hero and real evidence", async ({
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Practical systems for real online work."
+      name: "Turn scattered systems into a clear operations layer."
     })
   ).toBeVisible();
   await expect(page.getByTestId("home-orbit-field")).toBeVisible();
@@ -77,6 +77,96 @@ test("desktop homepage exposes the refreshed hero and real evidence", async ({
     path: "test-results/nxwarden-home-desktop.png",
     fullPage: true
   });
+});
+
+test("homepage positioning alignment names primary and secondary ICPs", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await expect(
+    page.locator(".home-hero__lead")
+  ).toContainText(
+    /independent developers, solo founders, and founder-led micro-SaaS businesses/i
+  );
+  await expect(
+    page.locator(".audience-copy")
+  ).toContainText(
+    /small technical studios and small technical teams without dedicated DevOps/i
+  );
+});
+
+test("services positioning alignment puts offers before supporting capabilities", async ({
+  page
+}) => {
+  await page.goto("/services/");
+
+  const mainText = (await page.locator("main").innerText()).toLowerCase();
+  const capabilitiesIndex = mainText.indexOf("supporting capabilities");
+
+  expect(capabilitiesIndex).toBeGreaterThan(-1);
+  for (const offer of [
+    "Operations Clarity Audit",
+    "Operations Foundation Sprint",
+    "Runbook & Handoff System"
+  ]) {
+    const offerIndex = mainText.indexOf(offer.toLowerCase());
+    expect(offerIndex).toBeGreaterThan(-1);
+    expect(offerIndex).toBeLessThan(capabilitiesIndex);
+  }
+
+  const auditCard = page
+    .locator("section[aria-labelledby='service-offers-title']")
+    .locator("article")
+    .filter({ hasText: "Operations Clarity Audit" });
+  await expect(auditCard).toContainText(/no-credentials-first/i);
+  await expect(auditCard).toContainText(/system inventory/i);
+  await expect(auditCard).toContainText(/risk-priority map/i);
+  await expect(auditCard).toContainText(/missing-documentation list/i);
+  await expect(auditCard).toContainText(/30-day action plan/i);
+});
+
+test("contact positioning alignment exposes approved project types", async ({
+  page
+}) => {
+  await page.goto("/contact/");
+
+  await expect(page.locator("select[name='projectType'] option")).toHaveText([
+    "Operations Clarity Audit",
+    "Operations Foundation Sprint",
+    "Runbook & Handoff System",
+    "Website / workflow / dashboard project",
+    "Not sure yet"
+  ]);
+});
+
+test("work sample positioning alignment labels sanitized audit deliverable", async ({
+  page
+}) => {
+  await page.goto("/work/");
+
+  const sample = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "Operations Clarity Audit sample" })
+  });
+  await expect(sample).toContainText(/internal.*sanitized sample/i);
+  await expect(sample).toContainText(/not a customer engagement/i);
+  await expect(sample).toContainText("System inventory");
+  await expect(sample).toContainText("Risk-priority map");
+  await expect(sample).toContainText("Missing-documentation list");
+  await expect(sample).toContainText("30-day action plan");
+});
+
+test("roadmap positioning alignment separates validation and ProofPack", async ({
+  page
+}) => {
+  await page.goto("/roadmap/");
+
+  await expect(page.getByText(/service-offer validation/i)).toBeVisible();
+  await expect(page.getByText(/public sample deliverables/i)).toBeVisible();
+  await expect(page.getByText(/customer discovery interviews/i)).toBeVisible();
+  await expect(
+    page.getByText(/ProofPack is a separate local-first product/i)
+  ).toBeVisible();
 });
 
 for (const viewport of mobileViewports) {
