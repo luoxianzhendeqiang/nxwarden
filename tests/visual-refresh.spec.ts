@@ -55,6 +55,101 @@ async function expectNoElementOverlap(
   expect(overlaps).toBe(false);
 }
 
+type PaintedTextMetrics = {
+  box: { x: number; y: number; width: number; height: number };
+  lineCount: number;
+};
+
+async function getPaintedTextMetrics(
+  locator: import("@playwright/test").Locator,
+  phrase?: string
+): Promise<PaintedTextMetrics> {
+  return locator.evaluate((node, requestedPhrase) => {
+    const range = document.createRange();
+
+    if (requestedPhrase) {
+      const textNodes: Text[] = [];
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+      let current = walker.nextNode();
+      let combinedText = "";
+
+      while (current) {
+        textNodes.push(current as Text);
+        combinedText += current.textContent ?? "";
+        current = walker.nextNode();
+      }
+
+      const startIndex = combinedText
+        .toLocaleLowerCase()
+        .indexOf(requestedPhrase.toLocaleLowerCase());
+      if (startIndex < 0) {
+        throw new Error(`Could not find phrase: ${requestedPhrase}`);
+      }
+
+      const endIndex = startIndex + requestedPhrase.length;
+      let cursor = 0;
+      let startNode: Text | null = null;
+      let endNode: Text | null = null;
+      let startOffset = 0;
+      let endOffset = 0;
+
+      for (const textNode of textNodes) {
+        const length = textNode.textContent?.length ?? 0;
+        if (!startNode && startIndex >= cursor && startIndex < cursor + length) {
+          startNode = textNode;
+          startOffset = startIndex - cursor;
+        }
+        if (!endNode && endIndex > cursor && endIndex <= cursor + length) {
+          endNode = textNode;
+          endOffset = endIndex - cursor;
+          break;
+        }
+        cursor += length;
+      }
+
+      if (!startNode || !endNode) {
+        throw new Error(`Could not map phrase range: ${requestedPhrase}`);
+      }
+      range.setStart(startNode, startOffset);
+      range.setEnd(endNode, endOffset);
+    } else {
+      range.selectNodeContents(node);
+    }
+
+    const rect = range.getBoundingClientRect();
+    const lineTops: number[] = [];
+    for (const fragment of Array.from(range.getClientRects())) {
+      if (fragment.width <= 0 || fragment.height <= 0) continue;
+      if (!lineTops.some((top) => Math.abs(top - fragment.top) <= 2)) {
+        lineTops.push(fragment.top);
+      }
+    }
+
+    return {
+      box: {
+        x: rect.x,
+        y: rect.y,
+        width: rect.width,
+        height: rect.height
+      },
+      lineCount: lineTops.length
+    };
+  }, phrase);
+}
+
+function expectRectanglesNotToOverlap(
+  first: PaintedTextMetrics["box"],
+  second: PaintedTextMetrics["box"]
+) {
+  const overlaps = !(
+    first.x + first.width <= second.x ||
+    second.x + second.width <= first.x ||
+    first.y + first.height <= second.y ||
+    second.y + second.height <= first.y
+  );
+  expect(overlaps).toBe(false);
+}
+
 test("desktop homepage exposes the refreshed hero and real evidence", async ({
   page
 }) => {
@@ -94,6 +189,196 @@ test("homepage positioning alignment names primary and secondary ICPs", async ({
   ).toContainText(
     /small technical studios and small technical teams without dedicated DevOps/i
   );
+});
+
+test("desktop homepage work heading clears the complete timeline", async ({
+  page
+}) => {
+  for (const viewport of desktopViewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+
+    const section = page.locator("section.work");
+    const heading = page.getByRole("heading", {
+      level: 2,
+      name: "Small systems, written down and kept understandable."
+    });
+    const timeline = section.locator("ol.timeline");
+    const handoff = timeline.getByText("Handoff", { exact: true });
+
+    await expect(heading).toHaveText(
+      "Small systems, written down and kept understandable."
+    );
+    await expect(timeline.locator("li")).toHaveCount(5);
+    await expect(handoff).toBeVisible();
+
+    const [sectionBox, timelineBox, headingText, lastWord, handoffText] =
+      await Promise.all([
+        section.boundingBox(),
+        timeline.boundingBox(),
+        getPaintedTextMetrics(heading),
+        getPaintedTextMetrics(heading, "understandable."),
+        getPaintedTextMetrics(handoff, "handoff")
+      ]);
+
+    expect(sectionBox).not.toBeNull();
+    expect(timelineBox).not.toBeNull();
+    expect(headingText.lineCount).toBeGreaterThanOrEqual(3);
+    expect(headingText.lineCount).toBeLessThanOrEqual(4);
+    expect(headingText.box.y + headingText.box.height).toBeLessThan(
+      timelineBox!.y
+    );
+    expectRectanglesNotToOverlap(headingText.box, timelineBox!);
+    expectRectanglesNotToOverlap(lastWord.box, handoffText.box);
+
+    expect(headingText.box.x).toBeGreaterThanOrEqual(sectionBox!.x - 1);
+    expect(headingText.box.x + headingText.box.width).toBeLessThanOrEqual(
+      sectionBox!.x + sectionBox!.width + 1
+    );
+
+    const clipping = await heading.evaluate((node) => {
+      const styles = getComputedStyle(node);
+      return {
+        overflowX: styles.overflowX,
+        overflowY: styles.overflowY,
+        wordBreak: styles.wordBreak
+      };
+    });
+    expect(["hidden", "clip"]).not.toContain(clipping.overflowX);
+    expect(["hidden", "clip"]).not.toContain(clipping.overflowY);
+    expect(clipping.wordBreak).not.toBe("break-all");
+
+    const timelineContained = await timeline.evaluate((node) => {
+      const list = node.getBoundingClientRect();
+      return Array.from(node.querySelectorAll("li")).every((item) => {
+        const range = document.createRange();
+        range.selectNodeContents(item);
+        const text = range.getBoundingClientRect();
+        return (
+          text.left >= list.left - 1 &&
+          text.right <= list.right + 1 &&
+          text.top >= list.top - 1 &&
+          text.bottom <= list.bottom + 1
+        );
+      });
+    });
+    expect(timelineContained).toBe(true);
+    await expectNoHorizontalOverflow(page);
+  }
+});
+
+test("mobile homepage keeps work heading and timeline in one stable column", async ({
+  page
+}) => {
+  for (const viewport of mobileViewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+
+    const section = page.locator("section.work");
+    const heading = section.locator("h2");
+    const timeline = section.locator("ol.timeline");
+    const [headingText, timelineBox] = await Promise.all([
+      getPaintedTextMetrics(heading),
+      timeline.boundingBox()
+    ]);
+
+    expect(timelineBox).not.toBeNull();
+    await expect(heading).toHaveText(
+      "Small systems, written down and kept understandable."
+    );
+    await expect(timeline.locator("li")).toHaveCount(5);
+    await expect(timeline.getByText("Handoff", { exact: true })).toBeVisible();
+    expect(headingText.box.y + headingText.box.height).toBeLessThan(
+      timelineBox!.y
+    );
+    await expectNoHorizontalOverflow(page);
+  }
+});
+
+test("homepage micro-polish metrics stay within the approved ranges", async ({
+  page
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const desktopMetrics = await page.evaluate(() => {
+    const systems = document.querySelector<HTMLElement>(".home-page > .systems")!;
+    const systemsHeading = systems.querySelector<HTMLElement>("h2")!;
+    const trustCopy = document.querySelector<HTMLElement>(".trust-copy")!;
+    const trustGrid = document.querySelector<HTMLElement>(".trust-grid")!;
+    const evidenceMedia = document.querySelector<HTMLElement>(
+      ".evidence-card-v2__media"
+    )!;
+    const evidenceBody = document.querySelector<HTMLElement>(
+      ".evidence-card-v2__copy > span:last-child"
+    )!;
+    const contactForm = document.querySelector<HTMLElement>(
+      ".home-page > .contact .contact-form"
+    )!;
+    const footer = document.querySelector<HTMLElement>(".home-page .site-footer")!;
+    const footerBrand = footer.querySelector<HTMLElement>("strong")!;
+    const trustCopyBox = trustCopy.getBoundingClientRect();
+    const trustGridBox = trustGrid.getBoundingClientRect();
+
+    return {
+      sectionPadding: Number.parseFloat(getComputedStyle(systems).paddingTop),
+      headingSize: Number.parseFloat(getComputedStyle(systemsHeading).fontSize),
+      trustIsStacked: trustCopyBox.bottom < trustGridBox.top,
+      evidenceMediaWidth: evidenceMedia.getBoundingClientRect().width,
+      evidenceBodySize: Number.parseFloat(getComputedStyle(evidenceBody).fontSize),
+      contactFormWidth: contactForm.getBoundingClientRect().width,
+      footerFontSize: Number.parseFloat(getComputedStyle(footer).fontSize),
+      footerBrandSize: Number.parseFloat(getComputedStyle(footerBrand).fontSize),
+      footerMarginTop: Number.parseFloat(getComputedStyle(footer).marginTop)
+    };
+  });
+
+  expect(desktopMetrics.sectionPadding).toBeGreaterThanOrEqual(82);
+  expect(desktopMetrics.sectionPadding).toBeLessThanOrEqual(88);
+  expect(desktopMetrics.headingSize).toBeGreaterThanOrEqual(76);
+  expect(desktopMetrics.headingSize).toBeLessThanOrEqual(79);
+  expect(desktopMetrics.trustIsStacked).toBe(true);
+  expect(desktopMetrics.evidenceMediaWidth).toBeGreaterThanOrEqual(104);
+  expect(desktopMetrics.evidenceMediaWidth).toBeLessThanOrEqual(112);
+  expect(desktopMetrics.evidenceBodySize).toBeGreaterThanOrEqual(13);
+  expect(desktopMetrics.contactFormWidth).toBeGreaterThanOrEqual(520);
+  expect(desktopMetrics.contactFormWidth).toBeLessThanOrEqual(560);
+  expect(desktopMetrics.footerFontSize).toBeGreaterThanOrEqual(14);
+  expect(desktopMetrics.footerBrandSize).toBeGreaterThanOrEqual(16);
+  expect(desktopMetrics.footerMarginTop).toBeGreaterThanOrEqual(54);
+  expect(desktopMetrics.footerMarginTop).toBeLessThanOrEqual(60);
+
+  for (const [selector, phrase] of [
+    ["#audience-title", "founder-operators"],
+    ["#portal-title", "public-safe"],
+    ["#contact-title", "scoped project"]
+  ] as const) {
+    const metrics = await getPaintedTextMetrics(page.locator(selector), phrase);
+    expect(metrics.lineCount, `${phrase} should stay on one painted line`).toBe(1);
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const mobileMetrics = await page.evaluate(() => {
+    const systems = document.querySelector<HTMLElement>(".home-page > .systems")!;
+    const systemsHeading = systems.querySelector<HTMLElement>("h2")!;
+    const evidenceMedia = document.querySelector<HTMLElement>(
+      ".evidence-card-v2__media"
+    )!;
+    return {
+      sectionPadding: Number.parseFloat(getComputedStyle(systems).paddingTop),
+      headingSize: Number.parseFloat(getComputedStyle(systemsHeading).fontSize),
+      evidenceMediaWidth: evidenceMedia.getBoundingClientRect().width
+    };
+  });
+
+  expect(mobileMetrics.sectionPadding).toBeGreaterThanOrEqual(56);
+  expect(mobileMetrics.sectionPadding).toBeLessThanOrEqual(62);
+  expect(mobileMetrics.headingSize).toBeGreaterThanOrEqual(34);
+  expect(mobileMetrics.headingSize).toBeLessThanOrEqual(36);
+  expect(mobileMetrics.evidenceMediaWidth).toBeGreaterThanOrEqual(72);
+  expect(mobileMetrics.evidenceMediaWidth).toBeLessThanOrEqual(80);
+  await expectNoHorizontalOverflow(page);
 });
 
 test("services positioning alignment puts offers before supporting capabilities", async ({

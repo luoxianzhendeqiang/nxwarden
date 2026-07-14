@@ -160,7 +160,8 @@ export default function Home() {
         <div className="audience-copy">
           <p className="eyebrow">built for</p>
           <h2 id="audience-title">
-            For founder-operators carrying the operational memory.
+            For <span className="headline-phrase">founder-operators</span>{" "}
+            carrying the operational memory.
           </h2>
           <p>
             NX Warden is built first for independent developers, solo founders,
@@ -182,7 +183,10 @@ export default function Home() {
       <section className="portal" aria-labelledby="portal-title">
         <div className="portal-copy">
           <p className="eyebrow">operations demo</p>
-          <h2 id="portal-title">A public-safe preview of the dashboard approach.</h2>
+          <h2 id="portal-title">
+            A <span className="headline-phrase">public-safe</span> preview of the
+            dashboard approach.
+          </h2>
         </div>
         <div className="portal-links" aria-label="Public-safe demo signals">
           {demoSignals.map((signal) => {
@@ -230,7 +234,10 @@ export default function Home() {
       <section className="contact" id="contact" aria-labelledby="contact-title">
         <div className="contact-copy">
           <p className="eyebrow">nxwarden.com</p>
-          <h2 id="contact-title">Start with a scoped project inquiry.</h2>
+          <h2 id="contact-title">
+            Start with a <span className="headline-phrase">scoped project</span>{" "}
+            inquiry.
+          </h2>
           <p>
             Tell NX Warden what needs to be organized, automated, monitored, or
             published. If the form is unavailable, email the business intake
