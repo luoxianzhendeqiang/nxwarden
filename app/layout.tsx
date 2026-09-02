@@ -5,7 +5,7 @@ import "./visual-system.css";
 export const metadata: Metadata = {
   title: "NX Warden — Cloud Automation & Operations Studio",
   description:
-    "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
+    "Practical operations services and local-first software for independent developers, solo founders, founder-led micro-SaaS operators, and small technical teams.",
   applicationName: "NX Warden",
   metadataBase: new URL("https://nxwarden.com"),
   openGraph: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: "NX Warden",
     title: "NX Warden — Cloud Automation & Operations Studio",
     description:
-      "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
+      "Practical operations services and local-first software for independent developers, solo founders, founder-led micro-SaaS operators, and small technical teams.",
     images: ["/assets/nxwarden-orbit-field.png"],
     url: "https://nxwarden.com/"
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NX Warden — Cloud Automation & Operations Studio",
     description:
-      "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses.",
+      "Practical operations services and local-first software for independent developers, solo founders, founder-led micro-SaaS operators, and small technical teams.",
     images: ["/assets/nxwarden-orbit-field.png"]
   },
   icons: {
@@ -50,7 +50,7 @@ const organizationJsonLd = {
   logo: "https://nxwarden.com/assets/nxwarden-icon-512.png",
   email: "ceo@nxwarden.com",
   description:
-    "Practical cloud systems, workflow automation, internal dashboards, monitoring, and runbooks for independent creators and small online businesses."
+    "Practical operations services and local-first software for independent developers, solo founders, founder-led micro-SaaS operators, and small technical teams."
 };
 
 export default function RootLayout({

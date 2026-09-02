@@ -8,6 +8,7 @@ import {
   Globe2,
   LayoutDashboard,
   Mail,
+  PackageCheck,
   ShieldCheck,
   Workflow
 } from "lucide-react";
@@ -114,6 +115,26 @@ export default function Home() {
     <PageShell className="home-page">
       <HomeHero />
       <EvidenceBand />
+
+      <section className="proofpack-home" aria-labelledby="home-proofpack-title">
+        <div className="proofpack-home__copy">
+          <p className="eyebrow">Products</p>
+          <h2 id="home-proofpack-title">ProofPack</h2>
+          <p>Local-first operating evidence compiler.</p>
+          <p>Turn completed technical work into a structured evidence bundle.</p>
+        </div>
+        <div className="proofpack-home__action">
+          <PackageCheck aria-hidden="true" size={34} strokeWidth={1.7} />
+          <p>
+            ProofPack v1.0.0 is Released through public documentation and
+            request access.
+          </p>
+          <a className="secondary-link" href="/products/proofpack/">
+            Explore ProofPack
+            <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
+          </a>
+        </div>
+      </section>
 
       <section className="systems" id="services" aria-labelledby="services-title">
         <div className="section-head">

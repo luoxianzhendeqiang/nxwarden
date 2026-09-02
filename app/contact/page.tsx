@@ -69,6 +69,38 @@ export default function ContactPage() {
         </div>
       </section>
 
+      <section
+        className="split-band content-band proofpack-request-guide"
+        data-testid="proofpack-request-guide"
+        aria-labelledby="proofpack-request-title"
+      >
+        <div>
+          <p className="eyebrow">ProofPack · request access</p>
+          <h2 id="proofpack-request-title">Looking for ProofPack?</h2>
+          <p>
+            ProofPack v1.0.0 is Released through public documentation and
+            request access. Email the primary intake path to
+            describe the local evidence workflow you want to evaluate.
+          </p>
+        </div>
+        <div className="text-panel">
+          <dl className="proofpack-request-fields">
+            <div><dt>Product</dt><dd>ProofPack v1.0.0 · Released</dd></div>
+            <div><dt>Use case</dt><dd>What completed technical work should become reviewable evidence?</dd></div>
+            <div><dt>Environment</dt><dd>Optional: operating system and Python version.</dd></div>
+            <div><dt>Evidence to package</dt><dd>Optional: describe artifact categories, not private files.</dd></div>
+          </dl>
+          <p className="small-note">
+            <ShieldCheck aria-hidden="true" size={16} strokeWidth={2.1} />
+            Please do not send secrets or credentials by email.
+          </p>
+          <a className="secondary-link" href="mailto:ceo@nxwarden.com?subject=ProofPack%20v1.0.0%20Request%20Access">
+            Request ProofPack by email
+            <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
+          </a>
+        </div>
+      </section>
+
       <section className="contact contact-page" aria-label="Project inquiry form">
         <div className="contact-copy">
           <p className="eyebrow">secondary form path</p>

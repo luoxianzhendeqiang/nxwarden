@@ -8,24 +8,30 @@ import SiteFooter from "../components/site-footer";
 const facts = [
   {
     icon: Building2,
-    title: "Company",
-    body: "NX Warden is operated by NexusWarden Technology LLC, a Wyoming limited liability company."
+    title: "Legal company",
+    body: "NexusWarden Technology LLC is the legal company. NX Warden is the operating brand."
   },
   {
     icon: Sparkles,
-    title: "Operating Model",
-    body: "Founder-led, remote-first, and focused on practical software automation work."
+    title: "Current product",
+    body: "ProofPack v1.0.0 is Released through public documentation and request access."
   },
   {
     icon: FileCheck2,
-    title: "Deliverables",
-    body: "Websites, cloud operations setup, internal dashboards, documentation, and runbooks."
+    title: "Services",
+    body: "Operations Clarity Audit, Operations Foundation Sprint, and Runbook & Handoff System."
   },
   {
     icon: ShieldCheck,
     title: "Boundaries",
     body: "NX Warden does not provide regulated finance activities or licensed fund-movement products."
   }
+];
+
+const serviceOffers = [
+  "Operations Clarity Audit",
+  "Operations Foundation Sprint",
+  "Runbook & Handoff System"
 ];
 
 export default function AboutPage() {
@@ -60,6 +66,21 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="split-band content-band" aria-labelledby="about-services-title">
+        <div>
+          <p className="eyebrow">services</p>
+          <h2 id="about-services-title">Three bounded ways to improve the operations layer.</h2>
+        </div>
+        <div className="deliverable-panel" aria-label="NX Warden service offers">
+          {serviceOffers.map((offer) => (
+            <div className="deliverable-row" key={offer}>
+              <FileCheck2 aria-hidden="true" size={19} strokeWidth={2} />
+              <span>{offer}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="split-band content-band" aria-labelledby="about-focus-title">
         <div>
           <p className="eyebrow">focus</p>
@@ -72,9 +93,10 @@ export default function AboutPage() {
             service visibility, documentation, and simple reporting surfaces.
           </p>
           <p>
-            The studio helps independent creators, small online businesses, and
-            technical operators turn useful but scattered digital work into
-            clearer websites, workflows, dashboards, and operating notes.
+            The studio helps independent developers, solo founders,
+            founder-led micro-SaaS operators, and small technical teams turn
+            scattered digital work into clearer websites, workflows,
+            dashboards, and operating notes.
           </p>
           <p>
             The business is a software operations studio. It does not hold

@@ -1,4 +1,5 @@
 const footerLinks = [
+  ["Products", "/products/proofpack/"],
   ["Services", "/services/"],
   ["Work", "/work/"],
   ["About", "/about/"],

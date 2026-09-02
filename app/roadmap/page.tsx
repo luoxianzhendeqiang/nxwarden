@@ -13,21 +13,22 @@ import PageShell from "../components/page-shell";
 import SectionHeader from "../components/section-header";
 import SiteFooter from "../components/site-footer";
 
-const lastUpdated = "July 13, 2026";
+const lastUpdated = "September 1, 2026";
 
 const roadmap = [
   {
-    phase: "Current",
+    phase: "Released",
     icon: ClipboardCheck,
     items: [
       "Approved primary and secondary customer profiles",
       "Three bounded service-offer definitions",
       "Public website and protected inquiry flow",
-      "Internal sanitized Operations Clarity Audit sample"
+      "Internal sanitized Operations Clarity Audit sample",
+      "ProofPack v1.0 — Released"
     ]
   },
   {
-    phase: "Next",
+    phase: "Active Development",
     icon: Compass,
     items: [
       "Service-offer validation",
@@ -37,7 +38,7 @@ const roadmap = [
     ]
   },
   {
-    phase: "Later",
+    phase: "Exploratory",
     icon: Layers3,
     items: [
       "Refine scopes from observed customer problems",

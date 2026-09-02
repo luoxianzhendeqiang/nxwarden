@@ -1,6 +1,7 @@
 import { Menu, TerminalSquare } from "lucide-react";
 
 const links = [
+  { href: "/products/proofpack/", label: "Products" },
   { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
   { href: "/roadmap/", label: "Roadmap" },

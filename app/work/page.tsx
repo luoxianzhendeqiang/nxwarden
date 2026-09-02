@@ -100,6 +100,19 @@ export default function WorkPage() {
         </p>}
       />
 
+      <section className="work-classifications content-band" aria-labelledby="work-classifications-title">
+        <div>
+          <p className="eyebrow">work labels</p>
+          <h2 id="work-classifications-title">Know what kind of evidence you are viewing.</h2>
+        </div>
+        <div className="work-classification-list" aria-label="Work classifications">
+          <span>Product development</span>
+          <span>Internal infrastructure</span>
+          <span>Client / service work</span>
+          <span>Fictional demonstration</span>
+        </div>
+      </section>
+
       <section className="subpage-section content-band" aria-labelledby="samples-title">
         <SectionHeader
           eyebrow="public-safe proof"
@@ -185,6 +198,29 @@ export default function WorkPage() {
               <span>{item}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="split-band content-band" aria-labelledby="proofpack-sample-title">
+        <div>
+          <p className="eyebrow">fictional product example</p>
+          <h2 id="proofpack-sample-title">ProofPack fictional example</h2>
+          <p>
+            Acme Relay is a fictional demonstration, not a customer or client
+            engagement. It was created for ProofPack v1.0.0 and is not evidence
+            of a customer outcome. It is not customer work.
+          </p>
+        </div>
+        <div className="text-panel">
+          <p>
+            The example shows how fictional logs, checks, deployment notes, and
+            selected artifacts become a report, manifest, artifact directory,
+            and checksum index without exposing a real operating environment.
+          </p>
+          <a className="secondary-link" href="/products/proofpack/#acme-relay-example">
+            View the Acme Relay example
+            <ArrowRight aria-hidden="true" size={17} strokeWidth={2.1} />
+          </a>
         </div>
       </section>
 
