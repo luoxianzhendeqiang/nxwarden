@@ -2,12 +2,17 @@ import { expect, test } from "@playwright/test";
 
 const publicRoutes = [
   "/",
+  "/products/proofpack/",
+  "/products/proofpack/docs/",
   "/services/",
   "/work/",
   "/roadmap/",
   "/about/",
   "/contact/",
   "/policies/",
+  "/privacy/",
+  "/security/",
+  "/terms/",
   "/console/"
 ];
 
@@ -454,11 +459,293 @@ test("roadmap positioning alignment separates validation and ProofPack", async (
   ).toBeVisible();
 });
 
-for (const viewport of mobileViewports) {
-  test(`mobile routes fit at ${viewport.width}px`, async ({ page }) => {
-    await page.setViewportSize(viewport);
+test("ProofPack product page presents the approved v1 offer and safe CTA path", async ({
+  page
+}) => {
+  await page.goto("/products/proofpack/");
 
-    for (const route of publicRoutes) {
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Operating evidence, packaged."
+    })
+  ).toBeVisible();
+  await expect(
+    page.getByText(/ProofPack v1\.0\.0.*Released/i).first()
+  ).toBeVisible();
+  await expect(page.getByText(/a local-first compiler for turning operating work into structured, shareable evidence/i)).toBeVisible();
+  await expect(page.getByText(/turn logs, commands, checks and deployment artifacts into a structured evidence bundle — locally\./i)).toBeVisible();
+
+  const hero = page.locator(".page-hero");
+  const getProofPack = hero.getByRole("link", { name: "Request ProofPack" });
+  const viewExample = hero.getByRole("link", { name: "View Example" });
+  await expect(getProofPack).toHaveAttribute("href", "/contact/");
+  await expect(viewExample).toHaveAttribute("href", "#acme-relay-example");
+
+  await expect(page.getByRole("heading", { name: "Backstage stays backstage." })).toBeVisible();
+  await expect(page.getByText(/packages the evidence you choose to share without turning your private operating environment into the deliverable/i)).toBeVisible();
+  await expect(page.getByText("Your work happened once. Its evidence should remain useful.")).toBeVisible();
+
+  const outputTree = page.getByTestId("proofpack-output-tree");
+  await expect(outputTree).toContainText("Manifest");
+  await expect(outputTree).toContainText("Report");
+  await expect(outputTree).toContainText("Evidence");
+  await expect(outputTree).toContainText("Checksums");
+  await expect(outputTree).toContainText("artifact_manifest.json");
+  await expect(outputTree).toContainText("build_report.md");
+  await expect(outputTree).toContainText("artifacts/");
+  await expect(outputTree).toContainText("checksums.sha256");
+  await expect(
+    page.getByText(/internally retained v1\.0\.0 release artifact/i)
+  ).toBeVisible();
+  await expect(
+    page.getByText(/No public ZIP download is currently available/i)
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Acme Relay shows the v1 package — with fictional data only."
+    })
+  ).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});
+
+test("ProofPack documentation describes only implemented request-access behavior", async ({
+  page
+}) => {
+  await page.goto("/products/proofpack/docs/");
+
+  for (const heading of [
+    "Overview",
+    "Request access and prerequisites",
+    "Quick start",
+    "Commands",
+    "Inputs",
+    "Outputs",
+    "Privacy model",
+    "Fictional demo",
+    "Limitations",
+    "Security reporting",
+    "Versioning"
+  ]) {
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
+
+  await expect(
+    page.getByText(/After receiving the ProofPack package from NX Warden/i)
+  ).toBeVisible();
+  const docs = page.locator("main");
+  for (const command of ["init", "check", "build", "preview", "doctor"]) {
+    await expect(docs.getByText(new RegExp(`generator\\.py ${command}`)).first()).toBeVisible();
+  }
+  await expect(docs.getByText(/generator\.py --version/).first()).toBeVisible();
+  for (const output of [
+    "proofpack.html",
+    "proofpack.md",
+    "compliance_checklist.json",
+    "artifact_manifest.json",
+    "build_report.json",
+    "build_report.md",
+    "checksums.sha256",
+    "artifacts/"
+  ]) {
+    await expect(docs.getByText(output, { exact: true }).first()).toBeVisible();
+  }
+  await expect(docs).not.toContainText(/download ProofPack|GitHub repository/i);
+  await expect(docs).toContainText(/ProofPack v1\.0\.0.*Released/i);
+  await expect(docs).not.toContainText(/Release Candidate|Launching/i);
+});
+
+test("ProofPack is integrated without presenting fictional work as customer work", async ({
+  page
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".site-nav__desktop").getByRole("link", { name: "Products" })).toHaveAttribute(
+    "href",
+    "/products/proofpack/"
+  );
+  const homeProduct = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "ProofPack", exact: true })
+  });
+  await expect(homeProduct).toContainText(/local-first operating evidence compiler/i);
+  await expect(homeProduct).toContainText(/ProofPack v1\.0\.0.*Released/i);
+  await expect(homeProduct.getByRole("link", { name: "Explore ProofPack" })).toHaveAttribute(
+    "href",
+    "/products/proofpack/"
+  );
+
+  await page.goto("/products/proofpack/#acme-relay-example");
+  const example = page.locator("#acme-relay-example");
+  await expect(example).toContainText(/fictional/i);
+  await expect(example).toContainText(/not a customer engagement/i);
+
+  await page.goto("/work/");
+  const proofPackSample = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "ProofPack fictional example" })
+  });
+  await expect(proofPackSample).toContainText(/Acme Relay/i);
+  await expect(proofPackSample).toContainText(/fictional/i);
+  await expect(proofPackSample).toContainText(/not customer work/i);
+
+  await page.goto("/roadmap/");
+  await expect(page.getByText("ProofPack v1.0 — Released", { exact: true })).toBeVisible();
+  await expect(page.locator("main")).not.toContainText(/ProofPack v1\.0\.0 Release Candidate|Launching/i);
+  await expect(
+    page.locator(".page-hero__description").getByText(/ProofPack is a separate local-first product/i)
+  ).toBeVisible();
+});
+
+test("ProofPack metadata, public discovery files, links, and basic semantics are valid", async ({
+  page,
+  request
+}) => {
+  const response = await page.goto("/products/proofpack/");
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle("ProofPack — Local-first Operating Evidence | NX Warden");
+  await expect(page.locator("link[rel='canonical']")).toHaveAttribute(
+    "href",
+    "https://nxwarden.com/products/proofpack/"
+  );
+  await expect(page.locator("meta[name='description']")).toHaveAttribute(
+    "content",
+    /local-first operating evidence compiler/i
+  );
+
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  const sitemapText = await sitemap.text();
+  for (const route of [
+    "/products/proofpack/",
+    "/products/proofpack/docs/",
+    "/privacy/",
+    "/security/",
+    "/terms/"
+  ]) {
+    expect(sitemapText).toContain(`https://nxwarden.com${route}`);
+  }
+  const robots = await request.get("/robots.txt");
+  expect(robots.status()).toBe(200);
+  expect(await robots.text()).toContain("https://nxwarden.com/sitemap.xml");
+
+  for (const href of ["/contact/", "/work/"]) {
+    const linkedResponse = await request.get(href);
+    expect(linkedResponse.status(), `${href} should resolve`).toBe(200);
+  }
+
+  const semanticIssues = await page.evaluate(() => {
+    const ids = Array.from(document.querySelectorAll<HTMLElement>("[id]")).map(
+      (node) => node.id
+    );
+    const duplicateIds = ids.filter(
+      (id, index) => id && ids.indexOf(id) !== index
+    );
+    const imagesWithoutAlt = Array.from(document.images).filter(
+      (image) => !image.hasAttribute("alt")
+    ).length;
+    const brokenLabelReferences = Array.from(
+      document.querySelectorAll<HTMLElement>("[aria-labelledby]")
+    ).filter((node) => {
+      const references = node.getAttribute("aria-labelledby")?.split(/\s+/) ?? [];
+      return references.some((id) => !document.getElementById(id));
+    }).length;
+
+    return {
+      duplicateIds: Array.from(new Set(duplicateIds)),
+      imagesWithoutAlt,
+      brokenLabelReferences
+    };
+  });
+  expect(semanticIssues).toEqual({
+    duplicateIds: [],
+    imagesWithoutAlt: 0,
+    brokenLabelReferences: 0
+  });
+
+  const missingRoute = await page.goto("/products/not-a-real-product/");
+  expect(missingRoute?.status()).toBe(404);
+});
+
+test("company surfaces distinguish the product, services, and fictional work", async ({
+  page
+}) => {
+  await page.goto("/about/");
+  await expect(page.getByText("NexusWarden Technology LLC").first()).toBeVisible();
+  await expect(page.getByText(/NX Warden is the operating brand/i)).toBeVisible();
+  await expect(page.getByText(/ProofPack v1\.0\.0.*Released/i)).toBeVisible();
+  for (const offer of [
+    "Operations Clarity Audit",
+    "Operations Foundation Sprint",
+    "Runbook & Handoff System"
+  ]) {
+    await expect(page.getByText(offer, { exact: true })).toBeVisible();
+  }
+
+  await page.goto("/work/");
+  for (const label of [
+    "Product development",
+    "Internal infrastructure",
+    "Client / service work",
+    "Fictional demonstration"
+  ]) {
+    await expect(page.getByText(label, { exact: true })).toBeVisible();
+  }
+  await expect(page.getByText(/Acme Relay is a fictional demonstration, not a customer or client engagement/i)).toBeVisible();
+
+  await page.goto("/roadmap/");
+  for (const category of ["Released", "Active Development", "Exploratory"]) {
+    await expect(page.getByRole("heading", { name: category, exact: true })).toBeVisible();
+  }
+  await expect(page.getByText("ProofPack v1.0 — Released", { exact: true })).toBeVisible();
+});
+
+test("contact gives a safe ProofPack request-access handoff", async ({ page }) => {
+  await page.goto("/contact/");
+  const guide = page.getByTestId("proofpack-request-guide");
+  await expect(guide.getByRole("heading", { name: "Looking for ProofPack?" })).toBeVisible();
+  for (const detail of ["Product", "Use case", "Environment", "Evidence to package"]) {
+    await expect(guide.getByText(detail, { exact: true })).toBeVisible();
+  }
+  await expect(guide.getByText(/do not send secrets or credentials by email/i)).toBeVisible();
+  await expect(page.locator(".contact-priority").getByRole("link", { name: "ceo@nxwarden.com" })).toBeVisible();
+  await expect(page.locator("form.contact-form")).toBeVisible();
+});
+
+test("policy pages match the current request-access model", async ({ page }) => {
+  await page.goto("/policies/");
+  for (const link of ["Privacy", "Security", "Terms"]) {
+    await expect(page.getByRole("link", { name: link, exact: true })).toBeVisible();
+  }
+
+  await page.goto("/privacy/");
+  await expect(page.getByText(/website inquiries/i)).toBeVisible();
+  await expect(page.getByText(/local-first/i)).toBeVisible();
+
+  await page.goto("/security/");
+  await expect(page.getByText(/responsible disclosure/i).first()).toBeVisible();
+  await expect(page.getByText(/does not provide compliance certification/i)).toBeVisible();
+
+  await page.goto("/terms/");
+  const terms = page.locator("main");
+  await expect(terms.getByText(/request access/i)).toBeVisible();
+  await expect(terms.getByText(/does not certify facts or compliance/i)).toBeVisible();
+  await expect(terms).not.toContainText(/subscription|service level agreement|refund policy|enterprise warranty|paid licen[cs]ing/i);
+});
+
+test("ProofPack request CTA and output stay readable at 320px", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.goto("/products/proofpack/");
+
+  const request = page.locator(".page-hero").getByRole("link", { name: "Request ProofPack" });
+  const requestBox = await request.boundingBox();
+  expect(requestBox).not.toBeNull();
+  expect(requestBox!.height).toBeGreaterThanOrEqual(44);
+  await expect(page.getByTestId("proofpack-output-tree")).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});
+
+for (const viewport of mobileViewports) {
+  for (const route of publicRoutes) {
+    test(`mobile route ${route} fits at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
       await page.goto(route);
       await expect(page.getByLabel("NX Warden home")).toBeVisible();
       await expectNoHorizontalOverflow(page);
@@ -476,20 +763,19 @@ for (const viewport of mobileViewports) {
           fullPage: true
         });
       }
-    }
-  });
+    });
+  }
 }
 
 for (const viewport of desktopViewports) {
-  test(`desktop routes fit at ${viewport.width}px`, async ({ page }) => {
-    await page.setViewportSize(viewport);
-
-    for (const route of publicRoutes) {
+  for (const route of publicRoutes) {
+    test(`desktop route ${route} fits at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
       await page.goto(route);
       await expect(page.getByLabel("NX Warden home")).toBeVisible();
       await expectNoHorizontalOverflow(page);
-    }
-  });
+    });
+  }
 }
 
 test("reduced motion keeps content visible and neutralizes transforms", async ({
@@ -539,7 +825,7 @@ test("split-band headings never overlap their content panels", async ({ page }) 
       const band = bands.nth(index);
       await expectNoElementOverlap(
         band.locator(":scope > div:first-child h2"),
-        band.locator(":scope > .text-panel")
+        band.locator(":scope > .text-panel, :scope > .deliverable-panel")
       );
     }
   }

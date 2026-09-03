@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test:api": "node --no-warnings --test tests/api-contract.test.mjs",
-    "test:public-scan": "node tests/public-output-scan.mjs",
+    "test:public-scan": "node --test tests/public-output-scan-fixtures.test.mjs && node tests/public-output-scan.mjs",
     "test:visual": "playwright test tests/visual-refresh.spec.ts",
     "verify:visual-refresh": "npm run test:api && npm run build && npm run test:public-scan && npm run test:visual"
   },
